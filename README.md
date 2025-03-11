@@ -2,13 +2,13 @@
 A comprehensive document management system built with Laravel 10, MySQL, Inertia.js, and Vue.js, designed to streamline the generation, management, and processing of official university letters and documents. UNIDOCS simplifies administrative workflows, ensuring efficiency and accuracy in student and faculty requests.
 
 🌟 Key Features
-✅ Automated Letter Generation – Generate various university letters instantly.
-✅ Letter Request Management – Track and process student and faculty document requests.
+✅ Automated Letter Generation – Generate various university letters instantly.<br>
+✅ Letter Request Management – Track and process student and faculty document requests.<br>
 ✅ Approval Workflow – Multi-step approval system for document processing. <br>
-✅ Notifications & Alerts – Stay updated with real-time request status.
-✅ User Roles & Permissions – Secure access based on roles (Admin, Student, Staff).
-✅ Reports & Analytics – Generate insights on document usage and trends.
-✅ Storage & Archiving – Secure storage for past and processed documents.
+✅ Notifications & Alerts – Stay updated with real-time request status.<br>
+✅ User Roles & Permissions – Secure access based on roles (Admin, Student, Staff).<br>
+✅ Reports & Analytics – Generate insights on document usage and trends.<br>
+✅ Storage & Archiving – Secure storage for past and processed documents.<br>
 
 
 
