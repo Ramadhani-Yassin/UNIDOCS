@@ -1,0 +1,78 @@
+
+<app-header></app-header> <!-- Header Component -->
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="login.component.css">
+  <title>UNIDOCS</title>
+</head>
+
+<body>
+
+<br><br><br>
+
+    <div class="container" [class.active]="isActive" #container>
+
+        <!-- Signup Form -->
+      <div *ngIf="!isLoginForm" class="form-container sign-up">
+        <form (ngSubmit)="onSignupSubmit(signupForm)" #signupForm="ngForm">
+            <h1>Sign Up</h1>
+          <div>
+            <!--<span>or use your email for registration</span>-->
+            <input type="text" id="first-name" name="firstName" [(ngModel)]="user.firstName" required placeholder = "First Name">
+            <input type="text" id="last-name" name="lastName" [(ngModel)]="user.lastName" required placeholder = "Last Name">
+            <input type="email" id="email" name="email" [(ngModel)]="user.email" required placeholder = "Email">
+            <input type="password" id="password" name="password" [(ngModel)]="user.password" required placeholder = "Password">
+            <button type="submit">Sign Up</button> <br>
+            <a *ngIf="registrationSuccessful" class="success-message">
+              User registered successfully
+            </a>
+          </div>
+        </form>
+      </div>
+
+      <!-- Login Form -->
+        <div *ngIf="isLoginForm" class="form-container sign-in">
+
+          <form (ngSubmit)="onLoginSubmit(loginForm)" #loginForm="ngForm">
+              <h1>Login</h1>
+
+              <!--<span>or use your email password</span>-->
+              <input type="email" id="email" name="email" [(ngModel)]="credentials.email" required placeholder = "Email">
+              <input type="password" id="password" name="password" [(ngModel)]="credentials.password" required placeholder = "Password">
+              <a href="#">Forget Your Password?</a>
+              <button type="submit">Login</button>
+
+              <div *ngIf="loginFailed" class="error-message">
+                Invalid email or password. Please try again.
+              </div>
+          </form>
+      </div>
+
+      <div class="toggle-container">
+
+        <div class="toggle">
+          <div class="toggle-panel toggle-left">
+            <h1>Welcome Back!</h1>
+            <p>Enter your personal details to access UNIDOCS features</p>
+            <button class="hidden" (click)="toggleForm(true)" [class.active]="isLoginForm">Login</button>
+          </div>
+        
+
+          <div class="toggle-panel toggle-right">
+          <h1>Hello, Friend!</h1>
+          <p>Register with your personal details to access UNIDOCS features</p>
+          <button class="hidden" (click)="toggleForm(false)" [class.active]="!isLoginForm">Sign Up</button>
+          </div>
+          
+        </div>
+      
+      </div>
+      
+    </div>
+
+</body> 
+
+<app-footer></app-footer> <!-- Footer Component -->

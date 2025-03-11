@@ -1,0 +1,147 @@
+/* General Header Styling */
+header {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  padding: 10px 0;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Ensure no margin/padding affects layout */
+body, html {
+  margin: 0;
+  padding: 0;
+}
+
+/* Container Adjustments */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+/* Logo */
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Navigation */
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  position: relative;
+}
+
+nav ul li a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease-in-out;
+}
+
+nav ul li a:hover {
+  color: #ffeb3b; /* Yellow hover effect */
+}
+
+/* Dropdown Menu */
+.dropdown .submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(37, 117, 252, 0.9);
+  padding: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.dropdown:hover .submenu {
+  display: block;
+}
+
+.submenu li {
+  padding: 10px 20px;
+}
+
+.submenu li a {
+  font-size: 14px;
+}
+
+/* Menu Toggle Button */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* Responsive Navigation */
+@media (max-width: 768px) {
+  nav {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: rgba(37, 117, 252, 0.9);
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    padding: 15px 0;
+    transition: all 0.4s ease-in-out;
+  }
+
+  nav.open {
+    display: flex;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.4s ease-in-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dropdown .submenu {
+    position: static;
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: none;
+  }
+
+  .dropdown.open .submenu {
+    display: block;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+}
