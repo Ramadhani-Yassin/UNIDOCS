@@ -1,4 +1,4 @@
-# ✨ UNIDOCS – University Document Management System (SPA)
+# ✨ UNIDOCS – University Document Management System 
 
 A comprehensive document management system built with **Spring Boot (Java), MySQL, and Angular**, designed to streamline the generation, management, and processing of official university letters and documents. **UNIDOCS** simplifies administrative workflows, ensuring efficiency and accuracy in student and faculty requests.
 
