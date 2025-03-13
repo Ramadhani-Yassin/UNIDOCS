@@ -12,7 +12,8 @@ header {
 }
 
 /* Ensure no margin/padding affects layout */
-body, html {
+body,
+html {
   margin: 0;
   padding: 0;
 }
@@ -144,4 +145,10 @@ nav ul li a:hover {
   .menu-toggle {
     display: block;
   }
+}
+
+.logo a {
+  color: white; /* Makes the text white */
+  text-decoration: none; /* Removes the underline */
+  font-weight: bold; /* Optional: Makes it bold */
 }

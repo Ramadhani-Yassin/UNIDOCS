@@ -1,52 +1,50 @@
-<app-header></app-header> <!-- Header Component -->
+<app-header></app-header>
+<!-- Header Component -->
 
 <body>
+  <br /><br /><br />
+  <section class="hero">
+    <h1>Welcome to UNIDOCS</h1>
+    <!--<p>Streamlining your university administrative experience with automated letter requests and real-time updates.</p><br>-->
+    <br /><br />
+    <div class="button-container">
+      <a routerLink="/login" class="cta-button"> Request A Letter </a>
+    </div>
+  </section>
 
-    <br><br><br>
-    <section class="hero">
-    
-        <h1>Welcome to UNIDOCS</h1>
-       <!--<p>Streamlining your university administrative experience with automated letter requests and real-time updates.</p><br>-->
-        <br><br>
-       <div class="button-container">
-        <a routerLink="/request-letter" class="cta-button">
-          Request A Letter
-        </a>
-      </div>
+  <section class="features">
+    <div class="feature">
+      <h2>Automated Requests</h2>
+      <p>Submit and process requests digitally with ease.</p>
+    </div>
+    <div class="feature">
+      <h2>Status Tracking</h2>
+      <p>Track your requests in real-time.</p>
+    </div>
+    <div class="feature">
+      <h2>AI-Powered Chatbot</h2>
+      <p>Get instant assistance with your requests.</p>
+    </div>
+  </section>
 
-    </section>
+  <section class="featured-images">
+    <img src="assets/images/image1.jpg" alt="Image 1" alt="IMAGE 1" />
+    <img src="assets/images/hand.jpg" alt="Image 2" />
+    <img src="assets/images/image3.jpg" alt="Image 3" alt="IMAGE 3" />
+    <img src="assets/images/image4.jpg" alt="Image 4" alt="IMAGE 4" />
+  </section>
 
-    <section class="features">
-        <div class="feature">
-            <h2>Automated Requests</h2>
-            <p>Submit and process requests digitally with ease.</p>
-        </div>
-        <div class="feature">
-            <h2>Status Tracking</h2>
-            <p>Track your requests in real-time.</p>
-        </div>
-        <div class="feature">
-            <h2>AI-Powered Chatbot</h2>
-            <p>Get instant assistance with your requests.</p>
-        </div>
-    </section>
-
-
-<section class="featured-images">
-    <img src="assets/images/image1.jpg" alt="Image 1" alt="IMAGE 1">
-    <img src="assets/images/hand.jpg" alt="Image 2">
-    <img src="assets/images/image3.jpg" alt="Image 3" alt="IMAGE 3">
-    <img src="assets/images/image4.jpg" alt="Image 4" alt="IMAGE 4">
-</section>
-
-
-
-<section class="chatbot">
+  <section class="chatbot">
     <h2>Need Help?</h2>
     <p>Chat with our AI assistant for instant support.</p>
     <div class="chatbox-container">
-        <script src="https://www.chatbase.co/chatbot.js" data-id="YOUR_CHATBASE_ID" defer></script>
+      <script
+        src="https://www.chatbase.co/chatbot.js"
+        data-id="YOUR_CHATBASE_ID"
+        defer
+      ></script>
     </div>
-</section>
+  </section>
 </body>
-<app-footer></app-footer> <!-- Footer Component -->
+<app-footer></app-footer>
+<!-- Footer Component -->
