@@ -7,6 +7,11 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -20,8 +25,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .cors(cors -> cors.disable()) // Disable or configure CORS properly
-            .csrf(csrf -> csrf.disable()) // Disable CSRF for testing
+            .cors(cors -> cors.configurationSource(corsConfigurationSource())) // ✅ Enable CORS properly
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for testing (enable in production with CSRF tokens)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                     "/api/users/login", 
@@ -29,10 +34,22 @@ public class SecurityConfig {
                     "/api/admin/login",
                     "/api/admin/register" // ✅ Allow admin registration
                 ).permitAll()
-                .anyRequest().authenticated() // Require authentication for all other endpoints
+                .anyRequest().authenticated() // Require authentication for other endpoints
             )
-            .sessionManagement(session -> session.disable()); // Disable session-based authentication (for JWT)
+            .sessionManagement(session -> session.disable()); // Disable session-based authentication (use JWT)
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // ✅ Allow Angular frontend
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

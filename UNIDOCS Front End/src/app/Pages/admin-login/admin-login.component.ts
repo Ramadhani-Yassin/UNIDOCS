@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
 @Component({
@@ -12,37 +12,62 @@ export class AdminLoginComponent {
   password: string = '';
   isActive: boolean = false;
   loading: boolean = false;
-  errorMessage: string = '';
+  message: string = ''; // Success or error message
+  isError: boolean = false; // Flag to check if it's an error
 
   constructor(private http: HttpClient, private router: Router) {}
 
-  // Toggle the active state (if needed for UI changes)
   toggleActive(isActive: boolean): void {
     this.isActive = isActive;
   }
 
   onSubmit() {
-    this.loading = true;
-    this.errorMessage = ''; // Clear previous errors
+    if (!this.email || !this.password) {
+      this.message = '❌ Email and password are required!';
+      this.isError = true;
+      return;
+    }
 
-    const admin = {
-      email: this.email,
+    this.loading = true;
+    this.message = ''; // Clear previous messages
+
+    const adminCredentials = {
+      email: this.email.trim(),
       password: this.password,
     };
 
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
     this.http
-      .post<{ token: string }>('http://localhost:8080/api/admin/login', admin)
-      .subscribe(
-        (response) => {
-          localStorage.setItem('adminToken', response.token); // Save token
-          alert('Login successful');
-          this.router.navigate(['/admin-dashboard']); // Redirect after login
+      .post<{ message: string; token?: string }>(
+        'http://localhost:8088/api/admin/login',
+        adminCredentials,
+        { headers }
+      )
+      .subscribe({
+        next: (response) => {
+          console.log('✅ Login Response:', response);
+
+          if (response.token) {
+            sessionStorage.setItem('adminToken', response.token); // Store token
+          }
+
+          this.message = '✔️ Successfully logged in as UNIDOCS admin!';
+          this.isError = false;
+
+          setTimeout(() => {
+            this.router.navigate(['/admin-dashboard']);
+          }, 1500); // Redirect after 1.5 seconds
+
+          this.loading = false;
         },
-        (error) => {
-          this.errorMessage =
-            error.error?.message || 'Invalid admin credentials'; // Improved error message
-          this.loading = false; // Stop loading
-        }
-      );
+        error: (err) => {
+          console.error('❌ Login Error:', err);
+
+          this.message = err.error?.message || '❌ Invalid admin credentials!';
+          this.isError = true;
+          this.loading = false;
+        },
+      });
   }
 }

@@ -33,6 +33,7 @@
         <button>Sign Up</button>
       </form>
     </div>
+
     <div class="form-container sign-in">
       <!--
             <div class="social-icons">
@@ -43,31 +44,39 @@
             </div>
             -->
 
-      <form (ngSubmit)="onSubmit()">
-        <h1>Admin Sign In</h1>
+      <form (submit)="onSubmit()">
+        <label>Email</label>
+        <input type="email" [(ngModel)]="email" name="email" required />
 
-        <input
-          type="email"
-          placeholder="Email"
-          [(ngModel)]="email"
-          name="email"
-          required
-        />
+        <label>Password</label>
         <input
           type="password"
-          placeholder="Password"
           [(ngModel)]="password"
           name="password"
           required
         />
 
-        <a href="#">Forget Your Password?</a>
         <button type="submit" [disabled]="loading">
-          {{ loading ? "Signing In..." : "Sign In" }}
+          {{ loading ? "Logging in..." : "Login" }}
         </button>
 
-        <p *ngIf="errorMessage" style="color: red">{{ errorMessage }}</p>
+        <!-- Message below the button -->
+        <p *ngIf="message" [ngClass]="isError ? 'error-text' : 'success-text'">
+          {{ message }}
+        </p>
       </form>
+
+      <!-- Add styles in CSS file -->
+      <style>
+        .error-text {
+          color: red;
+          font-weight: bold;
+        }
+        .success-text {
+          color: green;
+          font-weight: bold;
+        }
+      </style>
     </div>
     <div class="toggle-container">
       <div class="toggle">
