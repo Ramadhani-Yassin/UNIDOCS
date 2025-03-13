@@ -45,15 +45,20 @@
             -->
 
       <form (submit)="onSubmit()">
-        <label>Email</label>
-        <input type="email" [(ngModel)]="email" name="email" required />
+        <input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          placeholder="Email"
+        />
 
-        <label>Password</label>
         <input
           type="password"
           [(ngModel)]="password"
           name="password"
           required
+          placeholder="Password"
         />
 
         <button type="submit" [disabled]="loading">

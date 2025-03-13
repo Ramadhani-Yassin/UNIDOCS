@@ -56,7 +56,7 @@ export class AdminLoginComponent {
           this.isError = false;
 
           setTimeout(() => {
-            this.router.navigate(['/admin-dashboard']);
+            this.router.navigate(['/admin-portal']);
           }, 1500); // Redirect after 1.5 seconds
 
           this.loading = false;
