@@ -5,10 +5,9 @@ import { AboutUsComponent } from './Pages/about-us/about-us.component';
 import { ContactsComponent } from './Pages/contacts/contacts.component';
 //import { SignUpComponent } from './Pages/sign-up/sign-up.component';
 import { DashboardComponent } from './Pages/Students-Dashboard/Dashboard.component'; // Update import path
-import { LoginComponent  } from './Pages/Login/Login.component';// Update import path
+import { LoginComponent } from './Pages/Login/Login.component'; // Update import path
 import { AdminLoginComponent } from './Pages/admin-login/admin-login.component';
 import { AdminPortalComponent } from './Pages/admin-portal/admin-portal.component';
-
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -18,13 +17,13 @@ const routes: Routes = [
   //{ path: 'sign-up', component: SignUpComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
-  {path: 'admin-portal', component: AdminPortalComponent},
-  {path: 'admin-login', component: AdminLoginComponent},
-  { path: '**', component: HomeComponent } // Wildcard route
+  { path: 'admin-portal', component: AdminPortalComponent },
+  { path: 'admin-login', component: AdminLoginComponent },
+  { path: '**', component: HomeComponent }, // Wildcard route
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
