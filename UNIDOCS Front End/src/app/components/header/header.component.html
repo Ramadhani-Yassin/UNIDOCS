@@ -1,23 +1,40 @@
+<!-- header.component.html -->
 <header>
-  <div class="container">
-    <div class="logo"><a routerLink="/home">UNIDOCS</a></div>
-    <nav [class.open]="menuOpen">
+  <nav>
+    <div class="logo">
+      <a routerLink="/home">UNIDOCS</a>
+    </div>
+    
+    <div class="menu" [class.open]="menuOpen">
       <ul>
         <li><a routerLink="/home">Home</a></li>
         <li><a routerLink="/about-us">About Us</a></li>
         <li><a routerLink="/contacts">Contacts</a></li>
         <li class="dropdown" [class.open]="dropdownOpen">
-          <a href="javascript:void(0)" (click)="toggleDropdown()">
+          <a href="javascript:void(0)" (click)="toggleDropdown($event)" class="dashboard-link">
             Dashboard
-            <!--<span class="caret">▼</span>-->
+            <span class="dropdown-icon">▼</span>
           </a>
           <ul class="submenu">
-            <li><a routerLink="/login">Students</a></li>
-            <li><a routerLink="/admin-login">Admin</a></li>
+            <li class="submenu-item">
+              <a routerLink="/login" class="student-link">
+                <span class="menu-icon">●</span> Students
+              </a>
+            </li>
+            <li class="submenu-item">
+              <a routerLink="/admin-login" class="admin-link">
+                <span class="menu-icon">●</span> Admin
+              </a>
+            </li>
           </ul>
         </li>
       </ul>
-    </nav>
+    </div>
+    
+    <div class="register">
+      <a routerLink="/login">Login</a>
+    </div>
+    
     <button class="menu-toggle" (click)="toggleMenu()">☰</button>
-  </div>
+  </nav>
 </header>

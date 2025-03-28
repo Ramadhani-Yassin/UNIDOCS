@@ -6,8 +6,10 @@
   font-family: Arial, sans-serif;
 }
 
+
+
 body {
-  background-image: url('/assets/images/backgroung.jpg'); /* Correct path */
+  background-image: url('/assets/images/sKU.jpg'); /* Correct path */
   background-size: cover;
   background-position: center center;
   background-attachment: fixed;
