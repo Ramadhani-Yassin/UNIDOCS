@@ -1,36 +1,23 @@
 # ===============================================
-# GitHub Language Override for UNIDOCS
-# ===============================================
-# GOAL: Make Java the dominant language in stats
+# GitHub  for UNIDOCS
 # ===============================================
 
-# 1. FORCE Java to be the primary language
+
+
 *.java linguist-language=Java
 
-# 2. SUPPRESS other languages from being detected
-# -----------------------------------------------
-# Hide CSS (42.3%)
+
+#  CSS (42.3%)
 *.css linguist-detectable=false
 
-# Hide HTML (25.2%)
+#  HTML (25.2%)
 *.html linguist-detectable=false
 
-# Hide TypeScript (18.7%)
+# TypeScript (18.7%)
 *.ts linguist-detectable=false
 
-# (Optional) Hide JavaScript if needed (0.3%)
+#  JavaScript  (0.3%)
 *.js linguist-detectable=false
 
-# 3. (Bonus) Mark non-code files as documentation
-# -----------------------------------------------
-# Example: Exclude docs/ folders from language stats
+#
 docs/* linguist-documentation=true
-
-# ===============================================
-# HOW TO USE:
-# 1. Save this as `.gitattributes` in your repo root
-# 2. Run:
-#    git add .gitattributes
-#    git commit -m "Override GitHub language stats"
-# 3. Push and wait ~5 mins for GitHub to update
-# ===============================================
