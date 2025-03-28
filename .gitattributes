@@ -1,23 +1,20 @@
 # ===============================================
-# GitHub  for UNIDOCS
+# UNIDOCS
 # ===============================================
 
-
-
+# 1. Java 
 *.java linguist-language=Java
 
+# 2.  JS/TS 
+*.js linguist-detectable=true
+*.ts linguist-detectable=true
 
-#  CSS (42.3%)
-*.css linguist-detectable=false
+#  CSS/HTML 
+*.css linguist-vendored=true    
+*.html linguist-vendored=true   
 
-#  HTML (25.2%)
-*.html linguist-detectable=false
+# other languages 
+*.* linguist-detectable=true    # Fallback for other files
 
-# TypeScript (18.7%)
-*.ts linguist-detectable=false
-
-#  JavaScript  (0.3%)
-*.js linguist-detectable=false
-
-#
+# 5. Exclude documentation folders from stats
 docs/* linguist-documentation=true
