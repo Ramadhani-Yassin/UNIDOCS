@@ -81,8 +81,8 @@ We welcome contributions! Feel free to fork the repo, submit issues, or create p
 
 ---
 
-## 📜 License
+## ☎️ Contacts
 
-This project is open-source and licensed under the [MIT License](LICENSE).
+> Find me on [GitHub](https://github.com/Ramadhani-Yassin) | [LinkedIn](https://www.linkedin.com/in/ramadhani-yassin-ramadhani/) | [Email](mailto:yasynramah@gmail.com) | [Instagram](https://www.instagram.com/rm_tech.tz/) 
 
 🔥 **Built with passion for academic excellence!** 🚀
