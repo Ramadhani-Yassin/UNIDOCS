@@ -7,15 +7,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 //import { SignUpComponent } from './Pages/sign-up/sign-up.component';
 import { UserService } from './services/user.service';
-import { HomeComponent } from './Pages/home/home.component';
-import { AboutUsComponent } from './Pages/about-us/about-us.component';
-import { ContactsComponent } from './Pages/contacts/contacts.component';
-import { DashboardComponent } from './Pages/Students-Dashboard/Dashboard.component';
-import { LoginComponent } from './Pages/Login/Login.component';
+import { HomeComponent } from './Pages/HOME-PAGES/home/home.component';
+import { AboutUsComponent } from './Pages/HOME-PAGES/about-us/about-us.component';
+import { ContactsComponent } from './Pages/HOME-PAGES/contacts/contacts.component';
+import { DashboardComponent } from './Pages/STUDENT-SIDE/Students-Dashboard/Dashboard.component';
+import { LoginComponent } from './Pages/STUDENT-SIDE/Login/Login.component';
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { AdminPortalComponent } from './Pages/admin-portal/admin-portal.component';
-import { AdminLoginComponent } from './Pages/admin-login/admin-login.component';
+import { AdminPortalComponent } from './Pages/ADMIN-SIDE/admin-portal/admin-portal.component';
+import { AdminLoginComponent } from './Pages/ADMIN-SIDE/admin-login/admin-login.component';
 
 @NgModule({
   declarations: [
