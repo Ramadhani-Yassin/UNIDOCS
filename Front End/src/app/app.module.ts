@@ -16,6 +16,13 @@ import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { AdminPortalComponent } from './Pages/ADMIN-SIDE/admin-portal/admin-portal.component';
 import { AdminLoginComponent } from './Pages/ADMIN-SIDE/admin-login/admin-login.component';
+import { AnalyticsComponent } from './Pages/STUDENT-SIDE/analytics/analytics.component';
+import { MessagesComponent } from './Pages/STUDENT-SIDE/messages/messages.component';
+import { AnnouncementsComponent } from './Pages/STUDENT-SIDE/announcements/announcements.component';
+import { SettingsComponent } from './Pages/STUDENT-SIDE/settings/settings.component';
+import { LettersRequestedComponent } from './Pages/ADMIN-SIDE/letters-requested/letters-requested.component';
+import { ApprovedLettersComponent } from './Pages/ADMIN-SIDE/approved-letters/approved-letters.component';
+import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +36,14 @@ import { AdminLoginComponent } from './Pages/ADMIN-SIDE/admin-login/admin-login.
     HeaderComponent,
     FooterComponent,
     AdminPortalComponent,
-    AdminLoginComponent
+    AdminLoginComponent,
+    AnalyticsComponent,
+    MessagesComponent,
+    AnnouncementsComponent,
+    SettingsComponent,
+    LettersRequestedComponent,
+    ApprovedLettersComponent,
+    StudentsManagementComponent
   ],
   imports: [
     BrowserModule,
