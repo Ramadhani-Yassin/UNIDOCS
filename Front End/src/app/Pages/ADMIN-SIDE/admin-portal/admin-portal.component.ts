@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SidebarService } from '../../../services/sidebar.service';
 
 @Component({
   selector: 'app-admin-portal',
@@ -7,10 +8,7 @@ import { Component } from '@angular/core';
 })
 export class AdminPortalComponent {
 
-  status = false;
-  addToggle()
-{
-  this.status = !this.status;       
-}
+  constructor(public sidebarService: SidebarService) {
 
+}
 }
