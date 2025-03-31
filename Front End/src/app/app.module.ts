@@ -18,6 +18,7 @@ import { AdminPortalComponent } from './Pages/ADMIN-SIDE/admin-portal/admin-port
 import { AdminLoginComponent } from './Pages/ADMIN-SIDE/admin-login/admin-login.component';
 import { AnalyticsComponent } from './Pages/STUDENT-SIDE/analytics/analytics.component';
 import { MessagesComponent } from './Pages/STUDENT-SIDE/messages/messages.component';
+import {  ApplicationComponent } from './Pages/STUDENT-SIDE/application/application.component';
 import { AnnouncementsComponent } from './Pages/STUDENT-SIDE/announcements/announcements.component';
 import { SettingsComponent } from './Pages/STUDENT-SIDE/settings/settings.component';
 import { LettersRequestedComponent } from './Pages/ADMIN-SIDE/letters-requested/letters-requested.component';
@@ -44,6 +45,7 @@ import { StudentNavComponent } from './components/student-nav/student-nav.compon
     MessagesComponent,
     AnnouncementsComponent,
     SettingsComponent,
+    ApplicationComponent,
     LettersRequestedComponent,
     ApprovedLettersComponent,
     StudentsManagementComponent,

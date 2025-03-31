@@ -1,28 +1,23 @@
 import { Component } from '@angular/core';
+import { StudentSidebarService } from '../../../services/student-sidebar.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css'],
+  selector: 'app-students',
+  templateUrl: './Dashboard.component.html',
+  styleUrls: ['./Dashboard.component.css']
 })
 export class DashboardComponent {
-  status = false;
-
-  constructor(private router: Router) {}
-
-  addToggle() {
-    this.status = !this.status;
-  }
+  constructor(
+    public sidebarService: StudentSidebarService,
+    private router: Router
+  ) {}
 
   confirmLogout(event: Event) {
-    event.preventDefault(); // Prevent default anchor behavior
-
+    event.preventDefault();
     const confirmLogout = confirm('Do you really want to log out of UNIDOCS?');
-
     if (confirmLogout) {
-      this.router.navigate(['/home']); // Redirect to home
+      this.router.navigate(['/home']);
     }
-    // If "No", user stays on the same page (no action needed)
   }
 }

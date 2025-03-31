@@ -52,7 +52,7 @@ export class AdminLoginComponent {
             sessionStorage.setItem('adminToken', response.token); // Store token
           }
 
-          this.message = '✔️ Successfully logged in as UNIDOCS admin!';
+          this.message = '✔️ Successfully logged in as Admin!';
           this.isError = false;
 
           setTimeout(() => {

@@ -10,13 +10,14 @@
   margin-left: 60px;
 }
 
-/* MAIN */
+/* MAIN s*/
 #content main {
   width: 100%;
   padding: 36px 24px;
   font-family: 'Poppins', sans-serif;
-  max-height: calc(100vh - 56px);
-  overflow-y: auto;
+  max-height: calc(100vh - 56px); /*SCROLL BAR*/
+  overflow-y: auto;/*SCROLL BAR*/
+  scrollbar-width: none; /* For Firefox */
 }
 
 #content main .head-title {
