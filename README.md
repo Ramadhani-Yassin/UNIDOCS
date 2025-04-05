@@ -1,6 +1,6 @@
 # ✨ UNIDOCS – University Document Management System 
 
-A comprehensive document management system built with **Spring Boot (Java), MySQL, and Angular**, designed to streamline the generation, management, and processing of official university letters and documents. **UNIDOCS** simplifies administrative workflows, ensuring efficiency and accuracy in student and faculty requests.
+A comprehensive document management system built with **Spring Boot (Java), postgress, and Angular**, designed to streamline the generation, management, and processing of official university letters and documents. **UNIDOCS** simplifies administrative workflows, ensuring efficiency and accuracy in student and faculty requests.
 
 ## 🌟 Key Features
 
@@ -39,7 +39,7 @@ mvn clean install
 ```
 
 ### 4️⃣ Configure the database:
-Edit `src/main/resources/application.properties` and set up your MySQL credentials.
+Edit `src/main/resources/application.properties` and set up your postgress credentials.
 
 ### 5️⃣ Run database migrations:
 ```sh
@@ -69,7 +69,7 @@ ng serve
 
 ## 📌 Tech Stack
 
-- 🛠️ **Backend:** Spring Boot, MySQL, Spring Security  
+- 🛠️ **Backend:** Spring Boot, postgress, Spring Security  
 - 🎨 **Frontend:** Angular, TypeScript, Bootstrap  
 - 🔐 **Authentication:** JWT (JSON Web Tokens)  
 
