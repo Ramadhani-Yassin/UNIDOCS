@@ -48,6 +48,7 @@
 #content main .head-title .left .breadcrumb li a {
   color: #AAAAAA;
   pointer-events: none;
+  text-decoration: none;
 }
 
 #content main .head-title .left .breadcrumb li a.active {
@@ -66,6 +67,7 @@
   align-items: center;
   grid-gap: 10px;
   font-weight: 500;
+  text-decoration: none; 
 }
 
 #content main .box-info {
