@@ -96,6 +96,7 @@ We welcome contributions! Feel free to fork the repo, submit issues, or create p
   <a href="https://www.instagram.com/rm_tech.tz/" target="_blank">
     <img src="https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white" alt="Instagram">
   </a>
+  
+🔥 **Built with passion for academic excellence!** 🚀
 </div>
 
-🔥 **Built with passion for academic excellence!** 🚀
