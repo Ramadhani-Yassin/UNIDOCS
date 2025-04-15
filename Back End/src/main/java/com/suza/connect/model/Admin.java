@@ -1,16 +1,23 @@
 package com.suza.connect.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
+@Table(
+    name = "admin",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email")  // Ensures email is unique in the database
+    }
+)
 public class Admin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    
+    @Column(nullable = false, unique = true)  // Makes email non-null and unique
     private String email;
+    
+    @Column(nullable = false)  // Makes password non-null (optional)
     private String password;
 
     // Getters and Setters

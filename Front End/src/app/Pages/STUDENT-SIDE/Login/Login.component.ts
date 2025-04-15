@@ -79,7 +79,7 @@ export class LoginComponent {
         this.loading = false;
       },
       error: (error: any) => {
-        this.setMessage(error.error?.message || '❌ Signup failed!', true);
+        this.setMessage(error.error?.message || '❌ Email already in use or invalid!', true);
         this.loading = false;
       },
     });
