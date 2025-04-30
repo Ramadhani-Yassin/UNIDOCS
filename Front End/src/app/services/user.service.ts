@@ -21,9 +21,12 @@ export class UserService {
     return this.http.post(`${this.apiUrl}/signup`, user);
   }
 
-  login(credentials: { email: string; password: string }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, credentials);
-  }
+  login(credentials: { email: string, password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, {
+        email: credentials.email,
+        password: credentials.password
+    });
+}
 
   getUserDetails(credentials: {
     email: string;

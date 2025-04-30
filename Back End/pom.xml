@@ -61,6 +61,13 @@
         <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
 
+ <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>1.18.32</version> <!-- Use latest version -->
+        <scope>provided</scope>
+    </dependency>
+	
     <!-- Spring Boot Starter Test -->
     <dependency>
         <groupId>org.springframework.boot</groupId>

@@ -3,8 +3,10 @@ package com.suza.connect.service;
 import com.suza.connect.model.User;
 import com.suza.connect.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.List; // Added import
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -13,44 +15,61 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    // Register a new user
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public User registerUser(User user) {
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already registered");
+        }
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
-    // Find a user by email
     public Optional<User> findByEmail(String email) {
-        return Optional.ofNullable(userRepository.findByEmail(email));
+        return userRepository.findByEmail(email);
     }
 
-    // Validate user login
     public boolean validateUser(String email, String password) {
-        User user = userRepository.findByEmail(email);
-        return user != null && user.getPassword().equals(password);
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+        User user = userOptional.get();
+        return passwordEncoder.matches(password, user.getPassword());
     }
 
-    // Update user details
     public User updateUser(String email, User updatedUser) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
             user.setFirstName(updatedUser.getFirstName());
             user.setLastName(updatedUser.getLastName());
-            user.setPassword(updatedUser.getPassword());
+            
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+            
             return userRepository.save(user);
         }
         return null;
     }
 
-    // Delete a user by email
     public void deleteUser(String email) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
-            userRepository.delete(user);
-        }
+        userRepository.findByEmail(email).ifPresent(user -> userRepository.delete(user));
     }
 
-    // Get all users
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public void migratePlainTextPasswords() {
+        List<User> users = userRepository.findAll();
+        users.forEach(user -> {
+            if (!user.getPassword().startsWith("$2a$")) {
+                user.setPassword(passwordEncoder.encode(user.getPassword()));
+                userRepository.save(user);
+            }
+        });
     }
 }
