@@ -16,7 +16,7 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody User user) {
         try {
             User registeredUser = userService.registerUser(user);
@@ -32,21 +32,27 @@ public class UserController {
     }
 
     @PostMapping("/login")
-public ResponseEntity<?> loginUser(@RequestBody User loginRequest) {
-    try {
-        if (userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword())) {
-            return ResponseEntity.ok(Map.of(
-                "message", "Login successful",
-                "user", userService.findByEmail(loginRequest.getEmail()).orElse(null)
-            ));
+    public ResponseEntity<?> login(@RequestBody User loginRequest) {
+        try {
+            boolean valid = userService.validateUserByRole(
+                    loginRequest.getEmail(),
+                    loginRequest.getPassword(),
+                    loginRequest.getRole()
+            );
+            if (valid) {
+                return ResponseEntity.ok(Map.of(
+                        "message", "Login successful",
+                        "user", userService.findByEmail(loginRequest.getEmail()).orElse(null)
+                ));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid credentials for role ❌: " + loginRequest.getRole()));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Login failed: " + e.getMessage()));
         }
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(Map.of("error", "Invalid credentials"));
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(Map.of("error", "Login failed: " + e.getMessage()));
     }
-}
 
     @PostMapping("/migrate-passwords")
     public ResponseEntity<?> migratePasswords() {

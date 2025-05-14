@@ -1,73 +1,58 @@
 import { Component } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { NgForm } from '@angular/forms';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-admin-login',
   templateUrl: './admin-login.component.html',
-  styleUrls: ['./admin-login.component.css'],
+  styleUrls: ['./admin-login.component.css']
 })
 export class AdminLoginComponent {
-  email: string = '';
-  password: string = '';
-  isActive: boolean = false;
-  loading: boolean = false;
-  message: string = ''; // Success or error message
-  isError: boolean = false; // Flag to check if it's an error
+  credentials = { email: '', password: '', role: 'admin' };
+  isActive = false;
+  loading = false;
+  message = '';
+  isError = false;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private userService: UserService, private router: Router) {}
 
-  toggleActive(isActive: boolean): void {
-    this.isActive = isActive;
+  toggleActive(state: boolean): void {
+    this.isActive = state;
+    this.message = ''; // Clear messages when toggling
   }
 
-  onSubmit() {
-    if (!this.email || !this.password) {
-      this.message = '❌ Email and password are required!';
-      this.isError = true;
+  onSubmit(loginForm: NgForm): void {
+    if (loginForm.invalid) {
+      this.showMessage('Please enter both email and password', true);
       return;
     }
 
     this.loading = true;
     this.message = ''; // Clear previous messages
 
-    const adminCredentials = {
-      email: this.email.trim(),
-      password: this.password,
-    };
+    this.userService.login(this.credentials).subscribe({
+      next: (response) => {
+        this.showMessage('Admin login successful! Redirecting...', false);
+        setTimeout(() => {
+          this.router.navigate(['/admin-dashboard']);
+        }, 1500);
+      },
+      error: (error) => {
+        const errorMsg = error.error?.error || 'Invalid admin credentials';
+        this.showMessage(errorMsg, true);
+        this.loading = false;
+      }
+    });
+  }
 
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    this.http
-      .post<{ message: string; token?: string }>(
-        'http://localhost:8088/api/admin/login',
-        adminCredentials,
-        { headers }
-      )
-      .subscribe({
-        next: (response) => {
-          console.log('✅ Login Response:', response);
-
-          if (response.token) {
-            sessionStorage.setItem('adminToken', response.token); // Store token
-          }
-
-          this.message = '✔️ Successfully logged in as Admin!';
-          this.isError = false;
-
-          setTimeout(() => {
-            this.router.navigate(['/admin-portal']);
-          }, 1500); // Redirect after 1.5 seconds
-
-          this.loading = false;
-        },
-        error: (err) => {
-          console.error('❌ Login Error:', err);
-
-          this.message = err.error?.message || '❌ Invalid admin credentials!';
-          this.isError = true;
-          this.loading = false;
-        },
-      });
+  private showMessage(message: string, isError: boolean): void {
+    this.message = message;
+    this.isError = isError;
+    setTimeout(() => {
+      if (this.message === message) { // Only clear if it's the same message
+        this.message = '';
+      }
+    }, 5000);
   }
 }

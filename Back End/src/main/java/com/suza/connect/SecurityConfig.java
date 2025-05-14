@@ -2,6 +2,7 @@ package com.suza.connect.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,18 +27,29 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable())
+            .csrf(csrf -> csrf.disable()) // Disabled for API testing, enable in production with proper CSRF token handling
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers(
+                // Public endpoints
+                .requestMatchers(HttpMethod.POST, 
+                    "/api/users/register",
                     "/api/users/login",
-                    "/api/users/signup",
-                    "/api/users/migrate-passwords", // Allow password migration
-                    "/api/admin/login",
-                    "/api/admin/register"
+                    "/api/admin/register",
+                    "/api/admin/login"
                 ).permitAll()
+                
+                // Password migration endpoint (temporary)
+                .requestMatchers(HttpMethod.POST, "/api/users/migrate-passwords").permitAll()
+                
+                // User endpoints
+                .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
+                
+                // Admin endpoints
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                
+                // All other requests require authentication
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.disable());
+            .sessionManagement(session -> session.disable()); // Stateless session management
 
         return http.build();
     }
@@ -47,8 +59,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of("http://localhost:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(List.of("Authorization"));
+        configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

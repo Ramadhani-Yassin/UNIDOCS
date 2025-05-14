@@ -26,41 +26,36 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public boolean validateUser(String email, String password) {
+        return userRepository.findByEmail(email)
+                .map(user -> passwordEncoder.matches(password, user.getPassword()))
+                .orElse(false);
+    }
+
+    public boolean validateUserByRole(String email, String password, String role) {
+        return userRepository.findByEmailAndRole(email, role)
+                .map(user -> passwordEncoder.matches(password, user.getPassword()))
+                .orElse(false);
+    }
+
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    public boolean validateUser(String email, String password) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        return passwordEncoder.matches(password, user.getPassword());
-    }
-
-    public User updateUser(String email, User updatedUser) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            user.setFirstName(updatedUser.getFirstName());
-            user.setLastName(updatedUser.getLastName());
-            
-            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
-                user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
-            }
-            
-            return userRepository.save(user);
-        }
-        return null;
-    }
-
-    public void deleteUser(String email) {
-        userRepository.findByEmail(email).ifPresent(user -> userRepository.delete(user));
+    public Optional<User> findByEmailAndRole(String email, String role) {
+        return userRepository.findByEmailAndRole(email, role);
     }
 
     public List<User> getAllUsers() {
         return userRepository.findAll();
+    }
+
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findByRole(role);
+    }
+
+    public void deleteUser(String email) {
+        userRepository.findByEmail(email).ifPresent(userRepository::delete);
     }
 
     public void migratePlainTextPasswords() {

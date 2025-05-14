@@ -1,5 +1,5 @@
 <app-header></app-header>
-<!-- Header Componen -->
+<!-- Header Component -->
 
 <head>
   <meta charset="UTF-8" />
@@ -19,9 +19,7 @@
       <form>
         <h1>Create Account</h1>
         <div class="social-icons">
-          <a href="#" class="icon"
-            ><i class="fa-brands fa-google-plus-g"></i
-          ></a>
+          <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
           <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
           <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
           <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
@@ -35,54 +33,37 @@
     </div>
 
     <div class="form-container sign-in">
-      <!--
-            <div class="social-icons">
-              <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
-              <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
-              <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
-              <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
-            </div>
-            -->
-
-      <form (submit)="onSubmit()">
-        <input
-          type="email"
-          [(ngModel)]="email"
-          name="email"
+      <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
+        <h1>Admin Login</h1>
+        
+        <input 
+          [(ngModel)]="credentials.email" 
+          name="email" 
+          type="email" 
           required
           placeholder="Email"
         />
-
-        <input
-          type="password"
-          [(ngModel)]="password"
-          name="password"
+        <input 
+          [(ngModel)]="credentials.password" 
+          name="password" 
+          type="password" 
           required
           placeholder="Password"
         />
-
+        <input type="hidden" [(ngModel)]="credentials.role" name="role" value="admin">
+        
         <button type="submit" [disabled]="loading">
-          {{ loading ? "Logging in..." : "Login" }}
+          <span *ngIf="!loading">Login</span>
+          <span *ngIf="loading">Authenticating...</span>
         </button>
-
-        <!-- Message below the button -->
-        <p *ngIf="message" [ngClass]="isError ? 'error-text' : 'success-text'">
+        
+        <!-- Message Display -->
+        <div *ngIf="message" class="message" [ngClass]="{'error': isError, 'success': !isError}">
           {{ message }}
-        </p>
+        </div>
       </form>
-
-      <!-- Add styles in CSS file -->
-      <style>
-        .error-text {
-          color: red;
-          font-weight: bold;
-        }
-        .success-text {
-          color: green;
-          font-weight: bold;
-        }
-      </style>
     </div>
+
     <div class="toggle-container">
       <div class="toggle">
         <div class="toggle-panel toggle-left">
@@ -101,4 +82,4 @@
 </body>
 
 <app-footer></app-footer>
-<!-- Footer Compoent -->
+<!-- Footer Component -->

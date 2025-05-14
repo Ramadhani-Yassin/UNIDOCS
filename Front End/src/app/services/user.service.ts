@@ -1,37 +1,31 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { User } from '../models/user.model';
-import { BackendConfigService } from './backend-config.service';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class UserService {
-  constructor(
-    private http: HttpClient,
-    private backendConfigService: BackendConfigService
-  ) {}
+  private apiUrl = 'http://localhost:8088/api/users'; // Adjust port if needed
 
-  private get apiUrl(): string {
-    return `${this.backendConfigService.getBackendUrl()}/api/users`;
+  constructor(private http: HttpClient) {}
+
+  register(user: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  signup(user: User): Observable<any> {
-    return this.http.post(`${this.apiUrl}/signup`, user);
-  }
-
-  login(credentials: { email: string, password: string }): Observable<any> {
+  login(credentials: { email: string, password: string, role: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, {
-        email: credentials.email,
-        password: credentials.password
-    });
-}
-
-  getUserDetails(credentials: {
-    email: string;
-    password: string;
-  }): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/details`, credentials);
+      email: credentials.email,
+      password: credentials.password,
+      role: credentials.role
+    }).pipe(
+      tap((response: any) => {
+        if (response.user) {
+          localStorage.setItem('currentUser', JSON.stringify(response.user));
+        }
+      })
+    );
   }
 }

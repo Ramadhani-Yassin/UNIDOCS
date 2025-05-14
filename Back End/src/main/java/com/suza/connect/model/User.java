@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name = "student")
+@Table(name = "users") // <- updated table name
 @Data
 public class User {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,4 +23,7 @@ public class User {
 
     @Column(name = "password", nullable = false, length = 255)
     private String password;
+
+    @Column(name = "role", nullable = false)
+    private String role; // 'admin' or 'student'
 }

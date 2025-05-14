@@ -17,6 +17,16 @@ body {
   height: 100vh;
 }
 
+.error {
+  color: red;
+  font-weight: bold;
+}
+.success {
+  color: green;
+  font-weight: bold;
+}
+
+
 .container {
   background-color: #fff;
   border-radius: 30px;
@@ -237,4 +247,36 @@ body {
 
 .error {
   color: red;
+}
+
+
+.message {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: bold;
+  animation: fadeIn 0.3s ease-in;
+}
+
+.message.error {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.message.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+button[disabled] {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
