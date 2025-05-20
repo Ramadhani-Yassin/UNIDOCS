@@ -1,0 +1,131 @@
+<app-student-nav></app-student-nav>
+<!-- MAIN CONTENT -->
+<section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Dashboard</h1>
+        <ul class="breadcrumb">
+          <li>
+            <a href="#">Dashboard</a>
+          </li>
+          <li><i class="bx bx-chevron-right"></i></li>
+          <li>
+            <a class="active" href="#">Home</a>
+          </li>
+        </ul>
+      </div>
+      <a href="#" class="btn-download">
+        <i class="bx bxs-cloud-download"></i>
+        <span class="text">Download PDF</span>
+      </a>
+    </div>
+
+    <ul class="box-info">
+      <li>
+        <i class="bx bxs-user"></i>
+        <span class="text">
+          <h3>Hello</h3>
+          <p>First Name</p>
+        </span>
+      </li>
+      <li>
+        <i class="bx bxs-envelope"></i>
+        <span class="text">
+          <h3>20</h3>
+          <p>Letters You Requested</p>
+        </span>
+      </li>
+    </ul>
+
+    <div class="table-data">
+      <div class="todo">
+        <div class="head">
+          <h3>Letters You can Request</h3>
+          <i class="bx bx-filter"></i>
+        </div>
+        <ul class="todo-list">
+          <li class="completed">
+            <p>PT Request Letter</p>
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </li>
+          <li class="completed">
+            <p>Appeal Letter</p>
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </li>
+          <li class="not-completed">
+            <p>Introduction Letter</p>
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </li>
+          <li class="completed">
+            <p>Leave of Absence Letter</p>
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </li>
+          <li class="not-completed">
+            <p>Transcript Request Letter</p>
+            <i class="bx bx-dots-vertical-rounded"></i>
+          </li>
+        </ul>
+      </div>
+
+      <div class="order">
+        <div class="head">
+          <h3>Recent Applications</h3>
+          <i class="bx bx-search"></i>
+          <i class="bx bx-filter"></i>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Letter</th>
+              <th>Date Applied</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
+                <p>Transcript Request Letter</p>
+              </td>
+              <td>01-10-2023</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+            <tr>
+              <td>
+                <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
+                <p>Introduction Letter</p>
+              </td>
+              <td>01-10-2023</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+            <tr>
+              <td>
+                <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
+                <p>PT Request Letter</p>
+              </td>
+              <td>01-10-2023</td>
+              <td><span class="status process">On Progress</span></td>
+            </tr>
+            <tr>
+              <td>
+                <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
+                <p>Appeal Letter</p>
+              </td>
+              <td>01-10-2023</td>
+              <td><span class="status pending">Request Error</span></td>
+            </tr>
+            <tr>
+              <td>
+                <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
+                <p>PT Request Letter</p>
+              </td>
+              <td>01-10-2023</td>
+              <td><span class="status completed">Completed</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</section>

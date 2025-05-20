@@ -1,0 +1,229 @@
+/* Home Page CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+
+
+body {
+  background-image: url('/assets/images/sKU.jpg'); /* Correct path */
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  line-height: 1.6;
+}
+
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+nav a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #ffd700;
+}
+
+.hero {
+  text-align: center;
+  padding: 50px 20px;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  border-radius: 8px;
+}
+
+.hero h1 {
+  font-size: 40px; /* Extra large font size */
+  color: #6a11cb; /* Purple color */
+  font-weight: 900; /* Extra bold */
+  text-transform: uppercase; /* Uppercase text */
+  letter-spacing: 4px; /* Add spacing between letters */
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Subtle text shadow */
+  animation: float 3s ease-in-out infinite; /* Motion effect */
+}
+
+/* Keyframes for the floating motion effect */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0); /* Start and end at the same position */
+  }
+  50% {
+    transform: translateY(-10px); /* Move up slightly */
+  }
+}
+
+
+
+.cta-button {
+  display: inline-block;
+  background: #2575fc;
+  color: #fff;
+  padding: 10px 20px;
+  margin-top: 10px;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.cta-button:hover {
+  background: #6a11cb;
+}
+
+/* Featured Images Section */
+.featured-images {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  padding: 30px;
+  flex-wrap: wrap; /* Allows wrapping on smaller screens */
+}
+
+.featured-images img {
+  width: 22%;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featured-images img:hover {
+  transform: scale(1.05); /* Zoom effect on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger box-shadow on hover */
+}
+
+/* Features Section */
+.features {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 40px;
+  flex-wrap: wrap;
+}
+
+.feature {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 30%;
+  transition: transform 0.3s ease;
+}
+
+.feature:hover {
+  transform: translateY(-5px); /* Slight hover effect */
+}
+
+.feature h2 {
+  font-size: 24px;
+  color: #6a11cb;
+}
+
+.feature p {
+  color: #666;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+/* Media query for mobile and tablet devices */
+@media screen and (max-width: 1024px) {
+  .features {
+    flex-direction: column; /* Stack features vertically on smaller screens */
+    align-items: center; /* Center the features */
+    padding: 20px;
+  }
+
+  .feature {
+    width: 80%; /* Increase width on smaller screens */
+    margin-bottom: 20px;
+  }
+
+  .cta-button {
+    padding: 12px 25px;
+  }
+
+  .hero {
+    padding: 40px 20px; /* Adjust hero padding */
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .featured-images {
+    flex-direction: column; /* Stack images vertically on smaller screens */
+    align-items: center; /* Center images */
+  }
+
+  .featured-images img {
+    width: 80%; /* Adjust image width for mobile */
+  }
+
+  .features {
+    padding: 20px; /* Adjust padding for mobile */
+  }
+
+  .feature {
+    width: 90%; /* Adjust feature boxes for mobile */
+  }
+
+  .feature h2 {
+    font-size: 22px; /* Adjust heading size */
+  }
+
+  .feature p {
+    font-size: 14px; /* Adjust text size for mobile */
+  }
+
+  header {
+    padding: 15px 0; /* Adjust header padding */
+  }
+
+  .cta-button {
+    padding: 12px 25px; /* Adjust CTA button padding */
+  }
+
+  .hero h1 {
+    font-size: 28px; /* Adjust hero heading size for mobile */
+  }
+}
+
+footer {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: #fff;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.chatbot {
+  text-align: center;
+  padding: 40px;
+  background: #fff;
+  margin: 20px auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 10vh; /* Optional: Adjust height as needed */
+}
+
+
+
+

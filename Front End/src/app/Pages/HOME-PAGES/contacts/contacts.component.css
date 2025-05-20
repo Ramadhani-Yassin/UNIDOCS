@@ -1,0 +1,152 @@
+/* General Reset */
+* {
+  margin: 10;
+  padding: 10;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-image: url('/assets/images/sky.jpg'); /* Correct path */
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  line-height: 1.6;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Header */
+header {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  padding: 20px 0;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header h1 {
+  font-size: 24px;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+nav a {
+  color: #fff;
+  margin: 0 10px;
+  text-decoration: none;
+  font-size: 16px;
+  transition: color 0.3s ease-in-out;
+}
+
+nav a:hover {
+  color: #ffd700;
+}
+
+/* Contacts */
+.contacts {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 20px auto;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  animation: fadeIn 1s ease-in-out;
+}
+
+.contacts h1 {
+  font-size: 36px;
+  margin-bottom: 10px;
+  background: -webkit-linear-gradient(45deg, #6a11cb, #2575fc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.contacts p {
+  margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.contacts-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.contacts-info h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+/* Footer */
+footer {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: #fff;
+  padding: 20px 0;
+  margin-top: 20px;
+}
+
+.footer-content {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+footer a {
+  color: #ffd700;
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.3s ease-in-out;
+}
+
+footer a:hover {
+  color: #fff;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  header h1 {
+      font-size: 20px;
+  }
+
+  nav a {
+      font-size: 14px;
+  }
+
+  .contacts h1 {
+      font-size: 28px;
+      justify-content: center;
+     align-items: center;
+  }
+
+  .contacts-info h2 {
+      font-size: 20px;
+  }
+}

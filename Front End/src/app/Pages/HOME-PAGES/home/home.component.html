@@ -1,0 +1,97 @@
+<app-header></app-header>
+<!-- Header Component -->
+
+<body>
+  <br /><br /><br />
+
+
+  <section id="hero" style="position: relative; width: 100%; height: 100vh; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('assets/images/room.jpg'); background-size: cover; background-position: center; font-family: 'Poppins', sans-serif;">
+    
+ 
+    
+    <!-- Hero Content -->
+    <div class="hero-content" style="position: absolute; top: 35%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #fff; width: 100%; max-width: 800px; padding: 0 20px; z-index: 1;">
+        <span style="display: block; letter-spacing: 4px; margin-bottom: 15px; font-size: 18px;">WELCOME TO</span>
+        <h1 style="font-size: 3.5em; margin-bottom: 20px; font-family: 'Copperplate', sans-serif; font-weight: bold;">UNIDOCS</h1>
+        <h2 style="font-size: 1.5em; margin-bottom: 30px; font-weight: 300;">University Automated Letter Generating System</h2>
+        <div style="display: flex; justify-content: center; gap: 20px;">
+            <a routerLink="/login" style="text-decoration: none; color: #fff; padding: 12px 30px; font-size: 16px; border-radius: 5px; background: #e74c3c; transition: all 0.3s ease;">Request Letter</a>
+            <a routerLink="/about-us" style="text-decoration: none; color: #fff; padding: 12px 30px; font-size: 16px; border-radius: 5px; border: 1px solid #fff; transition: all 0.3s ease;">Learn More</a>
+        </div>
+    </div>
+    
+    <!-- Scrolling Indicator -->
+    <div class="scroll-indicator" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); color: #fff; font-size: 24px; animation: bounce 2s infinite;">
+        ↓
+    </div>
+</section>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+    
+    .menu a:hover {
+        color: #e74c3c;
+        background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .register a:hover {
+        background: #c0392b;
+    }
+    
+    .hero-content a:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
+        40% {transform: translateY(-20px) translateX(-50%);}
+        60% {transform: translateY(-10px) translateX(-50%);}
+    }
+</style>
+
+  <!--<section class="hero">
+    <h1>Welcome to UNIDOCS</h1>
+    <p>Streamlining your university administrative experience with automated letter requests and real-time updates.</p><br>
+    <br /><br />
+    <div class="button-container">
+      <a routerLink="/login" class="cta-button"> Request A Letter </a>
+    </div>
+  </section>-->
+
+  <section class="features">
+    <div class="feature">
+      <h2>Automated Requests</h2>
+      <p>Submit and process requests digitally with ease.</p>
+    </div>
+    <div class="feature">
+      <h2>Status Tracking</h2>
+      <p>Track your requests in real-time.</p>
+    </div>
+    <div class="feature">
+      <h2>AI-Powered Chatbot</h2>
+      <p>Get instant assistance with your requests.</p>
+    </div>
+  </section>
+
+  <section class="featured-images">
+    <img src="assets/images/image1.jpg" alt="Image 1" alt="IMAGE 1" />
+    <img src="assets/images/hand.jpg" alt="Image 2" />
+    <img src="assets/images/image3.jpg" alt="Image 3" alt="IMAGE 3" />
+    <img src="assets/images/image4.jpg" alt="Image 4" alt="IMAGE 4" />
+  </section>
+
+  <section class="chatbot">
+    <h2>Need Help?</h2>
+    <p>Chat with our AI assistant for instant support.</p>
+    <div class="chatbox-container">
+      <script
+        src="https://www.chatbase.co/chatbot.js"
+        data-id="YOUR_CHATBASE_ID"
+        defer
+      ></script>
+    </div>
+  </section>
+</body>
+<app-footer></app-footer>
+<!-- Footer Component -->

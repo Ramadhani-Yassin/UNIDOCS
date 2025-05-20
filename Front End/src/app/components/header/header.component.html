@@ -1,0 +1,40 @@
+<!-- header.component.html -->
+<header>
+  <nav>
+    <div class="logo">
+      <a routerLink="/home">UNIDOCS</a>
+    </div>
+    
+    <div class="menu" [class.open]="menuOpen">
+      <ul>
+        <li><a routerLink="/home">Home</a></li>
+        <li><a routerLink="/about-us">About Us</a></li>
+        <li><a routerLink="/contacts">Contacts</a></li>
+        <li class="dropdown" [class.open]="dropdownOpen">
+          <a href="javascript:void(0)" (click)="toggleDropdown($event)" class="dashboard-link">
+            Dashboard
+            <span class="dropdown-icon">▼</span>
+          </a>
+          <ul class="submenu">
+            <li class="submenu-item">
+              <a routerLink="/login" class="student-link">
+                <span class="menu-icon">●</span> Students
+              </a>
+            </li>
+            <li class="submenu-item">
+              <a routerLink="/admin-login" class="admin-link">
+                <span class="menu-icon">●</span> Admin
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    
+    <div class="register">
+      <a routerLink="/login">Login</a>
+    </div>
+    
+    <button class="menu-toggle" (click)="toggleMenu()">☰</button>
+  </nav>
+</header>

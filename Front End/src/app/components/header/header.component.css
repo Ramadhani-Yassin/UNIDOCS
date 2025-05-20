@@ -1,0 +1,233 @@
+/* header.component.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10000;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 5%;
+  height: 80px;
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+
+.logo {
+  font-size: 1.8em;
+  letter-spacing: 2px;
+  font-weight: 600;
+}
+
+.logo a {
+  color: white;
+  text-decoration: none;
+}
+
+.menu ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+.menu a {
+  text-decoration: none;
+  color: white;
+  padding: 10px 15px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.menu a:hover {
+  color: #ffeb3b;
+  background: rgba(255, 255, 255, 0.1);
+  filter: contrast(60%);
+}
+
+.dropdown {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.dashboard-link {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  font-size: 0.7em;
+  transition: transform 0.3s ease;
+}
+
+.dropdown.open .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: rgba(37, 117, 252, 0.95);
+  padding: 10px 0;
+  border-radius: 5px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  min-width: 180px;
+  backdrop-filter: blur(5px);
+  z-index: 1001;
+}
+
+.submenu-item {
+  padding: 8px 20px;
+  transition: all 0.2s ease;
+}
+
+.submenu-item:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.menu-icon {
+  font-size: 0.6em;
+  margin-right: 10px;
+  opacity: 0.8;
+}
+
+.student-link .menu-icon {
+  color: #4CAF50;
+}
+
+.admin-link .menu-icon {
+  color: #FF5722;
+}
+
+/* Changed this to only use .open class */
+.dropdown.open .submenu {
+  display: block;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+.register a {
+  text-decoration: none;
+  color: white;
+  padding: 10px 25px;
+  font-size: 16px;
+  border-radius: 5px;
+  background: #e74c3c;
+  transition: all 0.3s ease;
+}
+
+.register a:hover {
+  background: #c0392b;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .menu {
+    position: absolute;
+    top: 80px;
+    left: 0;
+    width: 100%;
+    background: rgba(37, 117, 252, 0.95);
+    display: none;
+    flex-direction: column;
+    text-align: center;
+    padding: 15px 0;
+    transition: all 0.4s ease-in-out;
+    backdrop-filter: blur(5px);
+  }
+
+  .menu.open {
+    display: flex;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+    animation: slideDown 0.4s ease-in-out;
+  }
+
+  .menu ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .dropdown .submenu {
+    position: static;
+    display: none;
+    background: rgba(255, 255, 255, 0.1);
+
+    box-shadow: none;
+    width: 100%;
+    animation: none;
+  }
+
+  .dropdown.open .submenu {
+    display: block;
+  }
+
+  .dropdown-icon {
+    display: inline-block; /* Show on mobile too */
+  }
+
+  .register {
+    display: none;
+  }
+
+  .menu-toggle {
+    display: block;
+  }
+
+  @keyframes slideDown {
+    from {
+      transform: translateY(-20px);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+}
+
+/* Additional fix for desktop hover issue */
+@media (min-width: 769px) {
+  .dropdown:hover .submenu {
+    display: none; /* Disable hover behavior completely */
+  }
+  
+  .submenu {
+    display: none !important; /* Force hide unless explicitly opened */
+  }
+  
+  .dropdown.open .submenu {
+    display: block !important; /* Only show when opened */
+  }
+}

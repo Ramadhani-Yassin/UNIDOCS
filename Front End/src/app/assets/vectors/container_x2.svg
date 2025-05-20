@@ -1,0 +1,28 @@
+<svg width="1226" height="576" viewBox="0 0 1226 576" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g opacity="0.7" filter="url(#filter59_18)">
+<path d="M502.343,0.138C544.92,-3.283 561.978,57.871 589.998,90.162C609.986,113.198 623.882,138.714 643.12,162.382C670.664,196.267 734.952,216.152 727.386,259.186C719.708,302.852 644.646,291.644 614.658,324.256C586.218,355.184 599.418,414.436 563.948,436.924C528.766,459.228 480.271,449.436 441.604,433.968C404.575,419.156 380.063,385.63 356.04,353.754C333.431,323.754 310.355,292.36 306.688,254.954C303.094,218.284 313.674,179.926 336.141,150.752C356.726,124.022 398.288,126.204 423.281,103.555C456.09,73.823 458.24,3.681 502.343,0.138Z" clip-rule="evenodd" fill-rule="evenodd" fill="#208FBF"/>
+</g>
+<g opacity="0.7" filter="url(#filter59_19)">
+<path d="M178.911,108.723C213.684,127.852 212.148,210.196 242.142,243.069C269.412,272.954 315.98,243.266 337.494,282.525C358.468,320.798 353.09,380.826 343.81,428.59C335.122,473.298 312.764,508.556 288.162,536.406C266.814,560.57 240.682,570.878 214.22,575.278C191.085,579.124 169.413,566.666 146.564,559.948C120.957,552.418 94.509,553.234 71.914,533.436C42.968,508.076 2.823,482.23 0.111,431.628C-2.648,380.14 46.772,357.64 59.943,310.016C73.805,259.891 53.424,192.861 77.332,152.408C101.33,111.803 145.139,90.145 178.911,108.723Z" clip-rule="evenodd" fill-rule="evenodd" fill="#208FBF"/>
+</g>
+<g opacity="0.7" filter="url(#filter59_20)">
+<path d="M946.162,87.631C980.296,96.278 996.044,137.535 1030.048,146.635C1081.55,160.417 1145.78,120.424 1187.648,152.251C1225.258,180.844 1238.248,246.596 1212.842,285.598C1182.992,331.42 1097.806,308.404 1059.876,348.39C1033.806,375.874 1066.722,423.974 1049.874,457.402C1026.304,504.17 997.774,590.108 946.162,574.022C884.144,554.692 931.602,434.492 875.298,402.99C819.536,371.79 742.772,459.58 686.719,428.86C642.007,404.356 648.992,333.506 661.099,285.598C672.574,240.194 718.33,212.767 750.263,177.423C776.352,148.547 796.004,112.949 831.987,96.456C867.016,80.4 908.614,78.117 946.162,87.631Z" clip-rule="evenodd" fill-rule="evenodd" fill="#208FBF" stroke="#000000" stroke-width="1" stroke-miterlimit="3.999327"/>
+</g>
+<defs>
+<filter id="filter59_18" x="206" y="-100" width="411" height="425" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="50" result="0foregroundblur"/>
+</filter>
+<filter id="filter59_19" x="-100" y="2" width="376" height="437" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="50" result="0foregroundblur"/>
+</filter>
+<filter id="filter59_20" x="552" y="-18" width="487" height="447" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+<feFlood flood-opacity="0" result="BackgroundImageFix"/>
+<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+<feGaussianBlur stdDeviation="50" result="0foregroundblur"/>
+</filter>
+</defs>
+</svg>

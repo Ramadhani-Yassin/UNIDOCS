@@ -1,0 +1,139 @@
+<app-student-nav></app-student-nav>
+
+<!-- MAIN CONTENT -->
+<section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Request Letter</h1>
+        <ul class="breadcrumb">
+          <li><a href="#">Request Letter</a></li>
+          <li><i class="bx bx-chevron-right"></i></li>
+          <li><a class="active" routerLink="/dashboard">Back to Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="request-container">
+      <!-- FORM COLUMN (NOW FIRST) -->
+      <div class="form-column">
+        <div class="form-container">
+          <form id="letterRequestForm">
+            <h2><i class='bx bx-file'></i> Request for Official University Letter</h2>
+            
+            <div class="form-group">
+              <label for="fullname">Full Name:</label>
+              <input type="text" id="fullname" name="fullname" required>
+            </div>
+
+            <div class="form-group">
+              <label for="reg_number">Registration Number:</label>
+              <input type="text" id="reg_number" name="reg_number" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address:</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone">Phone Number:</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+
+            <div class="form-group">
+              <label for="program">Program of Study:</label>
+              <input type="text" id="program" name="program" required>
+            </div>
+
+            <div class="form-group">
+              <label for="year_of_study">Year of Study:</label>
+              <select id="year_of_study" name="year_of_study" required>
+                <option value="" disabled selected>Select Year</option>
+                <option value="1">1st Year</option>
+                <option value="2">2nd Year</option>
+                <option value="3">3rd Year</option>
+                <option value="4">4th Year</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="letter_type">Select Letter Type:</label>
+              <select id="letter_type" name="letter_type" required>
+                <option value="" disabled selected>Select Letter Type</option>
+                <option value="field_office">Field Office Letter</option>
+                <option value="feasibility_study">Feasibility Study Request</option>
+                <option value="postponement">Postponement Request</option>
+                <option value="discontinuation">Discontinuation Letter</option>
+                <option value="internship">Internship/Industrial Training Letter</option>
+                <option value="scholarship">Scholarship Recommendation</option>
+                <option value="transcript">Transcript Request</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="reason">Reason for Request (Optional):</label>
+              <textarea id="reason" name="reason" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="supporting_docs">Upload Supporting Documents (if required):</label>
+              <input type="file" id="supporting_docs" name="supporting_docs">
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-submit">
+                <i class='bx bx-send'></i> Submit Request
+              </button>
+              <button type="reset" class="btn-cancel">
+                <i class='bx bx-reset'></i> Clear Form
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- INSTRUCTIONS COLUMN (NOW SECOND) -->
+      <div class="instructions-column">
+        <div class="info-box" style="margin-top: 20px;">
+          <h3><i class='bx bx-info-circle'></i> How to Request a Letter</h3>
+          <div class="step">
+            <h4>Step 1: Fill the Request Form</h4>
+            <p>Complete all required fields with accurate information.</p>
+          </div>
+          <div class="step">
+            <h4>Step 2: Submit Supporting Documents</h4>
+            <p>Upload any required documents (if applicable).</p>
+          </div>
+          <div class="step">
+            <h4>Step 3: Review & Submit</h4>
+            <p>Double-check your information before submission.</p>
+          </div>
+          <div class="step">
+            <h4>Step 4: Track Your Request</h4>
+            <p>Monitor your dashboard for approval status updates.</p>
+          </div>
+        </div>
+
+        <div class="letter-types">
+          <h3><i class='bx bx-list-ul'></i> Available Letter Types</h3>
+          <ul>
+            <li><strong>Field Office Letter</strong> - For fieldwork authorization</li>
+            <li><strong>Feasibility Study</strong> - Research permission letter</li>
+            <li><strong>Postponement</strong> - Temporary study break request</li>
+            <li><strong>Transcript Request</strong> - Official academic records</li>
+            <li><strong>Internship Letter</strong> - Industrial training approval</li>
+          </ul>
+        </div>
+
+        <div class="support-box">
+          <h3><i class='bx bx-support'></i> Need Help?</h3>
+          <p>Contact the Registrar's Office:</p>
+          <p><i class='bx bx-phone'></i> +255 777 123 456</p>
+          <p><i class='bx bx-envelope'></i> registrar@suza.ac.tz</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>

@@ -1,0 +1,73 @@
+<!-- Mobile overlay -->
+<div class="sidebar-overlay" 
+     *ngIf="(sidebarService.isOpen$ | async) && isMobile"
+     (click)="sidebarService.close()"></div>
+
+<!-- SIDEBAR -->
+<section id="sidebar" [class.hide]="!(sidebarService.isOpen$ | async)">
+  <a routerLink="/admin-portal" class="brand">
+    <i class="bx bxs-file-doc"></i>
+    <span class="text">UNIDOCS</span>
+  </a>
+  <ul class="side-menu top">
+    <li class="active">
+      <a routerLink="/admin-portal">
+        <i class="bx bxs-dashboard"></i>
+        <span class="text">Dashboard</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/general-analytics">
+        <i class="bx bx-bar-chart"></i>
+        <span class="text">Overall Analytics</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/students-management">
+        <i class="bx bxs-user-check"></i>
+        <span class="text">Student Management</span>
+      </a>
+    </li>
+    <li>
+      <a routerLink="/approved-letters">
+        <i class='bx bx-broadcast'></i>
+        <span class="text">Publish Announcements</span>
+      </a>
+    </li>
+  </ul>
+  <ul class="side-menu">
+    <li>
+      <a routerLink="/settings">
+        <i class="bx bxs-cog"></i>
+        <span class="text">Settings</span>
+      </a>
+    </li>
+    <li>
+      <a href="#" class="logout">
+        <i class="bx bxs-log-out-circle"></i>
+        <span class="text">Logout</span>
+      </a>
+    </li>
+  </ul>
+</section>
+
+<!-- NAVBAR -->
+<nav [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
+  <i (click)="toggleSidebar()" class="bx bx-menu"></i>
+  <a href="#" class="nav-link">Categories</a>
+  <form action="#">
+    <div class="form-input">
+      <input type="search" placeholder="Search letter requests..." />
+      <button type="button" class="search-btn">
+        <i class="bx bx-search"></i>
+      </button>
+    </div>
+  </form>
+  <a href="#" class="notification">
+    <i class="bx bxs-bell"></i>
+    <span class="num">5</span>
+  </a>
+  <a href="#" class="profile">
+    <img src="https://secure.gravatar.com/avatar/admin" />
+  </a>
+</nav>

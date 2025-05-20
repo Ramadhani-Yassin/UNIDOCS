@@ -1,0 +1,85 @@
+<app-header></app-header>
+<!-- Header Component -->
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+  />
+  <link rel="stylesheet" href="admin-login.component.css" />
+  <title>Modern Login Page | AsmrProg</title>
+</head>
+
+<body>
+  <br /><br /><br />
+  <div class="container" [class.active]="isActive" #container>
+    <div class="form-container sign-up">
+      <form>
+        <h1>Create Account</h1>
+        <div class="social-icons">
+          <a href="#" class="icon"><i class="fa-brands fa-google-plus-g"></i></a>
+          <a href="#" class="icon"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+          <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+        </div>
+        <span>or use your email for registration</span>
+        <input type="text" placeholder="Name" />
+        <input type="email" placeholder="Email" />
+        <input type="password" placeholder="Password" />
+        <button>Sign Up</button>
+      </form>
+    </div>
+
+    <div class="form-container sign-in">
+      <form (ngSubmit)="onSubmit(loginForm)" #loginForm="ngForm">
+        <h1>Admin Login</h1>
+        
+        <input 
+          [(ngModel)]="credentials.email" 
+          name="email" 
+          type="email" 
+          required
+          placeholder="Email"
+        />
+        <input 
+          [(ngModel)]="credentials.password" 
+          name="password" 
+          type="password" 
+          required
+          placeholder="Password"
+        />
+        <input type="hidden" [(ngModel)]="credentials.role" name="role" value="admin">
+        
+        <button type="submit" [disabled]="loading">
+          <span *ngIf="!loading">Login</span>
+          <span *ngIf="loading">Authenticating...</span>
+        </button>
+        
+        <!-- Message Display -->
+        <div *ngIf="message" class="message" [ngClass]="{'error': isError, 'success': !isError}">
+          {{ message }}
+        </div>
+      </form>
+    </div>
+
+    <div class="toggle-container">
+      <div class="toggle">
+        <div class="toggle-panel toggle-left">
+          <h1>Welcome Back!</h1>
+          <!--<p>Enter your personal details to use all of site features</p>-->
+          <button class="hidden" (click)="toggleActive(false)">Sign In</button>
+        </div>
+        <div class="toggle-panel toggle-right">
+          <h1>Administrators</h1>
+          <p>Enter Email and Password to Log in As an Admin</p>
+          <!--<button class="hidden" (click)="toggleActive(true)">Sign Up</button>-->
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+<app-footer></app-footer>
+<!-- Footer Component -->

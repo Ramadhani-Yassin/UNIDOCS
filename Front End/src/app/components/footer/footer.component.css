@@ -1,0 +1,47 @@
+/* Ensures body and html take full height */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column; /* Stack elements vertically */
+}
+
+/* Main content section styling */
+main {
+  flex: 1; /* Makes the main content area expand to take up available space */
+  padding-bottom: 60px; /* Add padding at the bottom to prevent overlap with the footer */
+}
+
+/* Footer styling */
+footer {
+  background: linear-gradient(45deg, #6a11cb, #2575fc);
+  color: white;
+  padding: 15px 0;
+  width: 100%;
+  position: relative;  /* Positioned normally within the flow */
+  margin-top: auto;    /* Pushes the footer to the bottom */
+}
+
+/* Container inside footer */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-size: 16px;
+}
+
+/* Spacer (if needed) */
+.spacer {
+  flex-grow: 1;
+  margin: 0 20px;
+}
