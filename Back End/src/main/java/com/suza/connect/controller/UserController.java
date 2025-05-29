@@ -54,6 +54,18 @@ public class UserController {
         }
     }
 
+
+            @GetMapping("/{id}")
+                    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+                 return userService.findById(id)
+                .map(user -> ResponseEntity.ok(Map.of(
+                "firstName", user.getFirstName(),
+                "lastName", user.getLastName(),
+                "email", user.getEmail()
+            )))
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(Map.of("error", "User not found")));
+}
     @PostMapping("/migrate-passwords")
     public ResponseEntity<?> migratePasswords() {
         userService.migratePlainTextPasswords();

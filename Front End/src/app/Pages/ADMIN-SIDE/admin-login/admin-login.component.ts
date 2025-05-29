@@ -35,7 +35,7 @@ export class AdminLoginComponent {
       next: (response) => {
         this.showMessage('Admin login successful! Redirecting...', false);
         setTimeout(() => {
-          this.router.navigate(['/admin-dashboard']);
+          this.router.navigate(['/admin-portal']);
         }, 1500);
       },
       error: (error) => {

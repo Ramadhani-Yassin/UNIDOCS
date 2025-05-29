@@ -1,0 +1,44 @@
+INSERT INTO public.letter_template (
+    id,
+    name,
+    description,
+    template_path,
+    created_at,
+    updated_at,
+    code,
+    required_fields,
+    placeholders,
+    is_active,
+    template_type
+)
+VALUES (
+    uuid_generate_v4(),
+    'Postponement Letter Template',
+    'DOCX template used to generate letters for study postponement requests at SUZA.',
+    '/home/ramah/Documents/FYP/templates/postponeTemplate.docx',
+    CURRENT_TIMESTAMP,
+    CURRENT_TIMESTAMP,
+    'POSTPONE',
+    '[
+        "fullName",
+        "yearofStudies",
+        "studyProgram",
+        "regNumber",
+        "requestReason",
+        "date",
+        "phoneNumber",
+        "email"
+    ]'::jsonb,
+    '{
+        "fullName": "{{ fullName }}",
+        "yearofStudies": "{{ yearofStudies }}",
+        "studyProgram": "{{ studyProgram }}",
+        "regNumber": "{{ regNumber }}",
+        "requestReason": "{{ requestReason }}",
+        "date": "{{ date }}",
+        "phoneNumber": "{{ phoneNumber }}",
+        "email": "{{ email }}"
+    }'::jsonb,
+    true,
+    'DOCX'
+);

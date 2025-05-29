@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    container_name: suza_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: suza
+      POSTGRES_USER: ramah
+      POSTGRES_PASSWORD: Ramah5656
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: suza_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: yasynramah@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: Ramah5656
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

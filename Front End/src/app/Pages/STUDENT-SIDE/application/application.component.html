@@ -21,29 +21,41 @@
           <form id="letterRequestForm">
             <h2><i class='bx bx-file'></i> Request for Official University Letter</h2>
             
+            <!-- Full Name Field -->
             <div class="form-group">
               <label for="fullname">Full Name:</label>
-              <input type="text" id="fullname" name="fullname" required>
+              <input type="text" id="fullname" name="fullname" 
+                     [(ngModel)]="fullName" required readonly
+                     class="form-control"
+                     [class.is-loading]="isLoading">
+              <div *ngIf="isLoading" class="loading-text">Loading user data...</div>
+              <div *ngIf="errorMessage" class="error-text">{{ errorMessage }}</div>
             </div>
 
             <div class="form-group">
               <label for="reg_number">Registration Number:</label>
-              <input type="text" id="reg_number" name="reg_number" required>
+              <input type="text" id="reg_number" name="reg_number" placeholder="Write on this Format eg: BITA/6/22/079/TZ" required>
             </div>
 
+            <!-- Email Field -->
             <div class="form-group">
               <label for="email">Email Address:</label>
-              <input type="email" id="email" name="email" required>
+              <input type="email" id="email" name="email" 
+                     [(ngModel)]="email" required readonly
+                     class="form-control"
+                     [class.is-loading]="isLoading">
+              <div *ngIf="isLoading" class="loading-text">Loading email...</div>
             </div>
 
+            <!-- Rest of your existing form fields -->
             <div class="form-group">
               <label for="phone">Phone Number:</label>
-              <input type="tel" id="phone" name="phone" required>
+              <input type="tel" id="phone" name="phone" placeholder="Write Your Phone No:" required>
             </div>
 
             <div class="form-group">
               <label for="program">Program of Study:</label>
-              <input type="text" id="program" name="program" required>
+              <input type="text" id="program" name="program" placeholder="eg: Bachelor's Degree in ICT with Accounting (BITA)" required>
             </div>
 
             <div class="form-group">
@@ -59,27 +71,38 @@
 
             <div class="form-group">
               <label for="letter_type">Select Letter Type:</label>
-              <select id="letter_type" name="letter_type" required>
+              <select id="letter_type" name="letter_type" required
+                      (change)="onLetterTypeChange($event)">
                 <option value="" disabled selected>Select Letter Type</option>
-                <option value="field_office">Field Office Letter</option>
-                <option value="feasibility_study">Feasibility Study Request</option>
+                <option value="introduction">Introduction Letter for Field</option>
                 <option value="postponement">Postponement Request</option>
+                <option value="feasibility_study">Feasibility Study Request</option>
                 <option value="discontinuation">Discontinuation Letter</option>
-                <option value="internship">Internship/Industrial Training Letter</option>
-                <option value="scholarship">Scholarship Recommendation</option>
+                <option value="scholarship">Recommendation Letter</option>
                 <option value="transcript">Transcript Request</option>
-                <option value="other">Other</option>
               </select>
             </div>
 
-            <div class="form-group">
-              <label for="reason">Reason for Request (Optional):</label>
+            <div class="form-group" *ngIf="showReasonField">
+              <label for="reason">Reason for Request:</label>
               <textarea id="reason" name="reason" rows="4"></textarea>
             </div>
 
-            <div class="form-group">
-              <label for="supporting_docs">Upload Supporting Documents (if required):</label>
-              <input type="file" id="supporting_docs" name="supporting_docs">
+            <!-- Additional Fields for Introduction Letter -->
+            <div *ngIf="showIntroductionFields">
+              <div class="form-group">
+                <label for="organization_name">Organization Name:</label>
+                <input type="text" id="organization_name" name="organization_name" 
+                       placeholder="e.g. AFRICOM Ltd" required>
+              </div>
+              <div class="form-group">
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" required>
+              </div>
+              <div class="form-group">
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" required>
+              </div>
             </div>
 
             <div class="form-actions">

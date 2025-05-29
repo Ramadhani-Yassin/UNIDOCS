@@ -1,4 +1,4 @@
-package com.suza.connect.config;
+package com.suza.connect;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,16 +36,19 @@ public class SecurityConfig {
                     "/api/admin/register",
                     "/api/admin/login"
                 ).permitAll()
-                
+
+                // Allow public GET access to /api/users/{id}
+                .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
+
                 // Password migration endpoint (temporary)
                 .requestMatchers(HttpMethod.POST, "/api/users/migrate-passwords").permitAll()
-                
-                // User endpoints
+
+                // Authenticated user endpoints
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
-                
-                // Admin endpoints
+
+                // Admin-only endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                
+
                 // All other requests require authentication
                 .anyRequest().authenticated()
             )
