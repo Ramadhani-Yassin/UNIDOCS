@@ -12,6 +12,78 @@
     margin-top: 24px;
   }
   
+
+  /* Alert Styles */
+.alert-container {
+  margin: 15px;
+  max-width: 1200px;
+}
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.alert-success {
+  color: #3c763d;
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+}
+
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+
+.alert i {
+  margin-right: 10px;
+  font-size: 1.2em;
+}
+
+.close {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Form Validation */
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.is-loading {
+  background-color: #f8f9fa;
+  opacity: 0.7;
+}
+
+.loading-text {
+  color: #6c757d;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
+/* Button States */
+button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* Existing styles remain the same */
+
+
   /* COLUMNS STRUCTURE */
   .instructions-column {
     flex: 1;

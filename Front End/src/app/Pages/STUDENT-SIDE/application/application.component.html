@@ -14,11 +14,22 @@
       </div>
     </div>
 
+    <!-- Alert Messages -->
+    <div *ngIf="showAlert" class="alert-container">
+      <div [class]="'alert alert-' + alertType">
+        <i [class]="alertType === 'success' ? 'bx bx-check-circle' : 'bx bx-error-circle'"></i>
+        {{ alertType === 'success' ? successMessage : errorMessage }}
+        <button type="button" class="close" (click)="showAlert = false">
+          <i class='bx bx-x'></i>
+        </button>
+      </div>
+    </div>
+
     <div class="request-container">
-      <!-- FORM COLUMN (NOW FIRST) -->
+      <!-- FORM COLUMN -->
       <div class="form-column">
         <div class="form-container">
-          <form id="letterRequestForm">
+          <form #letterRequestForm="ngForm" (ngSubmit)="onSubmit()">
             <h2><i class='bx bx-file'></i> Request for Official University Letter</h2>
             
             <!-- Full Name Field -->
@@ -29,12 +40,18 @@
                      class="form-control"
                      [class.is-loading]="isLoading">
               <div *ngIf="isLoading" class="loading-text">Loading user data...</div>
-              <div *ngIf="errorMessage" class="error-text">{{ errorMessage }}</div>
             </div>
 
+            <!-- Registration Number -->
             <div class="form-group">
               <label for="reg_number">Registration Number:</label>
-              <input type="text" id="reg_number" name="reg_number" placeholder="Write on this Format eg: BITA/6/22/079/TZ" required>
+              <input type="text" id="reg_number" name="reg_number" 
+                     [(ngModel)]="regNumber" #regNumberInput="ngModel" required
+                     placeholder="Write on this Format eg: BITA/6/22/079/TZ"
+                     [class.is-invalid]="regNumberInput.invalid && regNumberInput.touched">
+              <div *ngIf="regNumberInput.invalid && regNumberInput.touched" class="invalid-feedback">
+                Registration number is required
+              </div>
             </div>
 
             <!-- Email Field -->
@@ -44,35 +61,56 @@
                      [(ngModel)]="email" required readonly
                      class="form-control"
                      [class.is-loading]="isLoading">
-              <div *ngIf="isLoading" class="loading-text">Loading email...</div>
             </div>
 
-            <!-- Rest of your existing form fields -->
+            <!-- Phone Number -->
             <div class="form-group">
               <label for="phone">Phone Number:</label>
-              <input type="tel" id="phone" name="phone" placeholder="Write Your Phone No:" required>
+              <input type="tel" id="phone" name="phone" 
+                     [(ngModel)]="phone" #phoneInput="ngModel" required
+                     placeholder="Write Your Phone No:"
+                     [class.is-invalid]="phoneInput.invalid && phoneInput.touched">
+              <div *ngIf="phoneInput.invalid && phoneInput.touched" class="invalid-feedback">
+                Phone number is required
+              </div>
             </div>
 
+            <!-- Program of Study -->
             <div class="form-group">
               <label for="program">Program of Study:</label>
-              <input type="text" id="program" name="program" placeholder="eg: Bachelor's Degree in ICT with Accounting (BITA)" required>
+              <input type="text" id="program" name="program" 
+                     [(ngModel)]="program" #programInput="ngModel" required
+                     placeholder="eg: Bachelor's Degree in ICT with Accounting (BITA)"
+                     [class.is-invalid]="programInput.invalid && programInput.touched">
+              <div *ngIf="programInput.invalid && programInput.touched" class="invalid-feedback">
+                Program of study is required
+              </div>
             </div>
 
+            <!-- Year of Study -->
             <div class="form-group">
               <label for="year_of_study">Year of Study:</label>
-              <select id="year_of_study" name="year_of_study" required>
+              <select id="year_of_study" name="year_of_study" 
+                      [(ngModel)]="yearOfStudy" #yearOfStudyInput="ngModel" required
+                      [class.is-invalid]="yearOfStudyInput.invalid && yearOfStudyInput.touched">
                 <option value="" disabled selected>Select Year</option>
                 <option value="1">1st Year</option>
                 <option value="2">2nd Year</option>
                 <option value="3">3rd Year</option>
                 <option value="4">4th Year</option>
               </select>
+              <div *ngIf="yearOfStudyInput.invalid && yearOfStudyInput.touched" class="invalid-feedback">
+                Year of study is required
+              </div>
             </div>
 
+            <!-- Letter Type -->
             <div class="form-group">
               <label for="letter_type">Select Letter Type:</label>
-              <select id="letter_type" name="letter_type" required
-                      (change)="onLetterTypeChange($event)">
+              <select id="letter_type" name="letter_type" 
+                      [(ngModel)]="selectedLetterType" #letterTypeInput="ngModel" required
+                      (change)="onLetterTypeChange($event)"
+                      [class.is-invalid]="letterTypeInput.invalid && letterTypeInput.touched">
                 <option value="" disabled selected>Select Letter Type</option>
                 <option value="introduction">Introduction Letter for Field</option>
                 <option value="postponement">Postponement Request</option>
@@ -81,35 +119,203 @@
                 <option value="scholarship">Recommendation Letter</option>
                 <option value="transcript">Transcript Request</option>
               </select>
+              <div *ngIf="letterTypeInput.invalid && letterTypeInput.touched" class="invalid-feedback">
+                Letter type is required
+              </div>
             </div>
 
+            <!-- Postponement Reason Field -->
             <div class="form-group" *ngIf="showReasonField">
               <label for="reason">Reason for Request:</label>
-              <textarea id="reason" name="reason" rows="4"></textarea>
+              <textarea id="reason" name="reason" rows="4"
+                     [(ngModel)]="reason" #reasonInput="ngModel" required
+                     [class.is-invalid]="reasonInput.invalid && reasonInput.touched"></textarea>
+              <div *ngIf="reasonInput.invalid && reasonInput.touched" class="invalid-feedback">
+                Reason is required
+              </div>
+              
+              <label for="effective_date">Effective Date:</label>
+              <input type="date" id="effective_date" name="effective_date" 
+                     [(ngModel)]="effectiveDate" #effectiveDateInput="ngModel" required
+                     [class.is-invalid]="effectiveDateInput.invalid && effectiveDateInput.touched">
+              <div *ngIf="effectiveDateInput.invalid && effectiveDateInput.touched" class="invalid-feedback">
+                Effective date is required
+              </div>
             </div>
 
-            <!-- Additional Fields for Introduction Letter -->
+            <!-- Introduction Letter Fields -->
             <div *ngIf="showIntroductionFields">
               <div class="form-group">
                 <label for="organization_name">Organization Name:</label>
                 <input type="text" id="organization_name" name="organization_name" 
-                       placeholder="e.g. AFRICOM Ltd" required>
+                       [(ngModel)]="organizationName" #orgNameInput="ngModel" required
+                       placeholder="e.g. AFRICOM Ltd"
+                       [class.is-invalid]="orgNameInput.invalid && orgNameInput.touched">
+                <div *ngIf="orgNameInput.invalid && orgNameInput.touched" class="invalid-feedback">
+                  Organization name is required
+                </div>
               </div>
               <div class="form-group">
                 <label for="start_date">Start Date:</label>
-                <input type="date" id="start_date" name="start_date" required>
+                <input type="date" id="start_date" name="start_date" 
+                       [(ngModel)]="startDate" #startDateInput="ngModel" required
+                       [class.is-invalid]="startDateInput.invalid && startDateInput.touched">
+                <div *ngIf="startDateInput.invalid && startDateInput.touched" class="invalid-feedback">
+                  Start date is required
+                </div>
               </div>
               <div class="form-group">
                 <label for="end_date">End Date:</label>
-                <input type="date" id="end_date" name="end_date" required>
+                <input type="date" id="end_date" name="end_date" 
+                       [(ngModel)]="endDate" #endDateInput="ngModel" required
+                       [class.is-invalid]="endDateInput.invalid && endDateInput.touched">
+                <div *ngIf="endDateInput.invalid && endDateInput.touched" class="invalid-feedback">
+                  End date is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Feasibility Study Fields -->
+            <div *ngIf="showFeasibilityFields">
+              <div class="form-group">
+                <label for="research_title">Research Title:</label>
+                <input type="text" id="research_title" name="research_title" 
+                       [(ngModel)]="researchTitle" #researchTitleInput="ngModel" required
+                       placeholder="e.g. Impact of Digital Transformation on SMEs"
+                       [class.is-invalid]="researchTitleInput.invalid && researchTitleInput.touched">
+                <div *ngIf="researchTitleInput.invalid && researchTitleInput.touched" class="invalid-feedback">
+                  Research title is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="feasibility_organization">Organization Name:</label>
+                <input type="text" id="feasibility_organization" name="feasibility_organization" 
+                       [(ngModel)]="feasibilityOrganization" #feasOrgInput="ngModel" required
+                       placeholder="e.g. AFRICOM Ltd"
+                       [class.is-invalid]="feasOrgInput.invalid && feasOrgInput.touched">
+                <div *ngIf="feasOrgInput.invalid && feasOrgInput.touched" class="invalid-feedback">
+                  Organization name is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="study_start_date">Study Start Date:</label>
+                <input type="date" id="study_start_date" name="study_start_date" 
+                       [(ngModel)]="studyStartDate" #studyStartDateInput="ngModel" required
+                       [class.is-invalid]="studyStartDateInput.invalid && studyStartDateInput.touched">
+                <div *ngIf="studyStartDateInput.invalid && studyStartDateInput.touched" class="invalid-feedback">
+                  Start date is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="study_end_date">Study End Date:</label>
+                <input type="date" id="study_end_date" name="study_end_date" 
+                       [(ngModel)]="studyEndDate" #studyEndDateInput="ngModel" required
+                       [class.is-invalid]="studyEndDateInput.invalid && studyEndDateInput.touched">
+                <div *ngIf="studyEndDateInput.invalid && studyEndDateInput.touched" class="invalid-feedback">
+                  End date is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Discontinuation Fields -->
+            <div *ngIf="showDiscontinuationFields">
+              <div class="form-group">
+                <label for="discontinuation_reason">Reason for Discontinuation:</label>
+                <textarea id="discontinuation_reason" name="discontinuation_reason" rows="4"
+                       [(ngModel)]="discontinuationReason" #discontinuationReasonInput="ngModel" required
+                       [class.is-invalid]="discontinuationReasonInput.invalid && discontinuationReasonInput.touched"></textarea>
+                <div *ngIf="discontinuationReasonInput.invalid && discontinuationReasonInput.touched" class="invalid-feedback">
+                  Reason is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="effective_date">Effective Date:</label>
+                <input type="date" id="effective_date" name="effective_date" 
+                       [(ngModel)]="effectiveDate" #effectiveDateInput="ngModel" required
+                       [class.is-invalid]="effectiveDateInput.invalid && effectiveDateInput.touched">
+                <div *ngIf="effectiveDateInput.invalid && effectiveDateInput.touched" class="invalid-feedback">
+                  Effective date is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommendation Letter Fields -->
+            <div *ngIf="showRecommendationFields">
+              <div class="form-group">
+                <label for="recommendation_purpose">Purpose of Recommendation:</label>
+                <select id="recommendation_purpose" name="recommendation_purpose" 
+                        [(ngModel)]="recommendationPurpose" #recommendationPurposeInput="ngModel" required
+                        [class.is-invalid]="recommendationPurposeInput.invalid && recommendationPurposeInput.touched">
+                  <option value="" disabled selected>Select Purpose</option>
+                  <option value="scholarship">Scholarship Application</option>
+                  <option value="postgraduate">Postgraduate Studies</option>
+                  <option value="employment">Employment Application</option>
+                  <option value="internship">Internship Application</option>
+                </select>
+                <div *ngIf="recommendationPurposeInput.invalid && recommendationPurposeInput.touched" class="invalid-feedback">
+                  Purpose is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="receiving_institution">Receiving Institution:</label>
+                <input type="text" id="receiving_institution" name="receiving_institution" 
+                       [(ngModel)]="receivingInstitution" #receivingInstitutionInput="ngModel" required
+                       placeholder="e.g. University of Dar es Salaam"
+                       [class.is-invalid]="receivingInstitutionInput.invalid && receivingInstitutionInput.touched">
+                <div *ngIf="receivingInstitutionInput.invalid && receivingInstitutionInput.touched" class="invalid-feedback">
+                  Institution name is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="submission_deadline">Submission Deadline:</label>
+                <input type="date" id="submission_deadline" name="submission_deadline" 
+                       [(ngModel)]="submissionDeadline" #submissionDeadlineInput="ngModel" required
+                       [class.is-invalid]="submissionDeadlineInput.invalid && submissionDeadlineInput.touched">
+                <div *ngIf="submissionDeadlineInput.invalid && submissionDeadlineInput.touched" class="invalid-feedback">
+                  Deadline is required
+                </div>
+              </div>
+            </div>
+
+            <!-- Transcript Request Fields -->
+            <div *ngIf="showTranscriptFields">
+              <div class="form-group">
+                <label for="transcript_purpose">Purpose of Transcript:</label>
+                <select id="transcript_purpose" name="transcript_purpose" 
+                        [(ngModel)]="transcriptPurpose" #transcriptPurposeInput="ngModel" required
+                        [class.is-invalid]="transcriptPurposeInput.invalid && transcriptPurposeInput.touched">
+                  <option value="" disabled selected>Select Purpose</option>
+                  <option value="employment">Employment Application</option>
+                  <option value="further_studies">Further Studies</option>
+                  <option value="scholarship">Scholarship Application</option>
+                  <option value="personal_use">Personal Use</option>
+                </select>
+                <div *ngIf="transcriptPurposeInput.invalid && transcriptPurposeInput.touched" class="invalid-feedback">
+                  Purpose is required
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="delivery_method">Delivery Method:</label>
+                <select id="delivery_method" name="delivery_method" 
+                        [(ngModel)]="deliveryMethod" #deliveryMethodInput="ngModel" required
+                        [class.is-invalid]="deliveryMethodInput.invalid && deliveryMethodInput.touched">
+                  <option value="" disabled selected>Select Method</option>
+                  <option value="pickup">Pick Up</option>
+                  <option value="email">Email</option>
+                  <option value="post">Postal Mail</option>
+                </select>
+                <div *ngIf="deliveryMethodInput.invalid && deliveryMethodInput.touched" class="invalid-feedback">
+                  Delivery method is required
+                </div>
               </div>
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-submit">
-                <i class='bx bx-send'></i> Submit Request
+              <button type="submit" class="btn-submit" [disabled]="isLoading">
+                <i class='bx bx-send'></i> 
+                {{ isLoading ? 'Submitting...' : 'Submit Request' }}
               </button>
-              <button type="reset" class="btn-cancel">
+              <button type="button" class="btn-cancel" (click)="clearForm()" [disabled]="isLoading">
                 <i class='bx bx-reset'></i> Clear Form
               </button>
             </div>
@@ -117,7 +323,7 @@
         </div>
       </div>
 
-      <!-- INSTRUCTIONS COLUMN (NOW SECOND) -->
+      <!-- INSTRUCTIONS COLUMN -->
       <div class="instructions-column">
         <div class="info-box" style="margin-top: 20px;">
           <h3><i class='bx bx-info-circle'></i> How to Request a Letter</h3>
@@ -147,6 +353,8 @@
             <li><strong>Postponement</strong> - Temporary study break request</li>
             <li><strong>Transcript Request</strong> - Official academic records</li>
             <li><strong>Internship Letter</strong> - Industrial training approval</li>
+            <li><strong>Recommendation Letter</strong> - For scholarships/jobs</li>
+            <li><strong>Discontinuation Letter</strong> - For study termination</li>
           </ul>
         </div>
 

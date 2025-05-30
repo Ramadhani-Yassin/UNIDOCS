@@ -27,32 +27,35 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable()) // Disabled for API testing, enable in production with proper CSRF token handling
+            .csrf(csrf -> csrf.disable()) // Disable only during development
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints
-                .requestMatchers(HttpMethod.POST, 
+                // Public endpoints (no auth required)
+                .requestMatchers(HttpMethod.POST,
                     "/api/users/register",
                     "/api/users/login",
                     "/api/admin/register",
                     "/api/admin/login"
                 ).permitAll()
 
-                // Allow public GET access to /api/users/{id}
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-
-                // Password migration endpoint (temporary)
                 .requestMatchers(HttpMethod.POST, "/api/users/migrate-passwords").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests/recent/**").permitAll()
 
-                // Authenticated user endpoints
+                
+                // Allow public access to count by email
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
+
+                // Secure endpoints
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
-
-                // Admin-only endpoints
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests/**").hasAnyRole("STUDENT", "ADMIN")
 
-                // All other requests require authentication
+                // Everything else must be authenticated
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.disable()); // Stateless session management
+            .sessionManagement(session -> session.disable()); // Use stateless sessions (e.g., JWT)
 
         return http.build();
     }

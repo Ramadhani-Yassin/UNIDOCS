@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { StudentSidebarService } from '../../../services/student-sidebar.service';
 import { Router } from '@angular/router';
-import { UserService } from '../../../services/user.service'; // ✅ import this
+import { StudentSidebarService } from '../../../services/student-sidebar.service';
+import { LetterRequestService, LetterRequest } from '../../../services/letter-request.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-students',
@@ -9,15 +10,27 @@ import { UserService } from '../../../services/user.service'; // ✅ import this
   styleUrls: ['./Dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  fullName: string = 'Loading...'; // ✅ Placeholder
+  fullName: string = 'Loading...';
+  requestCount: number = 0;
+  isLoading: boolean = true;
+  errorMessage: string | null = null;
+  recentRequests: LetterRequest[] = [];
+  recentRequestsLoading: boolean = true;
 
   constructor(
     public sidebarService: StudentSidebarService,
     private router: Router,
-    private userService: UserService // ✅ inject service
+    private userService: UserService,
+    private letterRequestService: LetterRequestService
   ) {}
 
   ngOnInit(): void {
+    this.loadUserData();
+    this.loadRequestCount();
+    this.loadRecentRequests();
+  }
+
+  private loadUserData(): void {
     const user = this.userService.getCurrentUser();
     if (user) {
       this.fullName = user.firstName && user.lastName
@@ -28,7 +41,72 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  confirmLogout(event: Event) {
+  private loadRequestCount(): void {
+    this.isLoading = true;
+    this.errorMessage = null;
+
+    this.letterRequestService.getLetterRequestCount().subscribe({
+      next: (count) => {
+        this.requestCount = count;
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load request count', err);
+        this.errorMessage = 'Failed to load request count';
+        this.isLoading = false;
+      }
+    });
+  }
+
+  private loadRecentRequests(): void {
+    this.recentRequestsLoading = true;
+
+    this.letterRequestService.getRecentLetterRequests().subscribe({
+      next: (requests) => {
+        this.recentRequests = requests;
+        this.recentRequestsLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load recent requests', err);
+        this.recentRequestsLoading = false;
+      }
+    });
+  }
+
+  getStatusClass(status: string): string {
+    status = status?.toLowerCase() || '';
+    if (status.includes('complete')) return 'completed';
+    if (status.includes('progress')) return 'process';
+    if (status.includes('error')) return 'pending';
+    return 'pending';
+  }
+
+  formatDate(dateString: string): string {
+    // Attempt to parse the date safely
+    try {
+      const parsedDate = new Date(dateString);
+      if (isNaN(parsedDate.getTime())) {
+        return 'Invalid Date';
+      }
+
+      return parsedDate.toLocaleString('en-US', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      }).replace(/\//g, '-');
+    } catch (e) {
+      return 'Invalid Date';
+    }
+  }
+
+  goToApplication(): void {
+    this.router.navigate(['/application']);
+  }
+
+  confirmLogout(event: Event): void {
     event.preventDefault();
     const confirmLogout = confirm('Do you really want to log out of UNIDOCS?');
     if (confirmLogout) {

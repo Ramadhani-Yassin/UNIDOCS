@@ -12,6 +12,83 @@
   margin-left: 60px;
 }
 
+.loading-indicator {
+  color: #666;
+  font-style: italic;
+}
+
+.error-message {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+.dashboard-section {
+  margin-bottom: 20px;
+}
+
+
+.loading-indicator,
+.no-requests {
+    text-align: center;
+    padding: 10px;
+    color: #666;
+}
+
+.status {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.status.completed {
+    background-color: #c8e6c9;
+    color: #256029;
+}
+
+.status.process {
+    background-color: #ffecb3;
+    color: #805b36;
+}
+
+.status.pending {
+    background-color: #ffcdd2;
+    color: #c63737;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+img {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+td p {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+}
+
 /* MAIN */
 #content main {
   width: 100%;

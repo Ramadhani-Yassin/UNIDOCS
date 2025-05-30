@@ -1,1 +1,150 @@
 <app-student-nav></app-student-nav>
+
+<!-- MAIN CONTENT -->
+<section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Profile Settings</h1>
+        <ul class="breadcrumb">
+          <li><a href="#">Settings</a></li>
+          <li><i class="bx bx-chevron-right"></i></li>
+          <li><a class="active" routerLink="/dashboard">Back to Dashboard</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Alert Messages -->
+    <div *ngIf="showAlert" class="alert-container">
+      <div [class]="'alert alert-' + alertType">
+        <i [class]="alertType === 'success' ? 'bx bx-check-circle' : 'bx bx-error-circle'"></i>
+        {{ alertType === 'success' ? successMessage : errorMessage }}
+        <button type="button" class="close" (click)="showAlert = false">
+          <i class='bx bx-x'></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="request-container">
+      <!-- FORM COLUMN -->
+      <div class="form-column">
+        <div class="form-container">
+          <form #profileForm="ngForm" (ngSubmit)="onSubmit()">
+            <h2><i class='bx bx-user'></i> Update Personal Information</h2>
+            
+            <!-- First Name Field -->
+            <div class="form-group">
+              <label for="firstName">First Name:</label>
+              <input type="text" id="firstName" name="firstName" 
+                     [(ngModel)]="firstName" #firstNameInput="ngModel" required
+                     class="form-control"
+                     [class.is-invalid]="firstNameInput.invalid && firstNameInput.touched">
+              <div *ngIf="firstNameInput.invalid && firstNameInput.touched" class="invalid-feedback">
+                First name is required
+              </div>
+            </div>
+
+            <!-- Last Name Field -->
+            <div class="form-group">
+              <label for="lastName">Last Name:</label>
+              <input type="text" id="lastName" name="lastName" 
+                     [(ngModel)]="lastName" #lastNameInput="ngModel" required
+                     class="form-control"
+                     [class.is-invalid]="lastNameInput.invalid && lastNameInput.touched">
+              <div *ngIf="lastNameInput.invalid && lastNameInput.touched" class="invalid-feedback">
+                Last name is required
+              </div>
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group">
+              <label for="email">Email Address:</label>
+              <input type="email" id="email" name="email" 
+                     [(ngModel)]="email" #emailInput="ngModel" required
+                     class="form-control"
+                     [class.is-invalid]="emailInput.invalid && emailInput.touched">
+              <div *ngIf="emailInput.invalid && emailInput.touched" class="invalid-feedback">
+                Valid email is required
+              </div>
+            </div>
+
+            <!-- Verification Status -->
+            <div class="verification-status">
+              <div class="status-item" [class.verified]="isEmailVerified">
+                <i class='bx bx-envelope'></i>
+                <span>
+                  {{ isEmailVerified ? 'Email Verified' : 'Email Not Verified' }}
+                  <small *ngIf="!isEmailVerified">Check your inbox for verification link</small>
+                </span>
+                <i *ngIf="isEmailVerified" class='bx bx-check-circle verified-icon'></i>
+              </div>
+            </div>
+
+            <!-- Password Confirmation -->
+            <div class="form-group">
+              <label for="currentPassword">Confirm Current Password:</label>
+              <input type="password" id="currentPassword" name="currentPassword" 
+                     [(ngModel)]="currentPassword" #currentPasswordInput="ngModel" required
+                     placeholder="Enter your password to confirm changes"
+                     [class.is-invalid]="currentPasswordInput.invalid && currentPasswordInput.touched">
+              <div *ngIf="currentPasswordInput.invalid && currentPasswordInput.touched" class="invalid-feedback">
+                Password is required to save changes
+              </div>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn-submit" [disabled]="isLoading || !profileForm.dirty">
+                <i class='bx bx-save'></i> 
+                {{ isLoading ? 'Saving...' : 'Save Changes' }}
+              </button>
+              <button type="button" class="btn-cancel" (click)="resetForm()" [disabled]="isLoading || !profileForm.dirty">
+                <i class='bx bx-reset'></i> Discard Changes
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- INSTRUCTIONS COLUMN -->
+      <div class="instructions-column">
+        <div class="info-box" style="margin-top: 20px;">
+          <h3><i class='bx bx-info-circle'></i> How to Update Your Information</h3>
+          <div class="step">
+            <h4>Step 1: Edit Your Details</h4>
+            <p>Update your first name, last name, or email address in the form fields.</p>
+          </div>
+          <div class="step">
+            <h4>Step 2: Confirm Password</h4>
+            <p>Enter your current password to verify your identity.</p>
+          </div>
+          <div class="step">
+            <h4>Step 3: Save Changes</h4>
+            <p>Click "Save Changes" to update your profile information.</p>
+          </div>
+          <div class="step">
+            <h4>Step 4: Verify Email (if changed)</h4>
+            <p>If you changed your email, check your inbox for a verification link.</p>
+          </div>
+        </div>
+
+        <div class="letter-types">
+          <h3><i class='bx bx-shield-quarter'></i> Security Guidelines</h3>
+          <ul>
+            <li><strong>Keep your information current</strong> - Ensure your details are always up-to-date.</li>
+            <li><strong>Use a valid email</strong> - Important notifications will be sent to this address.</li>
+            <li><strong>Never share your password</strong> - University staff will never ask for your password.</li>
+            <li><strong>Verify email changes</strong> - Always verify new email addresses immediately.</li>
+          </ul>
+        </div>
+
+        <div class="support-box">
+          <h3><i class='bx bx-support'></i> Need Help?</h3>
+          <p>Contact the IT Support Office:</p>
+          <p><i class='bx bx-phone'></i> +255 777 987 654</p>
+          <p><i class='bx bx-envelope'></i> itsupport@suza.ac.tz</p>
+          <p><i class='bx bx-map'></i> Room 12, Administration Building</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
