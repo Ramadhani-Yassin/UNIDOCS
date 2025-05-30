@@ -62,7 +62,7 @@
   cursor: pointer;
 }
 
-/* Dirty Form Indicator */
+/* Dirty For Indicator */
 .form-container h2::after {
   content: '';
   display: inline-block;
