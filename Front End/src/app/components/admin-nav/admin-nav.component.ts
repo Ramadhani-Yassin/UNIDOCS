@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener, Renderer2 } from '@angular/core';
 import { SidebarService } from '../../services/sidebar.service';
 import { Subscription } from 'rxjs';
+import { Router } from '@angular/router'; // <-- Add this
 
 @Component({
   selector: 'app-admin-nav',
@@ -15,7 +16,8 @@ export class AdminNavComponent implements OnInit, OnDestroy {
 
   constructor(
     public sidebarService: SidebarService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private router: Router // <-- Add this
   ) {
     this.checkScreenSize();
   }
@@ -56,6 +58,14 @@ export class AdminNavComponent implements OnInit, OnDestroy {
 
   toggleSidebar() {
     this.sidebarService.toggle();
+  }
+
+  confirmLogout(event: Event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to logout?')) {
+      // Perform logout logic here (clear tokens, etc.)
+      this.router.navigate(['/']); // Redirect to homepage
+    }
   }
 
   ngOnDestroy() {

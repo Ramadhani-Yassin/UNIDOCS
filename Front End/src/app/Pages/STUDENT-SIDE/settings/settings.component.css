@@ -4,7 +4,7 @@
   width: calc(100% - 280px);
   margin-left: 280px;
   transition: all 0.3s ease;
-  padding-top: 56px;
+  padding-top: 45px;
 }
 
 #content.sidebar-collapsed {

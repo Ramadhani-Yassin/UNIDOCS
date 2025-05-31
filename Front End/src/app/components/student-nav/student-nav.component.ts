@@ -5,7 +5,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-student-nav', // This MUST match what you use in templates
+  selector: 'app-student-nav',
   templateUrl: './student-nav.component.html',
   styleUrls: ['./student-nav.component.css']
 })
@@ -60,24 +60,25 @@ export class StudentNavComponent implements OnInit, OnDestroy {
   confirmLogout(event: Event) {
     event.preventDefault();
     if (confirm('Are you sure you want to logout?')) {
-      // Perform logout
+      // Perform logout logic here (e.g., clear tokens)
+      this.router.navigate(['/']); // Redirect to homepage
     }
   }
 
   private updatePageTitle() {
-  const url = this.router.url;
-  if (url.includes('dashboard')) {
-    this.currentPageTitle = 'Dashboard';
-  } else if (url.includes('students')) {
-    this.currentPageTitle = 'Students';
-  } else if (url.includes('applications')) {
-    this.currentPageTitle = 'Applications';
-  } else if (url.includes('settings')) {
-    this.currentPageTitle = 'Settings';
-  } else if (url.includes('announcements')) {
-    this.currentPageTitle = 'Announcements';
+    const url = this.router.url;
+    if (url.includes('dashboard')) {
+      this.currentPageTitle = 'Dashboard';
+    } else if (url.includes('students')) {
+      this.currentPageTitle = 'Students';
+    } else if (url.includes('applications')) {
+      this.currentPageTitle = 'Applications';
+    } else if (url.includes('settings')) {
+      this.currentPageTitle = 'Settings';
+    } else if (url.includes('announcements')) {
+      this.currentPageTitle = 'Announcements';
+    }
   }
-}
 
   ngOnDestroy() {
     this.sidebarSubscription?.unsubscribe();
