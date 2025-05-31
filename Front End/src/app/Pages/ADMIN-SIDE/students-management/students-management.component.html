@@ -40,7 +40,7 @@
               <th>Registration Date</th>
               <th>Email</th>
               <th>Letters Requested</th>
-              <th>Status</th>
+              <!--<th>Status</th>-->
               <th>Actions</th>
             </tr>
           </thead>
@@ -55,14 +55,14 @@
               <td class="centered">{{ student.registrationDate | date:'dd-MM-yyyy' }}</td>
               <td class="centered">{{ student.email }}</td>
               <td class="centered">{{ student.lettersRequested }}</td>
-              <td class="centered">
+               <!--<td class="centered">
                 <span class="status" [ngClass]="{
                   'completed': student.status === 'active',
                   'pending': student.status === 'suspended'
                 }">
                   {{ student.status | titlecase }}
                 </span>
-              </td>
+              </td>-->
               <td class="actions">
                 <button *ngIf="student.status === 'active'" class="btn-suspend" (click)="suspendStudent(student.id)">
                   <i class="bx bx-pause-circle"></i> Suspend

@@ -21,12 +21,14 @@ import { ApplicationComponent } from './Pages/STUDENT-SIDE/application/applicati
 import { AnnouncementsComponent } from './Pages/STUDENT-SIDE/announcements/announcements.component';
 import { SettingsComponent } from './Pages/STUDENT-SIDE/settings/settings.component';
 import { LettersRequestedComponent } from './Pages/ADMIN-SIDE/letters-requested/letters-requested.component';
-import { ApprovedLettersComponent } from './Pages/ADMIN-SIDE/approved-letters/approved-letters.component';
 import { GeneralAnalyticsComponent } from './Pages/ADMIN-SIDE/general-analytics/general-analytics.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { StudentNavComponent } from './components/student-nav/student-nav.component';
 import { UserService } from './services/user.service';
 import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
+import { PublishAnnouncementsComponent } from './Pages/ADMIN-SIDE/publish-announcements/publish-announcements.component';
+import { StudentSettingsShellComponent } from './Pages/STUDENT-SIDE/student-settings-shell/student-settings-shell.component';
+import { AdminSettingsShellComponent } from './Pages/ADMIN-SIDE/admin-settings-shell/admin-settings-shell.component';
 
 @NgModule({
   declarations: [
@@ -46,11 +48,13 @@ import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-managem
     SettingsComponent,
     ApplicationComponent,
     LettersRequestedComponent,
-    ApprovedLettersComponent,
     GeneralAnalyticsComponent,
     AdminNavComponent,
     StudentNavComponent,
     StudentsManagementComponent,
+    PublishAnnouncementsComponent,
+    StudentSettingsShellComponent,
+    AdminSettingsShellComponent,
   ],
   imports: [
     BrowserModule,
