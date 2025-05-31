@@ -81,6 +81,10 @@ export class LetterRequestService {
             );
     }
 
+    getLetterAnalytics(dateRange: string): Observable<any> {
+        return this.http.get(`/api/analytics?range=${dateRange}`);
+    }
+
     private formatRequestData(request: any): any {
         return {
             fullName: request.fullName,

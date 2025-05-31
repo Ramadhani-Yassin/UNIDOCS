@@ -73,7 +73,7 @@ export class StudentNavComponent implements OnInit, OnDestroy {
     } else if (url.includes('applications')) {
       this.currentPageTitle = 'Applications';
     } else if (url.includes('settings')) {
-      this.currentPageTitle = 'Settings';
+      this.currentPageTitle = 'settings';
     }
   }
 

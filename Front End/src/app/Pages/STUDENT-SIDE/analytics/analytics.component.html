@@ -1,1 +1,208 @@
 <app-student-nav></app-student-nav>
+
+<!-- MAIN CONTENT -->
+<section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Letter Request Analytics</h1>
+        <ul class="breadcrumb">
+          <li><a href="#">Analytics</a></li>
+          <li><i class="bx bx-chevron-right"></i></li>
+          <li><a class="active" routerLink="/dashboard">Back to Dashboard</a></li>
+        </ul>
+      </div>
+      <div class="right">
+        <div class="date-filter">
+          <label for="dateRange">Filter by Date:</label>
+          <select id="dateRange" [(ngModel)]="selectedDateRange" (change)="onDateRangeChange()">
+            <option value="7">Last 7 Days</option>
+            <option value="30" selected>Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="365">Last Year</option>
+            <option value="all">All Time</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Summary Cards -->
+    <div class="summary-cards">
+      <div class="card">
+        <div class="card-icon" style="background: #e6f7ff;">
+          <i class='bx bx-file'></i>
+        </div>
+        <div class="card-info">
+          <h3>Total Requests</h3>
+          <h2>{{ analyticsData?.totalRequests || 0 }}</h2>
+          <p>{{ getPercentageChange('total') }}% from last period</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon" style="background: #f6ffed;">
+          <i class='bx bx-check-circle'></i>
+        </div>
+        <div class="card-info">
+          <h3>Approved</h3>
+          <h2>{{ analyticsData?.approvedRequests || 0 }}</h2>
+          <p>{{ getPercentageChange('approved') }}% from last period</p>
+        </div>
+      </div>
+      
+      <div class="card">
+        <div class="card-icon" style="background: #fff7e6;">
+          <i class='bx bx-time'></i>
+        </div>
+        <div class="card-info">
+          <h3>Pending</h3>
+          <h2>{{ analyticsData?.pendingRequests || 0 }}</h2>
+          <p>{{ getPercentageChange('pending') }}% from last period</p>
+        </div>
+      </div>
+      
+     <!--<div class="card">
+        <div class="card-icon" style="background: #fff1f0;">
+          <i class='bx bx-x-circle'></i>
+        </div>
+        <div class="card-info">
+          <h3>Rejected</h3>
+          <h2>{{ analyticsData?.rejectedRequests || 0 }}</h2>
+          <p>{{ getPercentageChange('rejected') }}% from last period</p>
+        </div>
+      </div>-->
+    </div>
+
+    <!-- Charts Section -->
+    <div class="charts-container">
+      <!-- Row 1 -->
+      <div class="chart-row">
+        <!-- Letter Type Distribution -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Letter Type Distribution</h3>
+            <div class="chart-legend">
+              <div *ngFor="let type of letterTypes; let i = index" class="legend-item">
+                <span class="legend-color" [style.background]="getColorForLetterType(type, i)"></span>
+                {{ type }}
+              </div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="letterTypeChartData"
+              [type]="'doughnut'"
+              [options]="doughnutChartOptions">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Request Status -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Request Status</h3>
+          </div>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="statusChartData"
+              [type]="'pie'"
+              [options]="pieChartOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2 -->
+      <div class="chart-row">
+        <!-- Requests Over Time -->
+        <div class="chart-card wide">
+          <div class="chart-header">
+            <h3>Requests Over Time</h3>
+          </div>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="timeSeriesChartData"
+              [type]="'line'"
+              [options]="lineChartOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3 -->
+      <div class="chart-row">
+        <!-- Approval Time Distribution -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Approval Time (Days)</h3>
+          </div>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="approvalTimeChartData"
+              [type]="'bar'"
+              [options]="barChartOptions">
+            </canvas>
+          </div>
+        </div>
+
+        <!-- Requests by Program -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Requests by Program</h3>
+            <div class="chart-legend">
+              <div *ngFor="let program of topPrograms; let i = index" class="legend-item">
+                <span class="legend-color" [style.background]="getColorForProgram(program, i)"></span>
+                {{ program }}
+              </div>
+            </div>
+          </div>
+          <div class="chart-container">
+            <canvas baseChart
+              [data]="programChartData"
+              [type]="'polarArea'"
+              [options]="polarAreaChartOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Requests Table -->
+    <div class="recent-requests">
+      <h3>Recent Requests</h3>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Student Name</th>
+              <th>Letter Type</th>
+              <th>Date Requested</th>
+              <th>Status</th>
+              <th>Approval Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let request of recentRequests">
+              <td>{{ request.id }}</td>
+              <td>{{ request.studentName }}</td>
+              <td>{{ request.letterType }}</td>
+              <td>{{ request.requestDate | date:'mediumDate' }}</td>
+              <td>
+                <span class="status-badge" [class.approved]="request.status === 'Approved'"
+                  [class.pending]="request.status === 'Pending'"
+                  [class.rejected]="request.status === 'Rejected'">
+                  {{ request.status }}
+                </span>
+              </td>
+              <td>{{ request.approvalTime || '-' }}</td>
+            </tr>
+            <tr *ngIf="recentRequests.length === 0">
+              <td colspan="6" class="no-data">No recent requests found</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</section>

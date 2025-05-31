@@ -1,6 +1,260 @@
-/* Profile Settings Specific Styles */
+/* MAIN CONTENT - Matches dashboard styling */
+#content {
+  position: relative;
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  transition: all 0.3s ease;
+  padding-top: 56px;
+}
+
+#content.sidebar-collapsed {
+  width: calc(100% - 60px);
+  margin-left: 60px;
+}
+
+/* MAIN - Consistent with dashboard */
+#content main {
+  width: 100%;
+  padding: 36px 24px;
+  font-family: 'Poppins', sans-serif;
+  min-height: calc(100vh - 56px);
+}
+
+/* HEAD TITLE - Same as dashboard */
+#content main .head-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 16px;
+  flex-wrap: wrap;
+}
+
+#content main .head-title .left h1 {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #342E37;
+}
+
+#content main .head-title .left .breadcrumb {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+}
+
+#content main .head-title .left .breadcrumb li {
+  color: #342E37;
+}
+
+#content main .head-title .left .breadcrumb li a {
+  color: #AAAAAA;
+  pointer-events: none;
+  text-decoration: none;
+}
+
+#content main .head-title .left .breadcrumb li a.active {
+  color: #3C91E6;
+  pointer-events: unset;
+}
+
+/* REQUEST CONTAINER - Two column layout */
+.request-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 36px; /* Increased from 24px to match analytics spacing */
+}
+
+/* FORM COLUMN */
+.form-column {
+  flex: 2;
+  min-width: 400px;
+}
+
+.form-container {
+  background: #fff; /* Changed from #F9F9F9 to match analytics cards */
+  border-radius: 10px; /* Changed from 20px to match analytics */
+  padding: 20px; /* Changed from 24px to match analytics */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matched analytics shadow */
+}
+
+.form-container h2 {
+  font-size: 24px;
+  color: #333; /* Changed from #342E37 to match analytics */
+  margin-bottom: 20px; /* Changed from 24px */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 16px; /* Changed from 20px */
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #666; /* Changed from #342E37 to match analytics */
+  font-size: 14px; /* Added to match analytics */
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px 12px; /* Adjusted to match analytics inputs */
+  border: 1px solid #ddd;
+  border-radius: 4px; /* Changed from 10px to match analytics */
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+  transition: all 0.3s ease;
+  font-size: 14px; /* Added to match analytics */
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #1890ff; /* Changed from #3C91E6 to match analytics */
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.2); /* Adjusted color */
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px; /* Changed from 24px */
+}
+
+.btn-submit {
+  background: #1890ff; /* Changed from #3C91E6 to match analytics */
+  color: #fff;
+  border: none;
+  padding: 10px 20px; /* Adjusted to match analytics buttons */
+  border-radius: 4px; /* Changed from 10px */
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s ease;
+  font-size: 14px; /* Added to match analytics */
+}
+
+.btn-submit:hover {
+  background: #0c7cd5; /* Darker shade of new color */
+}
+
+.btn-cancel {
+  background: #f5f5f5; /* Changed from #eee */
+  color: #666; /* Changed from #342E37 to match analytics */
+  border: none;
+  padding: 10px 20px; /* Adjusted to match */
+  border-radius: 4px; /* Changed from 10px */
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s ease;
+  font-size: 14px; /* Added to match analytics */
+}
+
+.btn-cancel:hover {
+  background: #e6e6e6; /* Slightly darker */
+}
+
+/* INSTRUCTIONS COLUMN */
+.instructions-column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.info-box,
+.letter-types,
+.support-box {
+  background: #fff; /* Changed from #F9F9F9 to match analytics */
+  border-radius: 10px; /* Changed from 20px */
+  padding: 20px; /* Changed from 24px */
+  margin-bottom: 20px; /* Changed from 24px */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05); /* Matched analytics shadow */
+}
+
+.info-box h3,
+.letter-types h3,
+.support-box h3 {
+  font-size: 16px; /* Changed from 20px to match analytics */
+  color: #333; /* Changed from #342E37 */
+  margin-bottom: 15px; /* Changed from 16px */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step {
+  margin-bottom: 15px; /* Changed from 16px */
+  padding-bottom: 15px; /* Changed from 16px */
+  border-bottom: 1px solid #eee;
+}
+
+.step:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.step h4 {
+  font-size: 14px; /* Changed from 16px */
+  color: #1890ff; /* Changed from #3C91E6 */
+  margin-bottom: 8px;
+}
+
+.step p {
+  color: #666;
+  font-size: 13px; /* Changed from 14px */
+  line-height: 1.5;
+}
+
+.letter-types ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.letter-types li {
+  margin-bottom: 10px; /* Changed from 12px */
+  padding-left: 20px; /* Changed from 24px */
+  position: relative;
+  color: #666; /* Changed from #342E37 */
+  line-height: 1.5;
+  font-size: 13px; /* Added to match */
+}
+
+.letter-types li:before {
+  content: "•";
+  color: #1890ff; /* Changed from #3C91E6 */
+  font-size: 18px; /* Changed from 20px */
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+
+.letter-types li strong {
+  color: #1890ff; /* Changed from #3C91E6 */
+}
+
+.support-box p {
+  margin: 6px 0; /* Changed from 8px */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #666; /* Changed from #342E37 */
+  font-size: 13px; /* Added to match */
+}
+
+/* VERIFICATION STATUS */
 .verification-status {
-  margin: 20px 0;
+  margin: 16px 0; /* Changed from 20px */
   border-radius: 10px;
   overflow: hidden;
 }
@@ -9,24 +263,24 @@
   display: flex;
   align-items: center;
   padding: 12px 16px;
-  background-color: #f8f9fa;
-  border-left: 4px solid #6c757d;
+  background-color: #fafafa; /* Changed from #f8f9fa to match analytics */
+  border-left: 4px solid #999; /* Changed from #6c757d */
   margin-bottom: 8px;
   gap: 12px;
 }
 
 .status-item.verified {
-  border-left-color: #28a745;
-  background-color: #e8f5e9;
+  border-left-color: #52c41a; /* Changed from #28a745 to match analytics */
+  background-color: #f6ffed; /* Changed from #e8f5e9 to match analytics */
 }
 
 .status-item i:first-child {
-  font-size: 1.5em;
-  color: #6c757d;
+  font-size: 1.2em; /* Reduced from 1.5em */
+  color: #999; /* Changed from #6c757d */
 }
 
 .status-item.verified i:first-child {
-  color: #28a745;
+  color: #52c41a; /* Changed from #28a745 */
 }
 
 .status-item span {
@@ -36,45 +290,139 @@
 }
 
 .status-item small {
-  font-size: 0.8em;
-  color: #6c757d;
+  font-size: 0.75em; /* Reduced from 0.8em */
+  color: #999; /* Changed from #6c757d */
   margin-top: 4px;
 }
 
 .verified-icon {
-  color: #28a745;
-  font-size: 1.5em;
+  color: #52c41a; /* Changed from #28a745 */
+  font-size: 1.2em; /* Reduced from 1.5em */
 }
 
-/* Password Field Icons */
-.password-field {
-  position: relative;
+/* FORM VALIDATION */
+.invalid-feedback {
+  color: #ff4d4f; /* Changed from #dc3545 to match analytics */
+  font-size: 12px; /* Changed from 0.875em */
+  margin-top: 4px; /* Changed from 0.25rem */
 }
 
-.password-toggle {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+.is-invalid {
+  border-color: #ff4d4f !important; /* Changed from #dc3545 */
+}
+
+.is-loading {
+  background-color: #fafafa; /* Changed from #f8f9fa */
+  opacity: 0.7;
+}
+
+.loading-text {
+  color: #999; /* Changed from #6c757d */
+  font-size: 12px; /* Changed from 0.875em */
+  margin-top: 4px; /* Changed from 0.25rem */
+}
+
+/* ALERT STYLES */
+.alert-container {
+  margin: 15px 0;
+  max-width: 100%;
+}
+
+.alert {
+  padding: 12px 15px; /* Adjusted from 15px */
+  margin-bottom: 16px; /* Changed from 20px */
+  border: 1px solid transparent;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  font-size: 13px; /* Added to match */
+}
+
+.alert-success {
+  color: #52c41a; /* Changed from #3c763d */
+  background-color: #f6ffed; /* Changed from #dff0d8 */
+  border-color: #b7eb8f; /* Changed from #d6e9c6 */
+}
+
+.alert-danger {
+  color: #ff4d4f; /* Changed from #a94442 */
+  background-color: #fff1f0; /* Changed from #f2dede */
+  border-color: #ffa39e; /* Changed from #ebccd1 */
+}
+
+.alert i {
+  margin-right: 8px; /* Changed from 10px */
+  font-size: 1em; /* Reduced from 1.2em */
+}
+
+.close {
+  margin-left: auto;
   background: none;
   border: none;
-  color: #6c757d;
   cursor: pointer;
+  color: inherit;
+  font-size: 14px; /* Added to match */
 }
 
-/* Dirty For Indicator */
-.form-container h2::after {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  background-color: #ffc107;
-  border-radius: 50%;
-  margin-left: 8px;
-  opacity: 0;
-  transition: opacity 0.3s ease;
+/* RESPONSIVE ADJUSTMENTS - Matches dashboard breakpoints */
+@media (max-width: 1200px) {
+  #content main {
+    padding: 24px 16px;
+  }
 }
 
-.form-container h2.dirty::after {
-  opacity: 1;
+@media (max-width: 992px) {
+  .instructions-column,
+  .form-column {
+    flex: 1 1 100%;
+  }
+  
+  .request-container {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn-submit,
+  .btn-cancel {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  #content main .head-title .left h1 {
+    font-size: 24px;
+  }
+  
+  .breadcrumb li:not(:last-child) {
+    display: none;
+  }
+  
+  .breadcrumb li:last-child {
+    margin-left: 0;
+  }
+  
+  .breadcrumb li i {
+    display: none;
+  }
+}
+
+@media (max-width: 576px) {
+  #content main {
+    padding: 16px 12px;
+  }
+  
+  .form-column {
+    min-width: 100%;
+  }
+  
+  .form-container,
+  .info-box,
+  .letter-types,
+  .support-box {
+    padding: 16px;
+  }
 }

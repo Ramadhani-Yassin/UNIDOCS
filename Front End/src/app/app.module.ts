@@ -2,12 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import { NgChartsModule } from 'ng2-charts'; // <-- Corrected import
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-//import { SignUpComponent } from './Pages/sign-up/sign-up.component';
-import { UserService } from './services/user.service';
 import { HomeComponent } from './Pages/HOME-PAGES/home/home.component';
 import { AboutUsComponent } from './Pages/HOME-PAGES/about-us/about-us.component';
 import { ContactsComponent } from './Pages/HOME-PAGES/contacts/contacts.component';
@@ -19,7 +17,7 @@ import { AdminPortalComponent } from './Pages/ADMIN-SIDE/admin-portal/admin-port
 import { AdminLoginComponent } from './Pages/ADMIN-SIDE/admin-login/admin-login.component';
 import { AnalyticsComponent } from './Pages/STUDENT-SIDE/analytics/analytics.component';
 import { MessagesComponent } from './Pages/STUDENT-SIDE/messages/messages.component';
-import {  ApplicationComponent } from './Pages/STUDENT-SIDE/application/application.component';
+import { ApplicationComponent } from './Pages/STUDENT-SIDE/application/application.component';
 import { AnnouncementsComponent } from './Pages/STUDENT-SIDE/announcements/announcements.component';
 import { SettingsComponent } from './Pages/STUDENT-SIDE/settings/settings.component';
 import { LettersRequestedComponent } from './Pages/ADMIN-SIDE/letters-requested/letters-requested.component';
@@ -28,11 +26,11 @@ import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-managem
 import { GeneralAnalyticsComponent } from './Pages/ADMIN-SIDE/general-analytics/general-analytics.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { StudentNavComponent } from './components/student-nav/student-nav.component';
+import { UserService } from './services/user.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-    //SignUpComponent,
     HomeComponent,
     AboutUsComponent,
     ContactsComponent,
@@ -58,7 +56,8 @@ import { StudentNavComponent } from './components/student-nav/student-nav.compon
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NgChartsModule // <-- Corrected import in imports array
   ],
   providers: [UserService],
   bootstrap: [AppComponent]
