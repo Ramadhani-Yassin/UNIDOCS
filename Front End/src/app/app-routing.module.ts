@@ -11,13 +11,13 @@ import { AdminPortalComponent } from './Pages/ADMIN-SIDE/admin-portal/admin-port
 import { AnalyticsComponent } from './Pages/STUDENT-SIDE/analytics/analytics.component';
 import { MessagesComponent } from './Pages/STUDENT-SIDE/messages/messages.component';
 import {  ApplicationComponent } from './Pages/STUDENT-SIDE/application/application.component';
-import { AnnouncementsComponent } from './Pages/STUDENT-SIDE/announcements/announcements.component';
+import { AnnouncementsComponent } from './Pages/STUDENT-SIDE/announcements/announcements.component'; 
 import { SettingsComponent } from './Pages/STUDENT-SIDE/settings/settings.component';
 import { LettersRequestedComponent } from './Pages/ADMIN-SIDE/letters-requested/letters-requested.component';
 import { ApprovedLettersComponent } from './Pages/ADMIN-SIDE/approved-letters/approved-letters.component';
-import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
 import { GeneralAnalyticsComponent } from './Pages/ADMIN-SIDE/general-analytics/general-analytics.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
+import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
 import { StudentNavComponent } from './components/student-nav/student-nav.component';
 
 
@@ -38,9 +38,9 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent },
   { path: 'letters-requested', component: LettersRequestedComponent },
   { path: 'approved-letters', component: ApprovedLettersComponent },
-  { path: 'students-management', component: StudentsManagementComponent },
   { path: 'general-analytics', component: GeneralAnalyticsComponent },
   { path: 'admin-nav', component: AdminNavComponent },
+  { path: 'students-management', component: StudentsManagementComponent },
   { path: 'student-nav', component: StudentNavComponent },
   { path: '**', component: HomeComponent } // Wildcard route for unknown paths
 ];

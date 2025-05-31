@@ -1,0 +1,377 @@
+/* CONTENT */
+#content {
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  transition: all 0.3s ease;
+}
+
+#content.sidebar-collapsed {
+  width: calc(100% - 60px);
+  margin-left: 60px;
+}
+
+/* MAIN */
+#content main {
+  width: 100%;
+  padding: 36px 24px;
+  font-family: 'Poppins', sans-serif;
+  max-height: calc(100vh - 56px); /*SCROLL BAR*/
+  overflow-y: auto;/*SCROLL BAR*/
+  scrollbar-width: none; /* For Firefox */
+}
+
+#content main .head-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 16px;
+  flex-wrap: wrap;
+}
+
+#content main .head-title .left h1 {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #342E37;
+}
+
+#content main .head-title .left .breadcrumb {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+}
+
+#content main .head-title .left .breadcrumb li {
+  color: #342E37;
+}
+
+#content main .head-title .left .breadcrumb li a {
+  color: #AAAAAA;
+  pointer-events: none;
+}
+
+#content main .head-title .left .breadcrumb li a.active {
+  color: #3C91E6;
+  pointer-events: unset;
+}
+
+#content main .head-title .btn-download {
+  height: 36px;
+  padding: 0 16px;
+  border-radius: 36px;
+  background: #3C91E6;
+  color: #F9F9F9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  grid-gap: 10px;
+  font-weight: 500;
+}
+
+#content main .table-data {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+  color: #342E37;
+}
+
+#content main .table-data > div {
+  border-radius: 20px;
+  background: #F9F9F9;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+#content main .table-data .head {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+  margin-bottom: 24px;
+}
+
+#content main .table-data .head h3 {
+  margin-right: auto;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+#content main .table-data .head .bx {
+  cursor: pointer;
+}
+
+#content main .table-data .order {
+  flex-grow: 1;
+  flex-basis: 500px;
+}
+
+#content main .table-data .order table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+}
+
+#content main .table-data .order table th {
+  padding-bottom: 12px;
+  font-size: 13px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+  font-weight: 600;
+  color: #342E37;
+}
+
+#content main .table-data .order table td {
+  padding: 16px 0;
+  vertical-align: middle;
+}
+
+/* Center all table cells except the first (student info) */
+#content main .table-data .order table td.centered,
+#content main .table-data .order table th:not(:first-child) {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* Student info cell: flex column, center */
+.student-cell {
+  padding-left: 0 !important;
+}
+.student-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+.student-info img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(60,145,230,0.10);
+  background: #fff;
+  border: 1px solid #e0e0e0;
+}
+.student-info span {
+  font-weight: 500;
+  color: #342E37;
+  font-size: 15px;
+}
+
+/* Action buttons: same width, horizontally aligned */
+.actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  justify-content: center;
+}
+
+.btn-suspend, .btn-activate, .btn-delete {
+  min-width: 110px;
+  max-width: 120px;
+  justify-content: center;
+  text-align: center;
+  padding: 6px 0;
+  box-sizing: border-box;
+  border-radius: 20px;
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.btn-suspend {
+  background-color: #FFCE26;
+  color: #342E37;
+}
+
+.btn-activate {
+  background-color: #3C91E6;
+  color: white;
+}
+
+.btn-delete {
+  background-color: #FD7238;
+  color: white;
+}
+
+.btn-suspend:hover, .btn-activate:hover, .btn-delete:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+/* Search and filter */
+.search-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.search-filter input {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-family: 'Poppins', sans-serif;
+  min-width: 200px;
+}
+
+.search-filter select {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background-color: white;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #eee;
+}
+
+.pagination button {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #3C91E6;
+  background-color: white;
+  color: #3C91E6;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.pagination button:not(:disabled):hover {
+  background-color: #3C91E6;
+  color: white;
+}
+
+.pagination span {
+  font-weight: 500;
+  color: #342E37;
+}
+
+/* Quick Actions (todo) */
+#content main .table-data .todo {
+  flex-grow: 1;
+  flex-basis: 300px;
+}
+
+#content main .table-data .todo .todo-list {
+  width: 100%;
+}
+
+#content main .table-data .todo .todo-list li {
+  width: 100%;
+  margin-bottom: 16px;
+  background: #eee;
+  border-radius: 10px;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#content main .table-data .todo .todo-list li .bx {
+  cursor: pointer;
+}
+
+#content main .table-data .todo .todo-list li.completed {
+  border-left: 10px solid #3C91E6;
+}
+
+#content main .table-data .todo .todo-list li.not-completed {
+  border-left: 10px solid #FD7238;
+}
+
+#content main .table-data .todo .todo-list li:last-child {
+  margin-bottom: 0;
+}
+
+/* Status Badge */
+.status {
+  display: inline-block;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: capitalize;
+  color: #fff;
+  background: #bdbdbd; /* fallback */
+}
+
+.status.completed {
+  background: #27ae60 !important; /* Green for active */
+  color: #fff !important;
+}
+
+.status.pending {
+  background: #e74c3c !important; /* Red for suspended */
+  color: #fff !important;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 576px) {
+  #content main .box-info {
+    grid-template-columns: 1fr;
+  }
+
+  #content main .table-data .head {
+    min-width: 420px;
+  }
+
+  #content main .table-data .order table {
+    min-width: 420px;
+  }
+
+  #content main .table-data .todo .todo-list {
+    min-width: 420px;
+  }
+}
+
+@media (max-width: 768px) {
+  .search-filter {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  #content main .table-data {
+    flex-direction: column;
+  }
+  .actions {
+    flex-direction: column;
+    gap: 4px;
+    align-items: stretch;
+  }
+  .btn-suspend, .btn-activate, .btn-delete {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  #content main .head-title .left h1 {
+    font-size: 28px;
+  }
+  .search-filter input {
+    min-width: 150px;
+  }
+}

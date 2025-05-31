@@ -1,1 +1,93 @@
+<!-- CONTENT -->
 <app-admin-nav></app-admin-nav>
+<section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
+  <!-- MAIN -->
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Student Management</h1>
+        <ul class="breadcrumb">
+          <li><a href="#">Dashboard</a></li>
+          <li><i class="bx bx-chevron-right"></i></li>
+          <li><a class="active" href="#">Student Management</a></li>
+        </ul>
+      </div>
+      <a href="#" class="btn-download">
+        <i class="bx bxs-download"></i>
+        <span class="text">Export Data</span>
+      </a>
+    </div>
+
+    <div class="table-data">
+      <div class="order">
+        <div class="head">
+          <h3>Registered Students</h3>
+          <div class="search-filter">
+            <i class="bx bx-search"></i>
+            <input type="text" placeholder="Search students..." [(ngModel)]="searchQuery" (input)="filterStudents()">
+            <i class="bx bx-filter"></i>
+            <select [(ngModel)]="statusFilter" (change)="filterStudents()">
+              <option value="all">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th>Student Name</th>
+              <th>Registration Date</th>
+              <th>Email</th>
+              <th>Letters Requested</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let student of paginatedStudents">
+              <td class="student-cell">
+                <div class="student-info">
+                  <img [src]="student.avatar || 'assets/default-avatar.png'" alt="Student Avatar" />
+                  <span>{{ student.firstName }} {{ student.lastName }}</span>
+                </div>
+              </td>
+              <td class="centered">{{ student.registrationDate | date:'dd-MM-yyyy' }}</td>
+              <td class="centered">{{ student.email }}</td>
+              <td class="centered">{{ student.lettersRequested }}</td>
+              <td class="centered">
+                <span class="status" [ngClass]="{
+                  'completed': student.status === 'active',
+                  'pending': student.status === 'suspended'
+                }">
+                  {{ student.status | titlecase }}
+                </span>
+              </td>
+              <td class="actions">
+                <button *ngIf="student.status === 'active'" class="btn-suspend" (click)="suspendStudent(student.id)">
+                  <i class="bx bx-pause-circle"></i> Suspend
+                </button>
+                <button *ngIf="student.status === 'suspended'" class="btn-activate" (click)="activateStudent(student.id)">
+                  <i class="bx bx-play-circle"></i> Activate
+                </button>
+                <button class="btn-delete" (click)="confirmDelete(student.id)">
+                  <i class="bx bx-trash"></i> Delete
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="pagination" *ngIf="filteredStudents.length > itemsPerPage">
+          <button (click)="previousPage()" [disabled]="currentPage === 1">
+            <i class="bx bx-chevron-left"></i> Previous
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+            Next <i class="bx bx-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>

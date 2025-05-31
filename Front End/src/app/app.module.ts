@@ -22,11 +22,11 @@ import { AnnouncementsComponent } from './Pages/STUDENT-SIDE/announcements/annou
 import { SettingsComponent } from './Pages/STUDENT-SIDE/settings/settings.component';
 import { LettersRequestedComponent } from './Pages/ADMIN-SIDE/letters-requested/letters-requested.component';
 import { ApprovedLettersComponent } from './Pages/ADMIN-SIDE/approved-letters/approved-letters.component';
-import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
 import { GeneralAnalyticsComponent } from './Pages/ADMIN-SIDE/general-analytics/general-analytics.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { StudentNavComponent } from './components/student-nav/student-nav.component';
 import { UserService } from './services/user.service';
+import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
 
 @NgModule({
   declarations: [
@@ -47,10 +47,10 @@ import { UserService } from './services/user.service';
     ApplicationComponent,
     LettersRequestedComponent,
     ApprovedLettersComponent,
-    StudentsManagementComponent,
     GeneralAnalyticsComponent,
     AdminNavComponent,
-    StudentNavComponent
+    StudentNavComponent,
+    StudentsManagementComponent,
   ],
   imports: [
     BrowserModule,

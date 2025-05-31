@@ -1,6 +1,7 @@
 <app-student-nav></app-student-nav>
 
-<div id="content">
+<!-- MAIN CONTENT - Added sidebar-collapsed binding -->
+<section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
   <main>
     <div class="head-title">
       <div class="left">
@@ -66,7 +67,7 @@
           <h4><i class='bx bx-paperclip'></i> Attachments</h4>
           <ul>
             <li *ngFor="let attachment of announcement.attachments">
-              <a href="{{ attachment.url }}" target="_blank">
+              <a href="{{ attachment.url }}" target="_blank" (click)="downloadAttachment(attachment); $event.preventDefault()">
                 <i class='bx bx-file'></i> {{ attachment.name }}
               </a>
             </li>
@@ -75,4 +76,4 @@
       </div>
     </div>
   </main>
-</div>
+</section>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { StudentSidebarService } from '../../../services/student-sidebar.service';
 
 interface Announcement {
   id: number;
@@ -19,34 +20,18 @@ interface Announcement {
   styleUrls: ['./announcements.component.css']
 })
 export class AnnouncementsComponent implements OnInit {
-  // Sidebar state
-  isSidebarCollapsed = false;
-  
   // Announcements state
   isLoading: boolean = true;
   errorMessage: string = '';
   announcements: Announcement[] = [];
+
+  constructor(public sidebarService: StudentSidebarService) {}
 
   ngOnInit(): void {
     // Simulate API call
     setTimeout(() => {
       this.loadAnnouncements();
     }, 1000);
-  }
-
-  // Toggle sidebar visibility
-  toggleSidebar() {
-    this.isSidebarCollapsed = !this.isSidebarCollapsed;
-    // Optional: Save state to localStorage for persistence
-    localStorage.setItem('sidebarCollapsed', JSON.stringify(this.isSidebarCollapsed));
-  }
-
-  // Load initial sidebar state
-  loadSidebarState() {
-    const savedState = localStorage.getItem('sidebarCollapsed');
-    if (savedState) {
-      this.isSidebarCollapsed = JSON.parse(savedState);
-    }
   }
 
   loadAnnouncements(): void {
@@ -94,9 +79,7 @@ export class AnnouncementsComponent implements OnInit {
     }
   }
 
-  // Additional utility methods
   downloadAttachment(attachment: any) {
-    // Implementation for downloading attachments
     console.log('Downloading:', attachment.name);
     // Actual download logic would go here
   }
