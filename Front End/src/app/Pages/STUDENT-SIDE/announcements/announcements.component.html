@@ -1,1 +1,78 @@
 <app-student-nav></app-student-nav>
+
+<div id="content">
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Announcements</h1>
+        <ul class="breadcrumb">
+          <li>
+            <a href="#" class="active">Dashboard</a>
+          </li>
+          <li><i class='bx bx-chevron-right'></i></li>
+          <li>
+            <a class="active">Announcements</a>
+          </li>
+        </ul>
+      </div>
+      <a href="#" class="btn-download">
+        <i class='bx bxs-cloud-download'></i>
+        <span class="text">Export</span>
+      </a>
+    </div>
+
+    <div class="announcements-container">
+      <!-- Loading State -->
+      <div *ngIf="isLoading" class="loading-indicator">
+        <i class='bx bx-loader-circle bx-spin'></i>
+        <span>Loading announcements...</span>
+      </div>
+
+      <!-- Error State -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        <i class='bx bx-error-circle'></i>
+        <span>{{ errorMessage }}</span>
+        <button class="close" (click)="errorMessage = ''">&times;</button>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!isLoading && !errorMessage && announcements.length === 0" class="no-data">
+        <i class='bx bx-info-circle'></i>
+        <p>No announcements available</p>
+      </div>
+
+      <!-- Announcements List -->
+      <div *ngFor="let announcement of announcements" class="announcement-card">
+        <div class="announcement-header">
+          <div class="announcement-title">
+            <h3>{{ announcement.title }}</h3>
+            <span class="status-badge" [ngClass]="{
+              'new': announcement.status === 'new',
+              'important': announcement.status === 'important',
+              'update': announcement.status === 'update'
+            }">
+              {{ announcement.status | titlecase }}
+            </span>
+          </div>
+          <div class="announcement-meta">
+            <span><i class='bx bx-calendar'></i> {{ announcement.date | date:'mediumDate' }}</span>
+            <span><i class='bx bx-user'></i> {{ announcement.author }}</span>
+          </div>
+        </div>
+        <div class="announcement-content">
+          <p>{{ announcement.content }}</p>
+        </div>
+        <div *ngIf="announcement.attachments.length > 0" class="announcement-attachments">
+          <h4><i class='bx bx-paperclip'></i> Attachments</h4>
+          <ul>
+            <li *ngFor="let attachment of announcement.attachments">
+              <a href="{{ attachment.url }}" target="_blank">
+                <i class='bx bx-file'></i> {{ attachment.name }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>

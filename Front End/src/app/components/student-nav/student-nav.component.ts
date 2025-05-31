@@ -65,17 +65,19 @@ export class StudentNavComponent implements OnInit, OnDestroy {
   }
 
   private updatePageTitle() {
-    const url = this.router.url;
-    if (url.includes('dashboard')) {
-      this.currentPageTitle = 'Dashboard';
-    } else if (url.includes('students')) {
-      this.currentPageTitle = 'Students';
-    } else if (url.includes('applications')) {
-      this.currentPageTitle = 'Applications';
-    } else if (url.includes('settings')) {
-      this.currentPageTitle = 'settings';
-    }
+  const url = this.router.url;
+  if (url.includes('dashboard')) {
+    this.currentPageTitle = 'Dashboard';
+  } else if (url.includes('students')) {
+    this.currentPageTitle = 'Students';
+  } else if (url.includes('applications')) {
+    this.currentPageTitle = 'Applications';
+  } else if (url.includes('settings')) {
+    this.currentPageTitle = 'Settings';
+  } else if (url.includes('announcements')) {
+    this.currentPageTitle = 'Announcements';
   }
+}
 
   ngOnDestroy() {
     this.sidebarSubscription?.unsubscribe();
