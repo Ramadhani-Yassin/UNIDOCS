@@ -1,6 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { StudentSidebarService } from '../../../services/student-sidebar.service'; // Updated import
+import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
   selector: 'app-settings',
@@ -8,6 +6,8 @@ import { StudentSidebarService } from '../../../services/student-sidebar.service
   styleUrls: ['./settings.component.css']
 })
 export class SettingsComponent implements OnInit {
+  @Input() sidebarService: any;
+
   // Form properties
   firstName: string = '';
   lastName: string = '';
@@ -24,7 +24,7 @@ export class SettingsComponent implements OnInit {
   // Loading state
   isLoading: boolean = false;
 
-  constructor(public sidebarService: StudentSidebarService) {} // Updated service injection
+  constructor() {}
 
   ngOnInit() {
     // Example data - in a real app, you would get this from a service
@@ -34,9 +34,11 @@ export class SettingsComponent implements OnInit {
     this.isEmailVerified = true;
 
     // Optional: Log sidebar state for debugging
-    this.sidebarService.isOpen$.subscribe(isOpen => {
-      console.log('Sidebar is open:', isOpen);
-    });
+    if (this.sidebarService && this.sidebarService.isOpen$) {
+      this.sidebarService.isOpen$.subscribe((isOpen: boolean) => {
+        console.log('Sidebar is open:', isOpen);
+      });
+    }
   }
 
   onSubmit() {
@@ -64,8 +66,9 @@ export class SettingsComponent implements OnInit {
     this.currentPassword = '';
   }
 
-  // Optional: Add method to toggle sidebar if needed
   toggleSidebar() {
-    this.sidebarService.toggle();
+    if (this.sidebarService && this.sidebarService.toggle) {
+      this.sidebarService.toggle();
+    }
   }
 }
