@@ -42,8 +42,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/recent/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests/*/generate").permitAll() // <-- Allow public access to generate endpoint
 
-                
                 // Allow public access to count by email
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
 

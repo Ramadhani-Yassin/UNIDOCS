@@ -1,19 +1,12 @@
 /* FORM STYLING */
-/* =============================================
-   ADDITIONAL STYLES FOR TWO-COLUMN LAYOUT 
-   (Add these to your existing CSS)
-   ============================================= */
-
-/* MAIN LAYOUT CONTAINER */
 .request-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 24px;
-    margin-top: 24px;
-  }
-  
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 24px;
+}
 
-  /* Alert Styles */
+/* Alert Styles */
 .alert-container {
   margin: 15px;
   max-width: 1200px;
@@ -81,270 +74,433 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* Existing styles remain the same */
+/* COLUMNS STRUCTURE */
+.instructions-column {
+  flex: 1;
+  min-width: 300px;
+}
 
+.form-column {
+  flex: 2;
+  min-width: 400px;
+}
 
-  /* COLUMNS STRUCTURE */
-  .instructions-column {
-    flex: 1;
-    min-width: 300px;
+/* INSTRUCTION BOX STYLES */
+.info-box,
+.letter-types,
+.support-box {
+  background: #F9F9F9;
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+/* INSTRUCTION HEADERS */
+.info-box h3,
+.letter-types h3,
+.support-box h3 {
+  font-size: 20px;
+  color: #342E37;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* STEP BY STEP INSTRUCTIONS */
+.step {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #eee;
+}
+
+.step:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.step h4 {
+  font-size: 16px;
+  color: #3C91E6;
+  margin-bottom: 8px;
+}
+
+.step p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* LETTER TYPES LIST */
+.letter-types ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.letter-types li {
+  margin-bottom: 12px;
+  padding-left: 24px;
+  position: relative;
+  color: #342E37;
+  line-height: 1.5;
+}
+
+.letter-types li:before {
+  content: "•";
+  color: #3C91E6;
+  font-size: 20px;
+  position: absolute;
+  left: 0;
+  top: -2px;
+}
+
+.letter-types li strong {
+  color: #3C91E6;
+}
+
+/* SUPPORT BOX STYLES */
+.support-box p {
+  margin: 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #342E37;
+}
+
+/* FORM CONTAINER */
+.form-container {
+  background: #F9F9F9;
+  border-radius: 20px;
+  padding: 24px;
+  margin-top: 24px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+}
+
+.form-container h2 {
+  font-size: 24px;
+  color: #342E37;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #342E37;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font-family: 'Poppins', sans-serif;
+  background: #fff;
+  transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #3C91E6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(60, 145, 230, 0.2);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.form-actions {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.btn-submit {
+  background: #3C91E6;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: #2a7bc8;
+}
+
+.btn-cancel {
+  background: #eee;
+  color: #342E37;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background: #ddd;
+}
+
+/* Download Section Styles */
+.download-section {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 24px;
+  border: 1px solid #e9ecef;
+}
+
+.download-section h3 {
+  color: #28a745;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.download-section p {
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.download-buttons {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.download-btn {
+  flex: 1;
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-align: center;
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.download-btn.docx {
+  background: #2b579a;
+}
+
+.download-btn.pdf {
+  background: #d24726;
+}
+
+.download-btn:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+
+.download-note {
+  font-size: 0.9em;
+  color: #6c757d;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85); /* Darker semi-transparent background */
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(5px);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-dialog {
+  background: #fff;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  animation: slideUp 0.4s ease;
+  position: relative;
+  z-index: 10000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.spinner {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  margin-bottom: 24px;
+}
+
+.spinner::before, .spinner::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 6px solid #3C91E6;
+  opacity: 0.6;
+  animation: ripple 1.5s infinite;
+}
+
+.spinner::after {
+  animation-delay: 0.75s;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0.5);
+    opacity: 1;
   }
-  
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.modal-text {
+  font-size: 1.2em;
+  color: #342E37;
+  line-height: 1.5;
+  font-weight: 500;
+  max-width: 80%;
+  margin: 0 auto;
+}
+
+/* Prevent scrolling when modal is open */
+body.modal-open {
+  overflow: hidden;
+  height: 100%;
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* RESPONSIVE ADJUSTMENTS */
+@media (max-width: 992px) {
+  .instructions-column,
   .form-column {
-    flex: 2;
-    min-width: 400px;
+    flex: 1 1 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-actions,
+  .download-buttons {
+    flex-direction: column;
   }
   
-  /* INSTRUCTION BOX STYLES */
-  .info-box,
-  .letter-types,
-  .support-box {
-    background: #F9F9F9;
-    border-radius: 20px;
-    padding: 24px;
-    margin-bottom: 24px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+  .btn-submit,
+  .btn-cancel,
+  .download-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .breadcrumb li:not(:last-child) {
+    display: none;
   }
   
-  /* INSTRUCTION HEADERS */
-  .info-box h3,
-  .letter-types h3,
-  .support-box h3 {
-    font-size: 20px;
-    color: #342E37;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  .breadcrumb li:last-child {
+    margin-left: 0;
   }
   
-  /* STEP BY STEP INSTRUCTIONS */
-  .step {
-    margin-bottom: 16px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid #eee;
+  .breadcrumb li i {
+    display: none;
   }
-  
-  .step:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
-    padding-bottom: 0;
-  }
-  
-  .step h4 {
-    font-size: 16px;
-    color: #3C91E6;
-    margin-bottom: 8px;
-  }
-  
-  .step p {
-    color: #666;
-    font-size: 14px;
-    line-height: 1.5;
-  }
-  
-  /* LETTER TYPES LIST */
-  .letter-types ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
-  }
-  
-  .letter-types li {
-    margin-bottom: 12px;
-    padding-left: 24px;
-    position: relative;
-    color: #342E37;
-    line-height: 1.5;
-  }
-  
-  .letter-types li:before {
-    content: "•";
-    color: #3C91E6;
-    font-size: 20px;
-    position: absolute;
-    left: 0;
-    top: -2px;
-  }
-  
-  .letter-types li strong {
-    color: #3C91E6;
-  }
-  
-  /* SUPPORT BOX STYLES */
-  .support-box p {
-    margin: 8px 0;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #342E37;
-  }
-  
-  /* RESPONSIVE ADJUSTMENTS FOR TWO-COLUMN LAYOUT */
-  @media (max-width: 992px) {
-    .instructions-column,
-    .form-column {
-      flex: 1 1 100%;
-    }
-  }
-  
-  /* EXISTING FORM STYLES REMAIN THE SAME (they're already in your CSS) */
+}
 
 #content {
-    position: relative;
-    width: calc(100% - 280px);
-    margin-left: 300px;
-    transition: all 0.3s ease;
-    padding-top: 70px;
-  }  
+  position: relative;
+  width: calc(100% - 280px);
+  margin-left: 300px;
+  transition: all 0.3s ease;
+  padding-top: 70px;
+}  
 
-  #content.sidebar-collapsed {
-    width: calc(100% - 60px);
-    margin-left: 60px;
-  }
-  #content main .head-title .left .breadcrumb {
-    display: flex;
-    align-items: center;
-    grid-gap: 16px;
-  }
-  
-  #content main .head-title .left .breadcrumb li {
-    color: #342E37;
-  }
-  
-  #content main .head-title .left .breadcrumb li a {
-    color: #AAAAAA;
-    pointer-events: none;
-    text-decoration: none;
-  }
-  
-  #content main .head-title .left .breadcrumb li a.active {
-    color: #3C91E6;
-    pointer-events: unset;
-  }  
+#content.sidebar-collapsed {
+  width: calc(100% - 60px);
+  margin-left: 60px;
+}
 
-.form-container {
-    background: #F9F9F9;
-    border-radius: 20px;
-    padding: 24px;
-    margin-top: 24px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-  }
-  
-  .form-container h2 {
-    font-size: 24px;
-    color: #342E37;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .form-group {
-    margin-bottom: 20px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 8px;
-    font-weight: 500;
-    color: #342E37;
-  }
-  
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    width: 100%;
-    padding: 12px 16px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    font-family: 'Poppins', sans-serif;
-    background: #fff;
-    transition: all 0.3s ease;
-  }
-  
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: #3C91E6;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(60, 145, 230, 0.2);
-  }
-  
-  .form-group textarea {
-    resize: vertical;
-    min-height: 100px;
-  }
-  
-  .form-group input[type="file"] {
-    padding: 10px;
-    background: #eee;
-  }
-  
-  .form-actions {
-    display: flex;
-    gap: 16px;
-    margin-top: 24px;
-  }
-  
-  .btn-submit {
-    background: #3C91E6;
-    color: #fff;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background 0.3s ease;
-  }
-  
-  .btn-submit:hover {
-    background: #2a7bc8;
-  }
-  
-  .btn-cancel {
-    background: #eee;
-    color: #342E37;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    transition: background 0.3s ease;
-  }
-  
-  .btn-cancel:hover {
-    background: #ddd;
-  }
-  
-  /* RESPONSIVE ADJUSTMENTS */
-  @media (max-width: 768px) {
-    .form-actions {
-      flex-direction: column;
-    }
-    
-    .btn-submit,
-    .btn-cancel {
-      width: 100%;
-      justify-content: center;
-    }
+#content main .head-title .left .breadcrumb {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+}
 
-    .breadcrumb li:not(:last-child) {
-        display: none;
-      }
-      
-      .breadcrumb li:last-child {
-        margin-left: 0;
-      }
-      
-      .breadcrumb li i {
-        display: none;
-      }
-    }
-  
+#content main .head-title .left .breadcrumb li {
+  color: #342E37;
+}
+
+#content main .head-title .left .breadcrumb li a {
+  color: #AAAAAA;
+  pointer-events: none;
+  text-decoration: none;
+}
+
+#content main .head-title .left .breadcrumb li a.active {
+  color: #3C91E6;
+  pointer-events: unset;
+}

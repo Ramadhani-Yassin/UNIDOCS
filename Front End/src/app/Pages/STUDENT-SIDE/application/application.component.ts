@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { NgForm } from '@angular/forms';
 import { LetterRequestService } from '../../../services/letter-request.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-application',
@@ -22,6 +23,8 @@ export class ApplicationComponent implements OnInit {
   successMessage: string = '';
   showAlert: boolean = false;
   alertType: 'success' | 'danger' = 'success';
+  downloadUrl: string | null = null;
+  isGenerating: boolean = false; // Add this line
   
   // Letter type visibility flags
   showIntroductionFields: boolean = false;
@@ -31,7 +34,7 @@ export class ApplicationComponent implements OnInit {
   showTranscriptFields: boolean = false;
   showReasonField: boolean = false;
   
-  // Form data properties with two-way binding
+  // Form data properties
   selectedLetterType: string = '';
   regNumber: string = '';
   phone: string = '';
@@ -144,22 +147,38 @@ export class ApplicationComponent implements OnInit {
     this.showReasonField = false;
   }
 
+  public setBodyModalClass(isLoading: boolean): void {
+    if (typeof document !== 'undefined') {
+      if (isLoading) {
+        document.body.classList.add('modal-open');
+      } else {
+        document.body.classList.remove('modal-open');
+      }
+    }
+  }
+
   onSubmit(): void {
     if (this.letterRequestForm.invalid) {
       this.showAlertMessage('Please fill all required fields correctly.', 'danger');
       return;
     }
 
-    const requestData = this.prepareRequestData();
     this.isLoading = true;
+    this.setBodyModalClass(true);
     this.showAlert = false;
+
+    const requestData = this.prepareRequestData();
 
     this.letterRequestService.submitLetterRequest(requestData).subscribe({
       next: (response: any) => {
         this.handleSuccessResponse(response);
+        this.isLoading = false;
+        this.setBodyModalClass(false);
       },
       error: (error: HttpErrorResponse) => {
         this.handleErrorResponse(error);
+        this.isLoading = false;
+        this.setBodyModalClass(false);
       }
     });
   }
@@ -189,15 +208,28 @@ export class ApplicationComponent implements OnInit {
 
   private handleSuccessResponse(response: any): void {
     this.isLoading = false;
+    this.setBodyModalClass(false);
+
+    // Start the synchronous "generating" modal
+    this.isGenerating = true;
+    this.setBodyModalClass(true);
+
+    setTimeout(() => {
+      this.isGenerating = false;
+      this.setBodyModalClass(false);
+      if (response.requestId) {
+        this.downloadUrl = `${environment.apiUrl}/api/letter-requests/${response.requestId}/generate?format=docx`;
+        this.setBodyModalClass(true);
+      }
+    }, 3000);
+
     this.showAlertMessage(
       response.message || 'Letter request submitted successfully!', 
       'success'
     );
-    this.clearForm();
   }
 
   private handleErrorResponse(error: HttpErrorResponse): void {
-    this.isLoading = false;
     console.error('Submission error:', error);
     
     let errorMsg = 'Failed to submit request. Please try again.';
@@ -222,7 +254,17 @@ export class ApplicationComponent implements OnInit {
   }
 
   clearForm(): void {
-    // Reset all form fields except user data
+    if (this.downloadUrl) {
+      if (confirm('Clearing the form will remove your download links. Continue?')) {
+        this.downloadUrl = null;
+        this.resetFormFields();
+      }
+    } else {
+      this.resetFormFields();
+    }
+  }
+
+  private resetFormFields(): void {
     this.regNumber = '';
     this.phone = '';
     this.program = '';
@@ -244,7 +286,6 @@ export class ApplicationComponent implements OnInit {
     this.transcriptPurpose = '';
     this.deliveryMethod = '';
 
-    // Reset form validation
     if (this.letterRequestForm) {
       this.letterRequestForm.resetForm({
         fullname: this.fullName,
