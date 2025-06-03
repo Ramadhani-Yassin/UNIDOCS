@@ -195,8 +195,9 @@ export class ApplicationComponent implements OnInit {
       reasonForRequest: this.reason || this.discontinuationReason,
       effectiveDate: this.effectiveDate,
       organizationName: this.organizationName || this.feasibilityOrganization,
-      startDate: this.startDate,
-      endDate: this.endDate,
+      // Use studyStartDate/studyEndDate for feasibility_study, otherwise use startDate/endDate
+      startDate: this.showFeasibilityFields ? this.studyStartDate : this.startDate,
+      endDate: this.showFeasibilityFields ? this.studyEndDate : this.endDate,
       researchTitle: this.researchTitle,
       recommendationPurpose: this.recommendationPurpose,
       receivingInstitution: this.receivingInstitution,

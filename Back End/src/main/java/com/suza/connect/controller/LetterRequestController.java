@@ -122,6 +122,12 @@ public class LetterRequestController {
             placeholders.put("phoneNumber", request.getPhoneNumber() != null ? request.getPhoneNumber() : "");
             placeholders.put("email", request.getEmail() != null ? request.getEmail() : "");
             placeholders.put("date", java.time.LocalDate.now().toString());
+            placeholders.put("researchTitle", request.getResearchTitle() != null ? request.getResearchTitle() : "");
+            placeholders.put("reasonForRequest", request.getReasonForRequest() != null ? request.getReasonForRequest() : "");
+            placeholders.put("effectiveDate", request.getEffectiveDate() != null ? request.getEffectiveDate().toString() : "");
+            placeholders.put("recommendationPurpose", request.getRecommendationPurpose() != null ? request.getRecommendationPurpose() : "");
+            placeholders.put("receivingInstitution", request.getReceivingInstitution() != null ? request.getReceivingInstitution() : "");
+            placeholders.put("submissionDeadline", request.getSubmissionDeadline() != null ? request.getSubmissionDeadline().toString() : "");
 
             File filledDocx = letterGenerationService.fillTemplate(templatePath, placeholders);
 
