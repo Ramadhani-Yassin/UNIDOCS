@@ -113,18 +113,14 @@ public class LetterRequestController {
             // Prepare placeholders map from request fields
             Map<String, String> placeholders = new HashMap<>();
             placeholders.put("fullName", request.getFullName() != null ? request.getFullName() : "");
-            placeholders.put("registrationNumber", request.getRegistrationNumber() != null ? request.getRegistrationNumber() : "");
-            placeholders.put("programOfStudy", request.getProgramOfStudy() != null ? request.getProgramOfStudy() : "");
+            placeholders.put("organizationName", request.getOrganizationName() != null ? request.getOrganizationName() : "");
             placeholders.put("yearOfStudy", request.getYearOfStudy() != null ? String.valueOf(request.getYearOfStudy()) : "");
-            placeholders.put("reasonForRequest", request.getReasonForRequest() != null ? request.getReasonForRequest() : "");
-            placeholders.put("effectiveDate", request.getEffectiveDate() != null ? request.getEffectiveDate().toString() : "");
+            placeholders.put("programOfStudy", request.getProgramOfStudy() != null ? request.getProgramOfStudy() : "");
+            placeholders.put("registrationNumber", request.getRegistrationNumber() != null ? request.getRegistrationNumber() : "");
+            placeholders.put("startDate", request.getStartDate() != null ? request.getStartDate().toString() : "");
+            placeholders.put("endDate", request.getEndDate() != null ? request.getEndDate().toString() : "");
             placeholders.put("phoneNumber", request.getPhoneNumber() != null ? request.getPhoneNumber() : "");
             placeholders.put("email", request.getEmail() != null ? request.getEmail() : "");
-
-            // For template compatibility (add these if your template uses them)
-            placeholders.put("regNumber", request.getRegistrationNumber() != null ? request.getRegistrationNumber() : "");
-            placeholders.put("studyProgram", request.getProgramOfStudy() != null ? request.getProgramOfStudy() : "");
-            placeholders.put("yearofStudies", request.getYearOfStudy() != null ? String.valueOf(request.getYearOfStudy()) : "");
             placeholders.put("date", java.time.LocalDate.now().toString());
 
             File filledDocx = letterGenerationService.fillTemplate(templatePath, placeholders);
