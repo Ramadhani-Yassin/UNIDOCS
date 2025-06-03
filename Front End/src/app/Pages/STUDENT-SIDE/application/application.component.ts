@@ -184,28 +184,27 @@ export class ApplicationComponent implements OnInit {
   }
 
   private prepareRequestData(): any {
-    return {
-      fullName: this.fullName,
-      email: this.email,
-      registrationNumber: this.regNumber,
-      phoneNumber: this.phone,
-      programOfStudy: this.program,
-      yearOfStudy: parseInt(this.yearOfStudy),
-      letterType: this.selectedLetterType,
-      reasonForRequest: this.reason || this.discontinuationReason,
-      effectiveDate: this.effectiveDate,
-      organizationName: this.organizationName || this.feasibilityOrganization,
-      // Use studyStartDate/studyEndDate for feasibility_study, otherwise use startDate/endDate
-      startDate: this.showFeasibilityFields ? this.studyStartDate : this.startDate,
-      endDate: this.showFeasibilityFields ? this.studyEndDate : this.endDate,
-      researchTitle: this.researchTitle,
-      recommendationPurpose: this.recommendationPurpose,
-      receivingInstitution: this.receivingInstitution,
-      submissionDeadline: this.submissionDeadline,
-      transcriptPurpose: this.transcriptPurpose,
-      deliveryMethod: this.deliveryMethod
-    };
-  }
+  return {
+    fullName: this.fullName,
+    email: this.email,
+    registrationNumber: this.regNumber,
+    phoneNumber: this.phone,
+    programOfStudy: this.program,
+    yearOfStudy: parseInt(this.yearOfStudy),
+    letterType: this.selectedLetterType,
+    reasonForRequest: this.reason,
+    effectiveDate: this.effectiveDate,
+    organizationName: this.organizationName,
+    startDate: this.startDate,
+    endDate: this.endDate,
+    researchTitle: this.researchTitle,
+    recommendationPurpose: this.recommendationPurpose,
+    receivingInstitution: this.receivingInstitution,
+    submissionDeadline: this.submissionDeadline,
+    transcriptPurpose: this.transcriptPurpose,
+    deliveryMethod: this.deliveryMethod
+  };
+}
 
   private handleSuccessResponse(response: any): void {
     this.isLoading = false;

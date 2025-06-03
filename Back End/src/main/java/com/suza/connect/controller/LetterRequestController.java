@@ -112,22 +112,24 @@ public class LetterRequestController {
 
             // Prepare placeholders map from request fields
             Map<String, String> placeholders = new HashMap<>();
-            placeholders.put("fullName", request.getFullName() != null ? request.getFullName() : "");
-            placeholders.put("organizationName", request.getOrganizationName() != null ? request.getOrganizationName() : "");
-            placeholders.put("yearOfStudy", request.getYearOfStudy() != null ? String.valueOf(request.getYearOfStudy()) : "");
-            placeholders.put("programOfStudy", request.getProgramOfStudy() != null ? request.getProgramOfStudy() : "");
-            placeholders.put("registrationNumber", request.getRegistrationNumber() != null ? request.getRegistrationNumber() : "");
-            placeholders.put("startDate", request.getStartDate() != null ? request.getStartDate().toString() : "");
-            placeholders.put("endDate", request.getEndDate() != null ? request.getEndDate().toString() : "");
-            placeholders.put("phoneNumber", request.getPhoneNumber() != null ? request.getPhoneNumber() : "");
-            placeholders.put("email", request.getEmail() != null ? request.getEmail() : "");
+            placeholders.put("fullName", safe(request.getFullName()));
+            placeholders.put("organizationName", safe(request.getOrganizationName()));
+            placeholders.put("yearOfStudy", safe(request.getYearOfStudy()));
+            placeholders.put("programOfStudy", safe(request.getProgramOfStudy()));
+            placeholders.put("registrationNumber", safe(request.getRegistrationNumber()));
+            placeholders.put("startDate", safe(request.getStartDate()));
+            placeholders.put("endDate", safe(request.getEndDate()));
+            placeholders.put("phoneNumber", safe(request.getPhoneNumber()));
+            placeholders.put("email", safe(request.getEmail()));
             placeholders.put("date", java.time.LocalDate.now().toString());
-            placeholders.put("researchTitle", request.getResearchTitle() != null ? request.getResearchTitle() : "");
-            placeholders.put("reasonForRequest", request.getReasonForRequest() != null ? request.getReasonForRequest() : "");
-            placeholders.put("effectiveDate", request.getEffectiveDate() != null ? request.getEffectiveDate().toString() : "");
-            placeholders.put("recommendationPurpose", request.getRecommendationPurpose() != null ? request.getRecommendationPurpose() : "");
-            placeholders.put("receivingInstitution", request.getReceivingInstitution() != null ? request.getReceivingInstitution() : "");
-            placeholders.put("submissionDeadline", request.getSubmissionDeadline() != null ? request.getSubmissionDeadline().toString() : "");
+            placeholders.put("researchTitle", safe(request.getResearchTitle()));
+            placeholders.put("reasonForRequest", safe(request.getReasonForRequest()));
+            placeholders.put("effectiveDate", safe(request.getEffectiveDate()));
+            placeholders.put("recommendationPurpose", safe(request.getRecommendationPurpose()));
+            placeholders.put("receivingInstitution", safe(request.getReceivingInstitution()));
+            placeholders.put("submissionDeadline", safe(request.getSubmissionDeadline()));
+            placeholders.put("transcriptPurpose", safe(request.getTranscriptPurpose()));
+            placeholders.put("deliveryMethod", safe(request.getDeliveryMethod()));
 
             File filledDocx = letterGenerationService.fillTemplate(templatePath, placeholders);
 
@@ -149,5 +151,13 @@ public class LetterRequestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Map.of("error", e.getMessage()));
         }
+    }
+
+    // Add this helper method in your controller class:
+    private String safe(Object value) {
+        if (value == null) return "";
+        if (value instanceof java.time.LocalDate) return value.toString();
+        if (value instanceof java.time.LocalDateTime) return value.toString();
+        return value.toString();
     }
 }
