@@ -29,6 +29,7 @@ import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-managem
 import { PublishAnnouncementsComponent } from './Pages/ADMIN-SIDE/publish-announcements/publish-announcements.component';
 import { StudentSettingsShellComponent } from './Pages/STUDENT-SIDE/student-settings-shell/student-settings-shell.component';
 import { AdminSettingsShellComponent } from './Pages/ADMIN-SIDE/admin-settings-shell/admin-settings-shell.component';
+import { CVGeneratorComponent } from './Pages/STUDENT-SIDE/cv-generator/cv-generator.component';
 
 @NgModule({
   declarations: [
@@ -55,6 +56,7 @@ import { AdminSettingsShellComponent } from './Pages/ADMIN-SIDE/admin-settings-s
     PublishAnnouncementsComponent,
     StudentSettingsShellComponent,
     AdminSettingsShellComponent,
+    CVGeneratorComponent,
   ],
   imports: [
     BrowserModule,

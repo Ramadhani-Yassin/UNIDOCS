@@ -17,9 +17,8 @@ import { PublishAnnouncementsComponent } from './Pages/ADMIN-SIDE/publish-announ
 import { GeneralAnalyticsComponent } from './Pages/ADMIN-SIDE/general-analytics/general-analytics.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
-import { StudentNavComponent } from './components/student-nav/student-nav.component';
-
-// Import your shell components
+import { StudentNavComponent } from './components/student-nav/student-nav.component'; 
+import { CVGeneratorComponent } from './Pages/STUDENT-SIDE/cv-generator/cv-generator.component';
 import { StudentSettingsShellComponent } from './Pages/STUDENT-SIDE/student-settings-shell/student-settings-shell.component';
 import { AdminSettingsShellComponent } from './Pages/ADMIN-SIDE/admin-settings-shell/admin-settings-shell.component';
 
@@ -44,6 +43,7 @@ const routes: Routes = [
   { path: 'publish-announcements', component: PublishAnnouncementsComponent },
   { path: 'general-analytics', component: GeneralAnalyticsComponent },
   { path: 'admin-nav', component: AdminNavComponent },
+  { path: 'generate-cv', component: CVGeneratorComponent },
   { path: 'students-management', component: StudentsManagementComponent },
   { path: 'student-nav', component: StudentNavComponent },
   { path: '**', component: HomeComponent } // Wildcard route for unknown paths
