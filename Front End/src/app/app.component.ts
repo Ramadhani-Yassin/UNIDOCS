@@ -1,17 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  template: `
-  
-    <router-outlet></router-outlet>
-  `
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
 })
-export class AppComponent {
-  title(title: any) {
-    throw new Error('Method not implemented.');
+export class AppComponent implements AfterViewInit {
+  ngAfterViewInit() {
+    // Prevent loading the script multiple times
+    if (!document.getElementById('g_2z9kh90ehDyF2Olf694')) {
+      const script = document.createElement('script');
+      script.src = 'https://www.chatbase.co/embed.min.js';
+      script.id = 'g_2z9kh90ehDyF2Olf694';
+      script.setAttribute('domain', 'www.chatbase.co');
+      document.body.appendChild(script);
+    }
   }
-
 }
 
 
