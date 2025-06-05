@@ -61,18 +61,6 @@
               </div>
             </div>
 
-            <!-- Verification Status -->
-            <div class="verification-status">
-              <div class="status-item" [class.verified]="isEmailVerified">
-                <i class='bx bx-envelope'></i>
-                <span>
-                  {{ isEmailVerified ? 'Email Verified' : 'Email Not Verified' }}
-                  <small *ngIf="!isEmailVerified">Check your inbox for verification link</small>
-                </span>
-                <i *ngIf="isEmailVerified" class='bx bx-check-circle verified-icon'></i>
-              </div>
-            </div>
-
             <!-- Password Confirmation -->
             <div class="form-group">
               <label for="currentPassword">Confirm Current Password:</label>

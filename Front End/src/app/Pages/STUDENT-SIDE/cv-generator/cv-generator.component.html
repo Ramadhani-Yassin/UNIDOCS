@@ -17,13 +17,13 @@
       <!-- FORM COLUMN -->
       <div class="form-column">
         <div class="form-container">
-          <form>
+          <form #cvForm="ngForm" (ngSubmit)="onSubmit()">
             <h2><i class='bx bx-id-card'></i> Generate Your CV</h2>
             
             <!-- Template Selection -->
             <div class="form-group">
               <label for="cv_template">Choose CV Template:</label>
-              <select id="cv_template" name="cv_template" required>
+              <select id="cv_template" name="cv_template" required [(ngModel)]="selectedTemplate">
                 <option value="" disabled selected>Select Template</option>
                 <option value="classic">Classic</option>
                 <option value="modern">Modern</option>
@@ -34,43 +34,43 @@
             <!-- Personal Information -->
             <div class="form-group">
               <label for="fullname">Full Name:</label>
-              <input type="text" id="fullname" name="fullname" required placeholder="Your full name">
+              <input type="text" id="fullname" name="fullname" required [(ngModel)]="fullName" placeholder="Your full name">
             </div>
             <div class="form-group">
               <label for="email">Email Address:</label>
-              <input type="email" id="email" name="email" required placeholder="you@example.com">
+              <input type="email" id="email" name="email" required [(ngModel)]="email" placeholder="you@example.com">
             </div>
             <div class="form-group">
               <label for="phone">Phone Number:</label>
-              <input type="tel" id="phone" name="phone" required placeholder="Your phone number">
+              <input type="tel" id="phone" name="phone" required [(ngModel)]="phone" placeholder="Your phone number">
             </div>
             <div class="form-group">
               <label for="address">Address:</label>
-              <input type="text" id="address" name="address" required placeholder="Your address">
+              <input type="text" id="address" name="address" required [(ngModel)]="address" placeholder="Your address">
             </div>
 
             <!-- Education -->
             <div class="form-group">
               <label for="education">Education:</label>
-              <textarea id="education" name="education" rows="3" required placeholder="List your education, e.g. University, Degree, Year"></textarea>
+              <textarea id="education" name="education" rows="3" required [(ngModel)]="education" placeholder="List your education, e.g. University, Degree, Year"></textarea>
             </div>
 
             <!-- Experience -->
             <div class="form-group">
               <label for="experience">Work Experience:</label>
-              <textarea id="experience" name="experience" rows="3" required placeholder="List your work experience"></textarea>
+              <textarea id="experience" name="experience" rows="3" required [(ngModel)]="experience" placeholder="List your work experience"></textarea>
             </div>
 
             <!-- Skills -->
             <div class="form-group">
               <label for="skills">Skills:</label>
-              <input type="text" id="skills" name="skills" required placeholder="e.g. Python, Communication, Leadership">
+              <input type="text" id="skills" name="skills" required [(ngModel)]="skills" placeholder="e.g. Python, Communication, Leadership">
             </div>
 
             <!-- Additional Sections -->
             <div class="form-group">
               <label for="about">About Me / Profile Summary:</label>
-              <textarea id="about" name="about" rows="2" placeholder="Short summary about yourself"></textarea>
+              <textarea id="about" name="about" rows="2" [(ngModel)]="about" placeholder="Short summary about yourself"></textarea>
             </div>
 
             <div class="form-actions">
@@ -112,19 +112,30 @@
       </div>
     </div>
 
-    <!-- Download Section (show after generation) -->
-    <!--
-    <div class="download-section">
-      <h3><i class='bx bx-check-circle'></i> Your CV is ready!</h3>
-      <p>Download your CV in the preferred format:</p>
-      <div class="download-buttons">
-        <a href="#" class="download-btn docx"><i class="bx bxs-file-doc"></i> Download DOCX</a>
-        <a href="#" class="download-btn pdf"><i class="bx bxs-file-pdf"></i> Download PDF</a>
+    <!-- Download Section (modal style, like application.component.html) -->
+    <div *ngIf="downloadUrl" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <h3 style="color:#28a745;display:flex;align-items:center;gap:10px;">
+            <i class='bx bx-check-circle'></i> Your CV is ready!
+          </h3>
+          <p>Download your CV in the preferred format:</p>
+          <div class="download-buttons">
+            <a [href]="downloadUrl.docx" download="cv.docx" class="download-btn docx">
+              <i class="bx bxs-file-doc"></i> Download DOCX
+            </a>
+            <a [href]="downloadUrl.pdf" download="cv.pdf" class="download-btn pdf">
+              <i class="bx bxs-file-pdf"></i> Download PDF
+            </a>
+          </div>
+          <p class="download-note">
+            <i class='bx bx-info-circle'></i> You can always regenerate or update your CV.
+          </p>
+          <button class="btn-cancel" (click)="downloadUrl = null" style="margin-top:16px;">
+            <i class='bx bx-x'></i> Close
+          </button>
+        </div>
       </div>
-      <p class="download-note">
-        <i class='bx bx-info-circle'></i> You can always regenerate or update your CV.
-      </p>
     </div>
-    -->
   </main>
 </section>

@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-settings',
@@ -13,8 +14,8 @@ export class SettingsComponent implements OnInit {
   lastName: string = '';
   email: string = '';
   currentPassword: string = '';
-  isEmailVerified: boolean = false;
-  
+  userId: number | null = null;
+
   // Alert properties
   showAlert: boolean = false;
   alertType: string = 'success';
@@ -24,14 +25,16 @@ export class SettingsComponent implements OnInit {
   // Loading state
   isLoading: boolean = false;
 
-  constructor() {}
+  constructor(private userService: UserService) {}
 
   ngOnInit() {
-    // Example data - in a real app, you would get this from a service
-    this.firstName = 'John';
-    this.lastName = 'Doe';
-    this.email = 'john.doe@suza.ac.tz';
-    this.isEmailVerified = true;
+    const user = this.userService.getCurrentUser();
+    if (user) {
+      this.userId = user.id;
+      this.firstName = user.firstName;
+      this.lastName = user.lastName;
+      this.email = user.email;
+    }
 
     // Optional: Log sidebar state for debugging
     if (this.sidebarService && this.sidebarService.isOpen$) {
@@ -43,26 +46,59 @@ export class SettingsComponent implements OnInit {
 
   onSubmit() {
     this.isLoading = true;
-    this.showAlert = true;
-    this.alertType = 'success';
-    
-    // Simulate API call
-    setTimeout(() => {
+    this.showAlert = false;
+
+    // Simple email validation
+    if (!this.email.includes('@')) {
       this.isLoading = false;
-      // In a real app, you would handle the form submission here
-      console.log('Form submitted:', {
-        firstName: this.firstName,
-        lastName: this.lastName,
-        email: this.email,
-        currentPassword: this.currentPassword
-      });
-    }, 1500);
+      this.showAlert = true;
+      this.alertType = 'danger';
+      this.errorMessage = 'Please enter a valid email address.';
+      return;
+    }
+
+    if (!this.currentPassword) {
+      this.isLoading = false;
+      this.showAlert = true;
+      this.alertType = 'danger';
+      this.errorMessage = 'Password is required to save changes.';
+      return;
+    }
+
+    const updateData = {
+      firstName: this.firstName,
+      lastName: this.lastName,
+      email: this.email,
+      currentPassword: this.currentPassword
+    };
+
+    if (!this.userId) {
+      this.isLoading = false;
+      this.showAlert = true;
+      this.alertType = 'danger';
+      this.errorMessage = 'User not found.';
+      return;
+    }
+
+    this.userService.updateUser(this.userId, updateData).subscribe({
+      next: (res) => {
+        this.isLoading = false;
+        this.showAlert = true;
+        this.alertType = 'success';
+        this.successMessage = 'Profile updated successfully!';
+        this.userService.storeUserData(res); // Update local storage
+      },
+      error: (err) => {
+        this.isLoading = false;
+        this.showAlert = true;
+        this.alertType = 'danger';
+        this.errorMessage = err.error?.error || 'Error updating profile. Please try again.';
+      }
+    });
   }
 
   resetForm() {
-    this.firstName = '';
-    this.lastName = '';
-    this.email = '';
+    this.ngOnInit();
     this.currentPassword = '';
   }
 

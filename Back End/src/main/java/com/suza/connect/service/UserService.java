@@ -7,6 +7,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -71,5 +72,23 @@ public class UserService {
                 userRepository.save(user);
             }
         });
+    }
+
+    public User updateUser(Long id, Map<String, Object> updates) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (updates.containsKey("firstName")) {
+            user.setFirstName((String) updates.get("firstName"));
+        }
+        if (updates.containsKey("lastName")) {
+            user.setLastName((String) updates.get("lastName"));
+        }
+        if (updates.containsKey("email")) {
+            user.setEmail((String) updates.get("email"));
+        }
+        // Optionally check currentPassword here if needed
+
+        return userRepository.save(user);
     }
 }

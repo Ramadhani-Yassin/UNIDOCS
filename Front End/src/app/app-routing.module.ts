@@ -21,32 +21,33 @@ import { StudentNavComponent } from './components/student-nav/student-nav.compon
 import { CVGeneratorComponent } from './Pages/STUDENT-SIDE/cv-generator/cv-generator.component';
 import { StudentSettingsShellComponent } from './Pages/STUDENT-SIDE/student-settings-shell/student-settings-shell.component';
 import { AdminSettingsShellComponent } from './Pages/ADMIN-SIDE/admin-settings-shell/admin-settings-shell.component';
+import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'about-us', component: AboutUsComponent },
   { path: 'contacts', component: ContactsComponent },
-  // { path: 'sign-up', component: SignUpComponent },
-  { path: 'dashboard', component: DashboardComponent },
   { path: 'login', component: LoginComponent },
   { path: 'admin-login', component: AdminLoginComponent },
-  { path: 'admin-portal', component: AdminPortalComponent },
-  { path: 'analytics', component: AnalyticsComponent },
-  { path: 'messages', component: MessagesComponent },
-  { path: 'application', component: ApplicationComponent },
-  { path: 'announcements', component: AnnouncementsComponent },
-  // Use shell components for settings
-  { path: 'settings', component: StudentSettingsShellComponent },
-  { path: 'admin/settings', component: AdminSettingsShellComponent },
-  { path: 'letters-requested', component: LettersRequestedComponent },
-  { path: 'publish-announcements', component: PublishAnnouncementsComponent },
-  { path: 'general-analytics', component: GeneralAnalyticsComponent },
-  { path: 'admin-nav', component: AdminNavComponent },
-  { path: 'generate-cv', component: CVGeneratorComponent },
-  { path: 'students-management', component: StudentsManagementComponent },
-  { path: 'student-nav', component: StudentNavComponent },
-  { path: '**', component: HomeComponent } // Wildcard route for unknown paths
+
+  // All routes below are protected
+  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'admin-portal', component: AdminPortalComponent, canActivate: [AuthGuard] },
+  { path: 'analytics', component: AnalyticsComponent, canActivate: [AuthGuard] },
+  { path: 'messages', component: MessagesComponent, canActivate: [AuthGuard] },
+  { path: 'application', component: ApplicationComponent, canActivate: [AuthGuard] },
+  { path: 'announcements', component: AnnouncementsComponent, canActivate: [AuthGuard] },
+  { path: 'settings', component: StudentSettingsShellComponent, canActivate: [AuthGuard] },
+  { path: 'admin/settings', component: AdminSettingsShellComponent, canActivate: [AuthGuard] },
+  { path: 'letters-requested', component: LettersRequestedComponent, canActivate: [AuthGuard] },
+  { path: 'publish-announcements', component: PublishAnnouncementsComponent, canActivate: [AuthGuard] },
+  { path: 'general-analytics', component: GeneralAnalyticsComponent, canActivate: [AuthGuard] },
+  { path: 'admin-nav', component: AdminNavComponent, canActivate: [AuthGuard] },
+  { path: 'generate-cv', component: CVGeneratorComponent, canActivate: [AuthGuard] },
+  { path: 'students-management', component: StudentsManagementComponent, canActivate: [AuthGuard] },
+  { path: 'student-nav', component: StudentNavComponent, canActivate: [AuthGuard] },
+  { path: '**', component: HomeComponent }
 ];
 
 @NgModule({

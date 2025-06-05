@@ -55,20 +55,32 @@ public class UserController {
     }
 
 
-            @GetMapping("/{id}")
-                    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-                 return userService.findById(id)
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+        return userService.findById(id)
                 .map(user -> ResponseEntity.ok(Map.of(
-                "firstName", user.getFirstName(),
-                "lastName", user.getLastName(),
-                "email", user.getEmail()
-            )))
-            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(Map.of("error", "User not found")));
-}
+                        "firstName", user.getFirstName(),
+                        "lastName", user.getLastName(),
+                        "email", user.getEmail()
+                )))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "User not found")));
+    }
+
     @PostMapping("/migrate-passwords")
     public ResponseEntity<?> migratePasswords() {
         userService.migratePlainTextPasswords();
         return ResponseEntity.ok(Map.of("message", "Password migration completed"));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
+        try {
+            User updatedUser = userService.updateUser(id, updates);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
 }

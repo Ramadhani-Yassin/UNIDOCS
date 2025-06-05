@@ -38,6 +38,7 @@ public class SecurityConfig {
                 ).permitAll()
 
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll() // <-- Add this line
                 .requestMatchers(HttpMethod.POST, "/api/users/migrate-passwords").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
