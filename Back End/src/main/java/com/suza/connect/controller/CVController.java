@@ -87,7 +87,7 @@ public class CVController {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body(Map.of("error", "Unknown CV template: " + request.getCvTemplate()));
             }
-            String templatePath = "/home/ramah/Documents/FYP/templates/" + templateFileName;
+            String templatePath = "/home/ramah/Documents/FYP/templates/CV" + templateFileName;
 
             // Prepare placeholders map from request fields
             Map<String, String> placeholders = new HashMap<>();
