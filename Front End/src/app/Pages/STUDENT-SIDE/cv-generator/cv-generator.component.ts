@@ -18,6 +18,11 @@ export class CVGeneratorComponent {
   about: string = '';
   selectedTemplate: string = '';
   isLoading: boolean = false;
+  isGenerating: boolean = false;
+  showAlert: boolean = false;
+  alertType: 'success' | 'danger' = 'success';
+  successMessage: string = '';
+  errorMessage: string = '';
   // Change downloadUrl to an object for docx/pdf
   downloadUrl: { docx: string, pdf: string } | null = null;
 
@@ -28,32 +33,57 @@ export class CVGeneratorComponent {
 
   onSubmit(): void {
     this.isLoading = true;
+    this.showAlert = false;
+    this.downloadUrl = null;
+
     const cvData = {
       fullName: this.fullName,
       email: this.email,
-      phoneNumber: this.phone, // <-- match backend field
+      phoneNumber: this.phone,
       address: this.address,
       education: this.education,
       experience: this.experience,
       skills: this.skills,
       about: this.about,
-      templateType: this.selectedTemplate // <-- match backend field
+      cvTemplate: this.selectedTemplate // <-- change from templateType to cvTemplate
     };
+
+    console.log('Submitting CV data:', cvData);
 
     this.cvRequestService.submitCVRequest(cvData).subscribe({
       next: (response: any) => {
         this.isLoading = false;
-        // Assume response.downloadUrl is DOCX, and PDF is similar (replace extension)
-        this.downloadUrl = {
-          docx: response.downloadUrl,
-          pdf: response.downloadUrl.replace(/\.docx$/, '.pdf')
-        };
+        this.isGenerating = true;
+        setTimeout(() => {
+          this.isGenerating = false;
+          if (response.requestId) {
+            // Build download URLs for DOCX and PDF
+            this.downloadUrl = {
+              docx: `/api/cv-requests/${response.requestId}/generate?format=docx`,
+              pdf: `/api/cv-requests/${response.requestId}/generate?format=pdf`
+            };
+            this.showAlertMessage('CV generated successfully!', 'success');
+          } else {
+            this.showAlertMessage('Failed to generate CV. Try again.', 'danger');
+          }
+        }, 2500);
       },
       error: (error: any) => {
         this.isLoading = false;
-        console.error('Error generating CV:', error);
+        this.isGenerating = false;
+        this.showAlertMessage('Error generating CV: ' + (error.message || 'Unknown error'), 'danger');
       }
     });
+  }
+
+  showAlertMessage(message: string, type: 'success' | 'danger'): void {
+    this.successMessage = type === 'success' ? message : '';
+    this.errorMessage = type === 'danger' ? message : '';
+    this.alertType = type;
+    this.showAlert = true;
+    if (type === 'success') {
+      setTimeout(() => this.showAlert = false, 5000);
+    }
   }
 
   clearForm(): void {

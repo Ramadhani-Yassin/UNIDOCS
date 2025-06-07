@@ -6,6 +6,7 @@ import com.suza.connect.service.CVGenerationService;
 import com.suza.connect.service.CVRequestService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/cv-requests")
@@ -63,9 +65,11 @@ public class CVController {
     }
 
     @GetMapping("/{id}/generate")
-    public ResponseEntity<?> generateCV(@PathVariable String id, @RequestParam(defaultValue = "docx") String format) {
+    public ResponseEntity<?> generateCV(
+            @PathVariable UUID id,
+            @RequestParam String format) {
         try {
-            Optional<CVRequest> requestOpt = cvRequestService.findById(id);
+            Optional<CVRequest> requestOpt = cvRequestService.findById(id.toString());
             if (requestOpt.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Request not found"));
             }
@@ -87,7 +91,14 @@ public class CVController {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                             .body(Map.of("error", "Unknown CV template: " + request.getCvTemplate()));
             }
-            String templatePath = "/home/ramah/Documents/FYP/templates/CV" + templateFileName;
+            String templatePath = "/home/ramah/Documents/FYP/templates/" + templateFileName;
+
+            File templateFile = new File(templatePath);
+            if (!templateFile.exists()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Template file not found: " + templatePath));
+            }
+
 
             // Prepare placeholders map from request fields
             Map<String, String> placeholders = new HashMap<>();

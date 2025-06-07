@@ -10,9 +10,10 @@ public class CVRequestDTO {
     private String education;
     private String experience;
     private String skills;
-    private String about;
-    private String templateType; // To specify the CV template type
-    private Date requestDate; // To track when the CV request was made
+    private String cvTemplate; // or templateType, match your frontend
+    private String about; // optional
+    private String programOfStudy; // optional
+    // ...other optional fields...
 
     // Getters and Setters
     public String getFullName() {
@@ -71,6 +72,14 @@ public class CVRequestDTO {
         this.skills = skills;
     }
 
+    public String getCvTemplate() {
+        return cvTemplate;
+    }
+
+    public void setCvTemplate(String cvTemplate) {
+        this.cvTemplate = cvTemplate;
+    }
+
     public String getAbout() {
         return about;
     }
@@ -79,19 +88,11 @@ public class CVRequestDTO {
         this.about = about;
     }
 
-    public String getTemplateType() {
-        return templateType;
+    public String getProgramOfStudy() {
+        return programOfStudy;
     }
 
-    public void setTemplateType(String templateType) {
-        this.templateType = templateType;
-    }
-
-    public Date getRequestDate() {
-        return requestDate;
-    }
-
-    public void setRequestDate(Date requestDate) {
-        this.requestDate = requestDate;
+    public void setProgramOfStudy(String programOfStudy) {
+        this.programOfStudy = programOfStudy;
     }
 }

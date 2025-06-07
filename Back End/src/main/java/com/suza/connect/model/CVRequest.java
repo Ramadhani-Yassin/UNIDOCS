@@ -5,7 +5,6 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
@@ -24,20 +23,30 @@ public class CVRequest {
     @Column(nullable = false)
     private String email;
 
-    @Column(name = "registration_number", nullable = false)
-    private String registrationNumber;
-
     @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "program_of_study", nullable = false)
-    private String programOfStudy;
+    @Column(name = "address", nullable = false)
+    private String address;
 
-    @Column(name = "year_of_study", nullable = false)
-    private Integer yearOfStudy;
+    @Column(name = "education", columnDefinition = "TEXT", nullable = false)
+    private String education;
+
+    @Column(name = "experience", columnDefinition = "TEXT", nullable = false)
+    private String experience;
+
+    @Column(name = "skills", columnDefinition = "TEXT", nullable = false)
+    private String skills;
 
     @Column(name = "cv_template", nullable = false)
     private String cvTemplate;
+
+    // Optional fields
+    @Column(name = "about", columnDefinition = "TEXT", nullable = true)
+    private String about;
+
+    @Column(name = "program_of_study", nullable = true)
+    private String programOfStudy;
 
     @Column(name = "submission_date", nullable = false)
     private LocalDateTime submissionDate = LocalDateTime.now();
@@ -45,19 +54,4 @@ public class CVRequest {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "education", columnDefinition = "TEXT")
-    private String education;
-
-    @Column(name = "experience", columnDefinition = "TEXT")
-    private String experience;
-
-    @Column(name = "skills", columnDefinition = "TEXT")
-    private String skills;
-
-    @Column(name = "about", columnDefinition = "TEXT")
-    private String about;
 }

@@ -21,14 +21,18 @@ public class CVRequestServiceImpl implements CVRequestService {
 
     @Override
     public CVRequest createCVRequest(CVRequestDTO requestDTO) {
-        // Map DTO to Entity (add more fields as needed)
         CVRequest request = new CVRequest();
         request.setFullName(requestDTO.getFullName());
         request.setEmail(requestDTO.getEmail());
         request.setPhoneNumber(requestDTO.getPhoneNumber());
-        // Set other fields as needed...
-        request.setCvTemplate(requestDTO.getTemplateType());
-        // Save to DB
+        request.setAddress(requestDTO.getAddress());
+        request.setEducation(requestDTO.getEducation());
+        request.setExperience(requestDTO.getExperience());
+        request.setSkills(requestDTO.getSkills());
+        request.setCvTemplate(requestDTO.getCvTemplate());
+        request.setAbout(requestDTO.getAbout());
+        request.setProgramOfStudy(requestDTO.getProgramOfStudy());
+        request.setSubmissionDate(java.time.LocalDateTime.now()); // <-- ADD THIS LINE
         return cvRequestRepository.save(request);
     }
 

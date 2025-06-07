@@ -27,25 +27,24 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            .csrf(csrf -> csrf.disable()) // Disable only during development
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 // Public endpoints (no auth required)
                 .requestMatchers(HttpMethod.POST,
                     "/api/users/register",
                     "/api/users/login",
                     "/api/admin/register",
-                    "/api/admin/login"
+                    "/api/admin/login",
+                    "/api/letter-requests",
+                    "/api/cv-requests" // <-- Ensure this is included here
                 ).permitAll()
 
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll() // <-- Add this line
+                .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/migrate-passwords").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/recent/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/letter-requests/*/generate").permitAll() // <-- Allow public access to generate endpoint
-
-                // Allow public access to count by email
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests/*/generate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
 
                 // Secure endpoints
@@ -56,7 +55,7 @@ public class SecurityConfig {
                 // Everything else must be authenticated
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.disable()); // Use stateless sessions (e.g., JWT)
+            .sessionManagement(session -> session.disable());
 
         return http.build();
     }

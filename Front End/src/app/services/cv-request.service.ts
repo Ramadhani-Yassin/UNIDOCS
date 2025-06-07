@@ -30,14 +30,11 @@ export class CVRequestService {
 
     submitCVRequest(requestData: any): Observable<any> {
         const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.getAuthToken()}`
+            'Content-Type': 'application/json'
+            // Add Authorization if needed
         });
 
-        return this.http.post(this.apiUrl, this.formatRequestData(requestData), { headers })
-            .pipe(
-                catchError(this.handleError)
-            );
+        return this.http.post<any>(this.apiUrl, requestData, { headers });
     }
 
     getRecentCVRequests(limit: number = 5): Observable<CVRequest[]> {
