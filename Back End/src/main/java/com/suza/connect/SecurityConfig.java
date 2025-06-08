@@ -45,6 +45,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/recent/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/*/generate").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/cv-requests/*/generate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
 
                 // Secure endpoints

@@ -112,8 +112,30 @@
       </div>
     </div>
 
-    <!-- Download Section (modal style, like application.component.html) -->
-    <div *ngIf="downloadUrl" class="modal-overlay">
+    <!-- Loading Modal Overlay -->
+    <div *ngIf="isLoading" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="spinner"></div>
+          <div class="modal-text">Processing your request, please wait...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Synchronous Generating Modal -->
+    <div *ngIf="isGenerating" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="spinner"></div>
+          <div class="modal-text" style="font-weight:600;">
+            Please wait while the system generates your CV...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Download Modal Overlay -->
+    <div *ngIf="downloadUrl && !isGenerating" class="modal-overlay">
       <div class="modal-dialog">
         <div class="modal-content">
           <h3 style="color:#28a745;display:flex;align-items:center;gap:10px;">

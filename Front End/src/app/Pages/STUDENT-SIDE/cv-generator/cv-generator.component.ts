@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CVRequestService } from '../../../services/cv-request.service';
 import { StudentSidebarService } from '../../../services/student-sidebar.service'; // Import sidebar service
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-cv-generator',
@@ -45,10 +46,8 @@ export class CVGeneratorComponent {
       experience: this.experience,
       skills: this.skills,
       about: this.about,
-      cvTemplate: this.selectedTemplate // <-- change from templateType to cvTemplate
+      cvTemplate: this.selectedTemplate
     };
-
-    console.log('Submitting CV data:', cvData);
 
     this.cvRequestService.submitCVRequest(cvData).subscribe({
       next: (response: any) => {
@@ -57,10 +56,9 @@ export class CVGeneratorComponent {
         setTimeout(() => {
           this.isGenerating = false;
           if (response.requestId) {
-            // Build download URLs for DOCX and PDF
             this.downloadUrl = {
-              docx: `/api/cv-requests/${response.requestId}/generate?format=docx`,
-              pdf: `/api/cv-requests/${response.requestId}/generate?format=pdf`
+              docx: `${environment.apiUrl}/api/cv-requests/${response.requestId}/generate?format=docx`,
+              pdf: `${environment.apiUrl}/api/cv-requests/${response.requestId}/generate?format=pdf`
             };
             this.showAlertMessage('CV generated successfully!', 'success');
           } else {
