@@ -99,7 +99,6 @@ public class CVController {
                         .body(Map.of("error", "Template file not found: " + templatePath));
             }
 
-
             // Prepare placeholders map from request fields
             Map<String, String> placeholders = new HashMap<>();
             placeholders.put("fullName", safe(request.getFullName()));
@@ -110,22 +109,30 @@ public class CVController {
             placeholders.put("experience", safe(request.getExperience()));
             placeholders.put("skills", safe(request.getSkills()));
             placeholders.put("about", safe(request.getAbout()));
-            // Add more as needed
             placeholders.put("date", java.time.LocalDate.now().toString());
 
             File filledDocx = cvGenerationService.fillTemplate(templatePath, placeholders);
+
+            // Extract first and last name from fullName
+            String fullName = safe(request.getFullName());
+            String[] nameParts = fullName.trim().split("\\s+");
+            String firstName = nameParts.length > 0 ? nameParts[0] : "User";
+            String lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : "";
+            String baseFileName = (firstName + " " + lastName + " CV").trim().replaceAll("[^a-zA-Z0-9 ]", "");
+            String fileExtension = "pdf".equalsIgnoreCase(format) ? "pdf" : "docx";
+            String fileName = baseFileName + "." + fileExtension;
 
             if ("pdf".equalsIgnoreCase(format)) {
                 File pdfFile = cvGenerationService.convertDocxToPdf(filledDocx);
                 InputStreamResource resource = new InputStreamResource(new FileInputStream(pdfFile));
                 return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + pdfFile.getName())
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                         .contentType(MediaType.APPLICATION_PDF)
                         .body(resource);
             } else {
                 InputStreamResource resource = new InputStreamResource(new FileInputStream(filledDocx));
                 return ResponseEntity.ok()
-                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filledDocx.getName())
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
                         .contentType(MediaType.APPLICATION_OCTET_STREAM)
                         .body(resource);
             }
