@@ -37,9 +37,9 @@
           <thead>
             <tr>
               <th>Student Name</th>
-              <th>Registration Date</th>
+              <!--<th>Registration Date</th>-->
               <th>Email</th>
-              <th>Letters Requested</th>
+             <!--<th>Letters Requested</th>-->
               <!--<th>Status</th>-->
               <th>Actions</th>
             </tr>
@@ -52,10 +52,10 @@
                   <span>{{ student.firstName }} {{ student.lastName }}</span>
                 </div>
               </td>
-              <td class="centered">{{ student.registrationDate | date:'dd-MM-yyyy' }}</td>
+              <!--<td class="centered">{{ student.registrationDate | date:'dd-MM-yyyy' }}</td>-->
               <td class="centered">{{ student.email }}</td>
-              <td class="centered">{{ student.lettersRequested }}</td>
-               <!--<td class="centered">
+              <!--<td class="centered">{{ student.lettersRequested }}</td>
+               <td class="centered">
                 <span class="status" [ngClass]="{
                   'completed': student.status === 'active',
                   'pending': student.status === 'suspended'

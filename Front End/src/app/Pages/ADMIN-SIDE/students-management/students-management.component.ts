@@ -1,15 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { SidebarService } from '../../../services/sidebar.service';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 interface Student {
-  id: string;
+  id: number;
   firstName: string;
   lastName: string;
   email: string;
   avatar?: string;
-  registrationDate: Date;
-  lettersRequested: number;
-  status: 'active' | 'suspended';
+  registrationDate?: Date | string;
+  lettersRequested?: number;
+  status?: 'active' | 'suspended';
+  role?: string;
 }
 
 @Component({
@@ -26,15 +29,26 @@ export class StudentsManagementComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
 
-  constructor(public sidebarService: SidebarService) {}
+  constructor(
+    public sidebarService: SidebarService,
+    private http: HttpClient
+  ) {}
 
   ngOnInit(): void {
     this.loadStudents();
   }
 
   loadStudents(): void {
-    this.students = this.generateMockStudents(75);
-    this.filterStudents();
+    this.http.get<Student[]>(`${environment.apiUrl}/api/users/students`).subscribe(students => {
+      this.students = students.map(s => ({
+        ...s,
+        avatar: s.avatar || 'assets/default-avatar.png',
+        registrationDate: s.registrationDate ? new Date(s.registrationDate) : undefined,
+        lettersRequested: s.lettersRequested ?? 0,
+        status: s.status ?? 'active'
+      }));
+      this.filterStudents();
+    });
   }
 
   filterStudents(): void {
@@ -61,7 +75,7 @@ export class StudentsManagementComponent implements OnInit {
     return Math.ceil(this.filteredStudents.length / this.itemsPerPage);
   }
 
-  suspendStudent(id: string): void {
+  suspendStudent(id: number): void {
     const student = this.students.find(s => s.id === id);
     if (student) {
       student.status = 'suspended';
@@ -69,7 +83,7 @@ export class StudentsManagementComponent implements OnInit {
     }
   }
 
-  activateStudent(id: string): void {
+  activateStudent(id: number): void {
     const student = this.students.find(s => s.id === id);
     if (student) {
       student.status = 'active';
@@ -77,15 +91,17 @@ export class StudentsManagementComponent implements OnInit {
     }
   }
 
-  confirmDelete(id: string): void {
+  confirmDelete(id: number): void {
     if (confirm('Are you sure you want to permanently delete this student?')) {
       this.deleteStudent(id);
     }
   }
 
-  deleteStudent(id: string): void {
-    this.students = this.students.filter(student => student.id !== id);
-    this.filterStudents();
+  deleteStudent(id: number): void {
+    this.http.delete(`${environment.apiUrl}/api/users/${id}`).subscribe(() => {
+      this.students = this.students.filter(student => student.id !== id);
+      this.filterStudents();
+    });
   }
 
   nextPage(): void {
@@ -120,14 +136,15 @@ export class StudentsManagementComponent implements OnInit {
     const lastNames = ['Seif', 'Said', 'Juma', 'Salim', 'Hamad', 'Othman', 'Rajab', 'Kombo', 'Hemed', 'Abdallah'];
 
     return Array.from({ length: count }, (_, i) => ({
-      id: `stu${1000 + i}`,
+      id: 1000 + i,
       firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
       lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
       email: `student${1000 + i}@university.edu`,
       avatar: `https://i.pravatar.cc/150?img=${Math.floor(Math.random() * 70)}`,
       registrationDate: new Date(Date.now() - Math.floor(Math.random() * 1000 * 60 * 60 * 24 * 365)),
       lettersRequested: Math.floor(Math.random() * 50),
-      status: Math.random() > 0.2 ? 'active' : 'suspended'
+      status: Math.random() > 0.2 ? 'active' : 'suspended',
+      role: Math.random() > 0.5 ? 'admin' : 'user'
     }));
   }
 }

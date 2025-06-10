@@ -135,4 +135,8 @@ public class LetterRequestService {
             .map(this::toDTO)
             .collect(Collectors.toList());
     }
+
+    public List<LetterRequest> getAllLetterRequests() {
+        return letterRequestRepository.findAll();
+    }
 }

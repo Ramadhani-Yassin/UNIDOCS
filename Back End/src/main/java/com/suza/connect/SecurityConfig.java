@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,16 +30,15 @@ public class SecurityConfig {
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                // Public endpoints (no auth required)
+                // PUBLIC ENDPOINTS
                 .requestMatchers(HttpMethod.POST,
                     "/api/users/register",
                     "/api/users/login",
                     "/api/admin/register",
                     "/api/admin/login",
                     "/api/letter-requests",
-                    "/api/cv-requests" // <-- Ensure this is included here
+                    "/api/cv-requests"
                 ).permitAll()
-
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/migrate-passwords").permitAll()
@@ -47,17 +47,17 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/*/generate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cv-requests/*/generate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
-                
-
-                // Secure endpoints
+                .requestMatchers(HttpMethod.GET, "/api/users/students").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/letter-requests/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll() // <-- Add this for POST if needed
+                .requestMatchers("/api/admin/**").permitAll()
+                // Everything else under /api/users/** requires role
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
-                .requestMatchers("/api/admin/**").permitAll() // <--- Temporarily allow all admin endpoints
-                .requestMatchers(HttpMethod.GET, "/api/letter-requests/**").hasAnyRole("STUDENT", "ADMIN")
-
-                // Everything else must be authenticated
+                // Everything else
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.disable());
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // <-- Use stateless
 
         return http.build();
     }
@@ -65,7 +65,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200"));
+        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://192.168.106.248:4200"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(List.of("Authorization"));

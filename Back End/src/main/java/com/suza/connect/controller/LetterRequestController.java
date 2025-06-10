@@ -169,4 +169,10 @@ public class LetterRequestController {
         if (value instanceof java.time.LocalDateTime) return value.toString();
         return value.toString();
     }
+
+    @GetMapping
+    public ResponseEntity<?> getAllLetterRequests() {
+        // Replace with your actual service call
+        return ResponseEntity.ok(letterRequestService.getAllLetterRequests());
+    }
 }

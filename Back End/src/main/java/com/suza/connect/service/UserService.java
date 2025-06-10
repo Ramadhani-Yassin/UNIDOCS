@@ -64,6 +64,10 @@ public class UserService {
         userRepository.findByEmail(email).ifPresent(userRepository::delete);
     }
 
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
+
     public void migratePlainTextPasswords() {
         List<User> users = userRepository.findAll();
         users.forEach(user -> {
