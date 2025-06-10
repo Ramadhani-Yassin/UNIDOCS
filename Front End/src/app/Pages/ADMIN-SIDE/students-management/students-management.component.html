@@ -36,34 +36,26 @@
         <table>
           <thead>
             <tr>
-              <th>Student Name</th>
-              <!--<th>Registration Date</th>-->
-              <th>Email</th>
+              <th class="centered">Student Name</th>
+              <!--<th class="centered">Registration Number</th>-->
+              <th class="centered">Email</th>
              <!--<th>Letters Requested</th>-->
               <!--<th>Status</th>-->
-              <th>Actions</th>
+              <th class="centered">Actions</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let student of paginatedStudents">
-              <td class="student-cell">
+              <td class="centered student-cell">
                 <div class="student-info">
-                  <img [src]="student.avatar || 'assets/default-avatar.png'" alt="Student Avatar" />
+                  <img [src]="student.avatar" alt="Student Avatar" />
                   <span>{{ student.firstName }} {{ student.lastName }}</span>
                 </div>
               </td>
-              <!--<td class="centered">{{ student.registrationDate | date:'dd-MM-yyyy' }}</td>-->
+              <!--<td class="centered">{{ student.registrationNumber }}</td>-->
               <td class="centered">{{ student.email }}</td>
-              <!--<td class="centered">{{ student.lettersRequested }}</td>
-               <td class="centered">
-                <span class="status" [ngClass]="{
-                  'completed': student.status === 'active',
-                  'pending': student.status === 'suspended'
-                }">
-                  {{ student.status | titlecase }}
-                </span>
-              </td>-->
-              <td class="actions">
+              <!--<td class="centered">{{ student.lettersRequested }}</td>-->
+              <td class="centered actions">
                 <button *ngIf="student.status === 'active'" class="btn-suspend" (click)="suspendStudent(student.id)">
                   <i class="bx bx-pause-circle"></i> Suspend
                 </button>

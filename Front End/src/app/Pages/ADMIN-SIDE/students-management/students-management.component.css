@@ -112,13 +112,17 @@
   margin-top: 16px;
 }
 
-#content main .table-data .order table th {
-  padding-bottom: 12px;
-  font-size: 13px;
-  text-align: left;
-  border-bottom: 1px solid #eee;
+#content main .table-data .order table th,
+#content main .table-data .order table th.centered {
+  background: #f4f8fb;
+  color: #3C91E6;
   font-weight: 600;
-  color: #342E37;
+  font-size: 15px;
+  border-bottom: 2px solid #e6e6e6;
+  text-align: center;
+  vertical-align: middle;
+  padding: 14px 16px;
+  white-space: nowrap;
 }
 
 #content main .table-data .order table td {
@@ -317,6 +321,11 @@
   text-transform: capitalize;
   color: #fff;
   background: #bdbdbd; /* fallback */
+}
+
+.centered {
+  text-align: center;
+  vertical-align: middle;
 }
 
 .status.completed {
