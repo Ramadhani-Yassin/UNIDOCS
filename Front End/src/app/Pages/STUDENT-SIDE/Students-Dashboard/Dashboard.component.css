@@ -57,6 +57,11 @@
     color: #c63737;
 }
 
+.status.approved { color: green; }
+.status.declined { color: red; }
+.status.pending { color: orange; }
+.status.completed { color: gray; }
+
 table {
     width: 100%;
     border-collapse: collapse;

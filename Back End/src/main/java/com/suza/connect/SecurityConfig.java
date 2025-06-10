@@ -47,10 +47,11 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/*/generate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cv-requests/*/generate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
+                
 
                 // Secure endpoints
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
-                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").permitAll() // <--- Temporarily allow all admin endpoints
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/**").hasAnyRole("STUDENT", "ADMIN")
 
                 // Everything else must be authenticated

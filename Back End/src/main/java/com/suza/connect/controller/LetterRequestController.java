@@ -56,10 +56,10 @@ public class LetterRequestController {
     }
 
     @GetMapping("/recent/{email}")
-    public ResponseEntity<List<LetterRequest>> getRecentRequestsByEmail(
+    public ResponseEntity<List<LetterRequestDTO>> getRecentRequestsByEmail(
             @PathVariable String email,
             @RequestParam(defaultValue = "5") int limit) {
-        List<LetterRequest> recentRequests = letterRequestService.findRecentByEmail(email, limit);
+        List<LetterRequestDTO> recentRequests = letterRequestService.findRecentByEmail(email, limit);
         return ResponseEntity.ok(recentRequests);
     }
 

@@ -1,4 +1,4 @@
-/* CONTENT */
+/* Sidebar collapse/expand styles */
 #content {
   width: calc(100% - 280px);
   margin-left: 280px;
@@ -32,7 +32,7 @@
 }
 
 .status-badge.approved {
-  background: #006e06;   /* Blue */
+  background: #006e06;    /* Blue */
   color: #fff;
 }
 
@@ -41,23 +41,18 @@
   color: #fff;
 }
 
-.status-cell {
-  display: flex;
-  align-items: center;
-  min-width: 160px;
-}
 
-
-/* MAIN s*/
+/* Main content */
 #content main {
   width: 100%;
   padding: 36px 24px;
   font-family: 'Poppins', sans-serif;
-  max-height: calc(100vh - 56px); /*SCROLL BAR*/
-  overflow-y: auto;/*SCROLL BAR*/
-  scrollbar-width: none; /* For Firefox */
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+  scrollbar-width: none;
 }
 
+/* Head title and breadcrumb */
 #content main .head-title {
   display: flex;
   align-items: center;
@@ -93,19 +88,7 @@
   pointer-events: unset;
 }
 
-#content main .head-title .btn-download {
-  height: 36px;
-  padding: 0 16px;
-  border-radius: 36px;
-  background: #3C91E6;
-  color: #F9F9F9;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  grid-gap: 10px;
-  font-weight: 500;
-}
-
+/* Info boxes */
 #content main .box-info {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -157,6 +140,7 @@
   color: #342E37;
 }
 
+/* Table and order section */
 #content main .table-data {
   display: flex;
   flex-wrap: wrap;
@@ -209,6 +193,11 @@
 .table-data .order table td {
   padding: 14px 16px;
   text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  vertical-align: middle;
 }
 
 .table-data .order table th {
@@ -217,6 +206,7 @@
   font-weight: 600;
   font-size: 15px;
   border-bottom: 2px solid #e6e6e6;
+  text-align: left;
 }
 
 .table-data .order table tr {
@@ -231,10 +221,17 @@
   font-size: 14px;
   color: #342E37;
   border-bottom: 1px solid #f0f0f0;
+  text-align: left;
 }
 
 .table-data .order table tr:last-child td {
   border-bottom: none;
+}
+
+.status-cell {
+  display: flex;
+  align-items: center;
+  min-width: 160px;
 }
 
 .table-data .order table select,
@@ -269,43 +266,7 @@
   background: #2563eb;
 }
 
-#content main .table-data .todo {
-  flex-grow: 1;
-  flex-basis: 300px;
-}
-
-#content main .table-data .todo .todo-list {
-  width: 100%;
-}
-
-#content main .table-data .todo .todo-list li {
-  width: 100%;
-  margin-bottom: 16px;
-  background: #eee;
-  border-radius: 10px;
-  padding: 14px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-#content main .table-data .todo .todo-list li .bx {
-  cursor: pointer;
-}
-
-#content main .table-data .todo .todo-list li.completed {
-  border-left: 10px solid #3C91E6;
-}
-
-#content main .table-data .todo .todo-list li.not-completed {
-  border-left: 10px solid #FD7238;
-}
-
-#content main .table-data .todo .todo-list li:last-child {
-  margin-bottom: 0;
-}
-
-/* MEDIA QUERIES */
+/* Responsive for small screens */
 @media screen and (max-width: 576px) {
   #content main .box-info {
     grid-template-columns: 1fr;
@@ -316,10 +277,6 @@
   }
 
   #content main .table-data .order table {
-    min-width: 420px;
-  }
-
-  #content main .table-data .todo .todo-list {
     min-width: 420px;
   }
 }

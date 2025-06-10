@@ -75,6 +75,13 @@ public class LetterRequest {
     @Column(name = "request_date", nullable = false)
     private LocalDateTime requestDate = LocalDateTime.now();
 
+    @Column(name = "status", nullable = false)
+    private String status = "PENDING"; // Default to PENDING
+
+    // Optionally
+    @Column(name = "admin_comment")
+    private String adminComment;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

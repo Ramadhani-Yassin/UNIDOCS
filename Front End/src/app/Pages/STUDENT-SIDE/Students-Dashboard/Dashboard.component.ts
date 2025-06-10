@@ -74,11 +74,12 @@ export class DashboardComponent implements OnInit {
   }
 
   getStatusClass(status: string): string {
-    status = status?.toLowerCase() || '';
-    if (status.includes('complete')) return 'completed';
-    if (status.includes('progress')) return 'process';
-    if (status.includes('error')) return 'pending';
-    return 'pending';
+    switch ((status || '').toUpperCase()) {
+      case 'APPROVED': return 'approved';
+      case 'DECLINED': return 'declined';
+      case 'PENDING': return 'pending';
+      default: return 'completed';
+    }
   }
 
   formatDate(dateString: string): string {

@@ -13,6 +13,7 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -35,6 +36,7 @@ public class LetterRequestService {
         request.setLetterType(requestDTO.getLetterType());
         request.setReasonForRequest(requestDTO.getReasonForRequest());
         request.setUser(user);
+        request.setStatus("PENDING");
 
         if (requestDTO.getEffectiveDate() != null) {
             request.setEffectiveDate(requestDTO.getEffectiveDate()
@@ -83,12 +85,54 @@ public class LetterRequestService {
         }
     }
 
-    public List<LetterRequest> findRecentByEmail(String email, int limit) {
-        return letterRequestRepository.findByEmailOrderByRequestDateDesc(email, 
-                PageRequest.of(0, limit));
+    public List<LetterRequestDTO> findRecentByEmail(String email, int limit) {
+        List<LetterRequest> requests = letterRequestRepository.findByEmailOrderByRequestDateDesc(email, PageRequest.of(0, limit));
+        return requests.stream().map(this::toDTO).collect(Collectors.toList());
+    }
+
+    private LetterRequestDTO toDTO(LetterRequest req) {
+        LetterRequestDTO dto = new LetterRequestDTO();
+        dto.setFullName(req.getFullName());
+        dto.setEmail(req.getEmail());
+        dto.setRegistrationNumber(req.getRegistrationNumber());
+        dto.setPhoneNumber(req.getPhoneNumber());
+        dto.setProgramOfStudy(req.getProgramOfStudy());
+        dto.setYearOfStudy(req.getYearOfStudy());
+        dto.setLetterType(req.getLetterType());
+        dto.setReasonForRequest(req.getReasonForRequest());
+        dto.setEffectiveDate(req.getEffectiveDate() != null ? java.sql.Date.valueOf(req.getEffectiveDate()) : null);
+        dto.setOrganizationName(req.getOrganizationName());
+        dto.setStartDate(req.getStartDate() != null ? java.sql.Date.valueOf(req.getStartDate()) : null);
+        dto.setEndDate(req.getEndDate() != null ? java.sql.Date.valueOf(req.getEndDate()) : null);
+        dto.setResearchTitle(req.getResearchTitle());
+        dto.setRecommendationPurpose(req.getRecommendationPurpose());
+        dto.setReceivingInstitution(req.getReceivingInstitution());
+        dto.setSubmissionDeadline(req.getSubmissionDeadline() != null ? java.sql.Date.valueOf(req.getSubmissionDeadline()) : null);
+        dto.setTranscriptPurpose(req.getTranscriptPurpose());
+        dto.setDeliveryMethod(req.getDeliveryMethod());
+        dto.setStatus(req.getStatus());
+        dto.setRequestDate(req.getRequestDate());
+        dto.setAdminComment(req.getAdminComment());
+        return dto;
     }
 
     public Long countByStudentEmail(String email) {
         return letterRequestRepository.countByEmail(email);
+    }
+
+    public void updateStatus(UUID id, String status, String comment) {
+        LetterRequest req = letterRequestRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Not found"));
+        req.setStatus(status);
+        // If you have an adminComment field:
+        // req.setAdminComment(comment);
+        letterRequestRepository.save(req);
+    }
+
+    public List<LetterRequestDTO> findAll() {
+        return letterRequestRepository.findAllByOrderByRequestDateDesc()
+            .stream()
+            .map(this::toDTO)
+            .collect(Collectors.toList());
     }
 }

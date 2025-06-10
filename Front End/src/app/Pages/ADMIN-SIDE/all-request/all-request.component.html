@@ -1,14 +1,13 @@
-<!-- CONTENT -->
 <app-admin-nav></app-admin-nav>
 <section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
   <!-- MAIN -->
   <main>
     <div class="head-title">
       <div class="left">
-        <h1>Admin Dashboard</h1>
+        <h1>All Letter Requests</h1>
         <ul class="breadcrumb">
           <li>
-            <a href="#" style="text-decoration: none;">Dashboard</a>
+            <a href="#" style="text-decoration: none;">All Requests</a>
           </li>
           <li><i class="bx bx-chevron-right"></i></li>
           <li>
@@ -18,36 +17,14 @@
       </div>
     </div>
 
-    <ul class="box-info">
-      <li>
-        <i class="bx bxs-check-circle"></i>
-        <span class="text">
-          <h3>505</h3>
-          <p>Letters Generated</p>
-        </span>
-      </li>
-      <li>
-        <i class="bx bxs-file"></i>
-        <span class="text">
-          <h3>8</h3>
-          <p>Letter Templates</p>
-        </span>
-      </li>
-      <li>
-        <i class="bx bxs-user"></i>
-        <span class="text">
-          <h3>5658</h3>
-          <p>Registered Students</p>
-        </span>
-      </li>
-    </ul>
-
     <div class="table-data">
       <div class="order">
         <div class="head">
-          <h3>Recent Letters Generated</h3>
-          <i class="bx bx-search"></i>
-          <i class="bx bx-filter"></i>
+          <h3></h3>
+          <div class="table-actions">
+            <i class="bx bx-search"></i>
+            <i class="bx bx-filter"></i>
+          </div>
         </div>
         <table>
           <thead>
@@ -61,8 +38,7 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Show only the top 20 requests -->
-            <tr *ngFor="let request of letterRequests | slice:0:20; let i = index">
+            <tr *ngFor="let request of letterRequests; let i = index">
               <td>{{ request.fullName }}</td>
               <td>{{ request.letterType }}</td>
               <!--<td>{{ request.requestDate | date:'short' }}</td>-->
@@ -102,33 +78,8 @@
             </tr>
           </tbody>
         </table>
-
       </div>
-<!--
-      <div class="todo">
-        <div class="head">
-          <h3>Admin Tasks</h3>
-          <i class="bx bx-plus"></i>
-          <i class="bx bx-filter"></i>
-        </div>
-        <ul class="todo-list">
-          <li class="not-completed">
-            <p>Review Requesting Trends</p>
-            <i class="bx bx-dots-vertical-rounded"></i>
-          </li>
-          <li class="completed">
-            <p>Students Management</p>
-            <i class="bx bx-dots-vertical-rounded"></i>
-          </li>
-          <li class="not-completed">
-            <p>Publish Announcements</p>
-            <i class="bx bx-dots-vertical-rounded"></i>
-          </li>
-        </ul>
-      </div>
--->
     </div>
   </main>
   <!-- MAIN -->
 </section>
-<!-- CONTENT -->

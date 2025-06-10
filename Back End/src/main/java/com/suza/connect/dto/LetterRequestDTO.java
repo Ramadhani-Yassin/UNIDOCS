@@ -21,6 +21,9 @@ public class LetterRequestDTO {
     private Date submissionDeadline;
     private String transcriptPurpose;
     private String deliveryMethod;
+    private String status; // Add this field
+    private java.time.LocalDateTime requestDate;
+    private String adminComment;
 
     // Getters and Setters
     public String getFullName() {
@@ -165,5 +168,29 @@ public class LetterRequestDTO {
 
     public void setDeliveryMethod(String deliveryMethod) {
         this.deliveryMethod = deliveryMethod;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public java.time.LocalDateTime getRequestDate() {
+        return requestDate;
+    }
+
+    public void setRequestDate(java.time.LocalDateTime requestDate) {
+        this.requestDate = requestDate;
+    }
+
+    public String getAdminComment() {
+        return adminComment;
+    }
+
+    public void setAdminComment(String adminComment) {
+        this.adminComment = adminComment;
     }
 }

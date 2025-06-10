@@ -3,11 +3,11 @@ import { SidebarService } from '../../../services/sidebar.service';
 import { AdminLetterService } from '../../../services/admin-letter.service';
 
 @Component({
-  selector: 'app-admin-portal',
-  templateUrl: './admin-portal.component.html',
-  styleUrls: ['./admin-portal.component.css']
+  selector: 'app-all-request',
+  templateUrl: './all-request.component.html',
+  styleUrls: ['./all-request.component.css']
 })
-export class AdminPortalComponent implements OnInit {
+export class AllRequestComponent implements OnInit {
   letterRequests: any[] = [];
   statuses = ['PENDING', 'APPROVED', 'DECLINED'];
   editingStatusIndex: number | null = null;
