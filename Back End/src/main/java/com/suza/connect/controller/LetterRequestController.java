@@ -58,7 +58,7 @@ public class LetterRequestController {
     @GetMapping("/recent/{email}")
     public ResponseEntity<List<LetterRequestDTO>> getRecentRequestsByEmail(
             @PathVariable String email,
-            @RequestParam(defaultValue = "5") int limit) {
+            @RequestParam(defaultValue = "500") int limit) {
         List<LetterRequestDTO> recentRequests = letterRequestService.findRecentByEmail(email, limit);
         return ResponseEntity.ok(recentRequests);
     }
@@ -174,5 +174,11 @@ public class LetterRequestController {
     public ResponseEntity<?> getAllLetterRequests() {
         // Replace with your actual service call
         return ResponseEntity.ok(letterRequestService.getAllLetterRequests());
+    }
+
+    @GetMapping("/all/{email}")
+    public ResponseEntity<List<LetterRequestDTO>> getAllRequestsByEmail(@PathVariable String email) {
+        List<LetterRequestDTO> allRequests = letterRequestService.findAllByEmail(email);
+        return ResponseEntity.ok(allRequests);
     }
 }

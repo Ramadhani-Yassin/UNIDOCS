@@ -139,4 +139,9 @@ public class LetterRequestService {
     public List<LetterRequest> getAllLetterRequests() {
         return letterRequestRepository.findAll();
     }
+
+    public List<LetterRequestDTO> findAllByEmail(String email) {
+        List<LetterRequest> requests = letterRequestRepository.findAllByEmailOrderByRequestDateDesc(email);
+        return requests.stream().map(this::toDTO).toList();
+    }
 }

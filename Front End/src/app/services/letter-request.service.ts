@@ -86,6 +86,22 @@ export class LetterRequestService {
         return this.http.get(`/api/analytics?range=${dateRange}`);
     }
 
+    getAllMyLetterRequests(): Observable<LetterRequest[]> {
+        const user = this.userService.getCurrentUser();
+        if (!user || !user.email) {
+            return throwError(() => new Error('User email not available'));
+        }
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${this.getAuthToken()}`
+        });
+        return this.http.get<LetterRequest[]>(
+            `${this.apiUrl}/all/${encodeURIComponent(user.email)}`,
+            { headers }
+        ).pipe(
+            catchError(this.handleError)
+        );
+    }
+
     private formatRequestData(request: any): any {
         return {
             fullName: request.fullName,

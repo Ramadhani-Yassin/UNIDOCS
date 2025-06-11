@@ -13,4 +13,5 @@ public interface LetterRequestRepository extends JpaRepository<LetterRequest, UU
     Long countByEmail(String email);
     List<LetterRequest> findByEmailOrderByRequestDateDesc(String email, Pageable pageable);
     List<LetterRequest> findAllByOrderByRequestDateDesc();
+    List<LetterRequest> findAllByEmailOrderByRequestDateDesc(String email);
 }

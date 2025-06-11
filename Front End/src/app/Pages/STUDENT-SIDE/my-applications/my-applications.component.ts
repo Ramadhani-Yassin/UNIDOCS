@@ -22,7 +22,7 @@ export class MyApplicationsComponent implements OnInit {
 
   loadMyApplications(): void {
     this.myApplicationsLoading = true;
-    this.letterRequestService.getRecentLetterRequests().subscribe({
+    this.letterRequestService.getAllMyLetterRequests().subscribe({
       next: (requests: LetterRequest[]) => {
         this.myApplications = requests;
         this.myApplicationsLoading = false;
