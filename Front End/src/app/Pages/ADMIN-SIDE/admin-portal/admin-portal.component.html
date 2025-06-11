@@ -65,7 +65,7 @@
             <tr *ngFor="let request of letterRequests | slice:0:20; let i = index">
               <td>{{ request.fullName }}</td>
               <td>{{ request.letterType }}</td>
-              <!--<td>{{ request.requestDate | date:'short' }}</td>-->
+              <!--<td>{{ formatDate(request.requestDate) }}</td>-->
               <td class="status-cell" style="min-width: 160px;">
                 <!-- Show badge if not editing -->
                 <span

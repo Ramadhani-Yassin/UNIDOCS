@@ -1,0 +1,220 @@
+/* Sidebar collapse/expand styles */
+#content {
+  width: calc(100% - 280px);
+  margin-left: 280px;
+  margin-top: 50px;
+  transition: all 0.3s ease;
+}
+
+#content.sidebar-collapsed {
+  width: calc(100% - 60px);
+  margin-left: 60px;
+}
+
+
+/* Head title and breadcrumb styles */
+#content main .head-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  grid-gap: 16px;
+  flex-wrap: wrap;
+}
+
+#content main .head-title .left h1 {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #342E37;
+}
+
+#content main .head-title .left .breadcrumb {
+  display: flex;
+  align-items: center;
+  grid-gap: 16px;
+}
+
+#content main .head-title .left .breadcrumb li {
+  color: #342E37;
+}
+
+#content main .head-title .left .breadcrumb li a {
+  color: #AAAAAA;
+  pointer-events: none;
+  text-decoration: none;
+}
+
+#content main .head-title .left .breadcrumb li a.active {
+  color: #3C91E6;
+  pointer-events: unset;
+}
+
+/* Responsive for small screens */
+@media screen and (max-width: 576px) {
+  #content main .head-title .left h1 {
+    font-size: 24px;
+  }
+  .breadcrumb li:not(:last-child) {
+    display: none;
+  }
+  .breadcrumb li:last-child {
+    margin-left: 0;
+  }
+  .breadcrumb li i {
+    display: none;
+  }
+}
+
+.loading-indicator,
+.no-requests {
+  text-align: center;
+  padding: 10px;
+  color: #666;
+}
+
+.status {
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status.completed {
+  background-color: #c8e6c9;
+  color: #256029;
+}
+
+.status.pending {
+  background-color: #ffcdd2;
+  color: #c63737;
+}
+
+.status.approved { color: green; }
+.status.declined { color: red; }
+.status.pending { color: orange; }
+.status.completed { color: gray; }
+
+.status-cell {
+  display: flex;
+  align-items: center;
+  min-width: 160px;
+}
+
+.status-badge {
+  display: inline-block;
+  min-width: 90px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin-right: 8px;
+  color: #fff;
+  background: #bdbdbd;
+  vertical-align: middle;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background: #FFCE26;
+  color: #342E37;
+}
+
+.status-badge.approved {
+  background: #006e06;
+  color: #fff;
+}
+
+.status-badge.declined {
+  background: #FD7238;
+  color: #fff;
+}
+
+/* Main content area */
+#content main {
+  width: 100%;
+  padding: 36px 24px;
+  font-family: 'Poppins', sans-serif;
+  max-height: calc(100vh - 56px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+
+/* Table-data and order containers */
+.table-data {
+  display: flex;
+  flex-wrap: wrap;
+  grid-gap: 24px;
+  margin-top: 24px;
+  width: 100%;
+  color: #342E37;
+}
+
+.table-data > .order {
+  border-radius: 20px;
+  background: #F9F9F9;
+  padding: 24px;
+  overflow-x: auto;
+  width: 100%;
+}
+
+/* Table styles */
+.table-data .order table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(60,145,230,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.table-data .order table th,
+.table-data .order table td {
+  padding: 14px 16px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  vertical-align: middle;
+}
+
+.table-data .order table th {
+  background: #f4f8fb;
+  color: #3C91E6;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 2px solid #e6e6e6;
+  text-align: left;
+}
+
+.table-data .order table tr {
+  transition: background 0.2s;
+}
+
+.table-data .order table tbody tr:hover {
+  background: #f0f6ff;
+}
+
+.table-data .order table td {
+  font-size: 14px;
+  color: #342E37;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: left;
+}
+
+.table-data .order table tr:last-child td {
+  border-bottom: none;
+}
+
+/* Responsive for small screens */
+@media screen and (max-width: 576px) {
+  #content main .table-data .head {
+    min-width: 420px;
+  }
+  #content main .table-data .order table {
+    min-width: 420px;
+  }
+}

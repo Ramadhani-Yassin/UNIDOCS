@@ -90,7 +90,7 @@
               <thead>
                   <tr>
                       <th>Letter Type</th>
-                      <!--<th>Request Date</th>-->
+                      <th>Request Date</th>
                       <th>Status</th>
                   </tr>
                   </thead>
@@ -100,7 +100,7 @@
                           <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
                           <p>{{ request.letterType }}</p>
                       </td>
-                      <!--<td>{{ formatDate(request.requestDate) }}</td>-->
+                      <td>{{ formatDate(request.requestDate) }}</td>
 
                       <td>
                           <span class="status {{ getStatusClass(request.status) }}">

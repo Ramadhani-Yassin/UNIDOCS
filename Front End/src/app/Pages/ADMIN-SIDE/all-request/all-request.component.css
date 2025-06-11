@@ -13,8 +13,8 @@
 
 .status-badge {
   display: inline-block;
-  min-width: 90px;
-  padding: 6px 14px;
+  min-width: 60px; /* reduced from 90px */
+  padding: 6px 10px; /* slightly reduced horizontal padding */
   border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
@@ -231,7 +231,7 @@
 .status-cell {
   display: flex;
   align-items: center;
-  min-width: 160px;
+  min-width: 90px; /* reduced from 160px */
 }
 
 .table-data .order table select,

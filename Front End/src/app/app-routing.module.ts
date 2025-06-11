@@ -22,6 +22,7 @@ import { CVGeneratorComponent } from './Pages/STUDENT-SIDE/cv-generator/cv-gener
 import { StudentSettingsShellComponent } from './Pages/STUDENT-SIDE/student-settings-shell/student-settings-shell.component';
 import { AdminSettingsShellComponent } from './Pages/ADMIN-SIDE/admin-settings-shell/admin-settings-shell.component';
 import { AllRequestComponent } from './Pages/ADMIN-SIDE/all-request/all-request.component';
+import { MyApplicationsComponent } from './Pages/STUDENT-SIDE/my-applications/my-applications.component';
 import { AuthGuard } from './auth.guard';
 
 const routes: Routes = [
@@ -34,6 +35,7 @@ const routes: Routes = [
 
   // All routes below are protected
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
+  { path: 'All-Applications', component: MyApplicationsComponent , canActivate: [AuthGuard] },
   { path: 'All-Requests', component: AllRequestComponent, canActivate: [AuthGuard] },
   { path: 'admin-portal', component: AdminPortalComponent, canActivate: [AuthGuard] },
   { path: 'analytics', component: AnalyticsComponent, canActivate: [AuthGuard] },

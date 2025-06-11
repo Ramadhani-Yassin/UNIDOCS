@@ -8,8 +8,9 @@ import { UserService } from './user.service';
 export interface LetterRequest {
     id: string;
     letterType: string;
-    requestDate: string;  // Changed from createdAt to requestDate
     status: string;
+    requestDate?: string;
+    adminComment?: string; // <-- Add this line
     // Add other fields as needed
 }
 

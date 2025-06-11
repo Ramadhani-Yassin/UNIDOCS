@@ -1,51 +1,53 @@
 import { Component, OnInit } from '@angular/core';
-import { SidebarService } from '../../../services/sidebar.service';
-import { AdminLetterService } from '../../../services/admin-letter.service';
+import { StudentSidebarService } from '../../../services/student-sidebar.service';
+import { LetterRequestService, LetterRequest } from '../../../services/letter-request.service';
 
 @Component({
-  selector: 'app-all-request',
-  templateUrl: './all-request.component.html',
-  styleUrls: ['./all-request.component.css']
+  selector: 'app-my-applications',
+  templateUrl: './my-applications.component.html',
+  styleUrls: ['./my-applications.component.css']
 })
-export class AllRequestComponent implements OnInit {
-  letterRequests: any[] = [];
-  statuses = ['PENDING', 'APPROVED', 'DECLINED'];
-  editingStatusIndex: number | null = null;
+export class MyApplicationsComponent implements OnInit {
+  myApplications: LetterRequest[] = [];
+  myApplicationsLoading = true;
 
   constructor(
-    public sidebarService: SidebarService,
-    private adminLetterService: AdminLetterService
+    public sidebarService: StudentSidebarService,
+    private letterRequestService: LetterRequestService
   ) {}
 
-  ngOnInit() {
-    this.loadLetterRequests();
+  ngOnInit(): void {
+    this.loadMyApplications();
   }
 
-  loadLetterRequests() {
-    this.adminLetterService.getAll().subscribe(data => {
-      this.letterRequests = data;
+  loadMyApplications(): void {
+    this.myApplicationsLoading = true;
+    this.letterRequestService.getRecentLetterRequests().subscribe({
+      next: (requests: LetterRequest[]) => {
+        this.myApplications = requests;
+        this.myApplicationsLoading = false;
+      },
+      error: () => {
+        this.myApplications = [];
+        this.myApplicationsLoading = false;
+      }
     });
   }
 
-  updateStatus(request: any) {
-    this.adminLetterService.updateStatus(request.id, request.status, request.adminComment || '').subscribe(() => {
-      this.loadLetterRequests();
-    });
-  }
-
-  setEditingStatus(idx: number) {
-    this.editingStatusIndex = idx;
-  }
-
-  saveStatus(request: any, idx: number) {
-    this.updateStatus(request);
-    this.editingStatusIndex = null;
+  getStatusClass(status: string): string {
+    switch ((status || '').toUpperCase()) {
+      case 'APPROVED': return 'approved';
+      case 'DECLINED': return 'declined';
+      case 'PENDING': return 'pending';
+      default: return 'completed';
+    }
   }
 
   formatDate(date: any): string {
     try {
       // If date is an array: [year, month, day, hour, minute, second, nano]
       if (Array.isArray(date) && date.length >= 6) {
+        // JS months are 0-based, Java months are 1-based
         const jsDate = new Date(
           date[0],           // year
           date[1] - 1,       // month (0-based)
@@ -64,7 +66,7 @@ export class AllRequestComponent implements OnInit {
           hour12: true
         }).replace(/\//g, '-');
       }
-      // Fallback for string dates
+      // Fallback to previous logic for string dates
       if (typeof date === 'string') {
         if (date && !date.endsWith('Z') && !date.includes('+')) {
           date = date + 'Z';

@@ -1,13 +1,12 @@
-<app-admin-nav></app-admin-nav>
+<app-student-nav></app-student-nav>
 <section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
-  <!-- MAIN -->
   <main>
     <div class="head-title">
       <div class="left">
-        <h1>All Letter Requests</h1>
+        <h1>My Applications</h1>
         <ul class="breadcrumb">
           <li>
-            <a href="#" style="text-decoration: none;">All Requests</a>
+            <a href="#" style="text-decoration: none;">My Applications</a>
           </li>
           <li><i class="bx bx-chevron-right"></i></li>
           <li>
@@ -29,57 +28,41 @@
         <table>
           <thead>
             <tr>
-              <th>Student</th>
               <th>Letter Type</th>
               <th>Request Date</th>
               <th>Status</th>
               <th>Admin Comment</th>
-              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let request of letterRequests; let i = index">
-              <td>{{ request.fullName }}</td>
+            <tr *ngFor="let request of myApplications">
               <td>{{ request.letterType }}</td>
-              <td>{{ formatDate(request.requestDate) }}</td>
+              <td> {{ request.requestDate ? formatDate(request.requestDate) : '-' }}</td>
               <td class="status-cell" style="min-width: 160px;">
-                <!-- Show badge if not editing -->
                 <span
-                  *ngIf="editingStatusIndex !== i"
                   class="status-badge"
                   [ngClass]="{
                     'pending': request.status === 'PENDING',
                     'approved': request.status === 'APPROVED',
                     'declined': request.status === 'DECLINED'
                   }"
-                  (click)="setEditingStatus(i)"
-                  style="cursor:pointer"
-                  title="Click to change status"
                 >
-                  {{ request.status | titlecase }}
+                  {{ request.status ? (request.status | titlecase) : 'Completed' }}
                 </span>
-                <!-- Show dropdown if editing -->
-                <select
-                  *ngIf="editingStatusIndex === i"
-                  [(ngModel)]="request.status"
-                  (blur)="saveStatus(request, i)"
-                  (change)="saveStatus(request, i)"
-                  autofocus
-                >
-                  <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
-                </select>
               </td>
               <td>
-                <input [(ngModel)]="request.adminComment" placeholder="Add comment" />
+                {{ request.adminComment ? request.adminComment : '-' }}
               </td>
-              <td>
-                <button (click)="updateStatus(request)">Update</button>
-              </td>
+            </tr>
+            <tr *ngIf="myApplicationsLoading">
+              <td colspan="4" class="loading-indicator">Loading your applications...</td>
+            </tr>
+            <tr *ngIf="!myApplicationsLoading && myApplications.length === 0">
+              <td colspan="4" class="no-requests">No applications found</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
   </main>
-  <!-- MAIN -->
 </section>
