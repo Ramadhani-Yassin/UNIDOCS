@@ -144,4 +144,8 @@ public class LetterRequestService {
         List<LetterRequest> requests = letterRequestRepository.findAllByEmailOrderByRequestDateDesc(email);
         return requests.stream().map(this::toDTO).toList();
     }
+
+    public Long getTotalLetterRequests() {
+        return letterRequestRepository.count();
+    }
 }

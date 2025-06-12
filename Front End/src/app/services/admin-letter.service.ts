@@ -1,18 +1,25 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
+@Injectable({
+  providedIn: 'root'
+})
 export class AdminLetterService {
-  private apiUrl = 'http://192.168.106.248:8088/api/admin/letters';
+  private apiUrl = `${environment.apiUrl}/api/letter-requests`;
 
   constructor(private http: HttpClient) {}
 
-  updateStatus(id: string, status: string, comment: string): Observable<any> {
-    return this.http.patch(`${this.apiUrl}/${id}/status`, { status, comment });
+  getAll(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}`);
   }
 
-  getAll() {
-    return this.http.get<any[]>(this.apiUrl);
+  updateStatus(id: string, status: string, adminComment: string): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}/status`, { status, adminComment });
+  }
+
+  getTotalLettersGenerated(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count-all`);
   }
 }

@@ -93,6 +93,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getUsersByRole("student"));
     }
 
+    @GetMapping("/count-students")
+    public ResponseEntity<Long> getStudentCount() {
+        return ResponseEntity.ok(userService.countByRole("student"));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);

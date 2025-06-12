@@ -91,6 +91,11 @@ export class UserService {
     return this.currentUserSubject.value !== null;
   }
 
+  // Get student count
+  getStudentCount(): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/count-students`);
+  }
+
   // Error handling
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);

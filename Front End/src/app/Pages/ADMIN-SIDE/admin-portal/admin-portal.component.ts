@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SidebarService } from '../../../services/sidebar.service';
 import { AdminLetterService } from '../../../services/admin-letter.service';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-admin-portal',
@@ -12,13 +13,27 @@ export class AdminPortalComponent implements OnInit {
   statuses = ['PENDING', 'APPROVED', 'DECLINED'];
   editingStatusIndex: number | null = null;
 
+  totalLettersGenerated: number = 0;
+  totalRegisteredStudents: number = 0;
+
   constructor(
     public sidebarService: SidebarService,
-    private adminLetterService: AdminLetterService
+    private adminLetterService: AdminLetterService,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
     this.loadLetterRequests();
+    this.loadCounts();
+  }
+
+  loadCounts() {
+    this.adminLetterService.getTotalLettersGenerated().subscribe(count => {
+      this.totalLettersGenerated = count;
+    });
+    this.userService.getStudentCount().subscribe(count => {
+      this.totalRegisteredStudents = count;
+    });
   }
 
   loadLetterRequests() {

@@ -69,6 +69,11 @@ public class LetterRequestController {
         return ResponseEntity.ok(count);
     }
 
+    @GetMapping("/count-all")
+    public ResponseEntity<Long> getTotalLetterRequests() {
+        return ResponseEntity.ok(letterRequestService.getTotalLetterRequests());
+    }
+
     @GetMapping("/{id}/generate")
     public ResponseEntity<?> generateLetter(@PathVariable String id, @RequestParam(defaultValue = "docx") String format) {
         try {

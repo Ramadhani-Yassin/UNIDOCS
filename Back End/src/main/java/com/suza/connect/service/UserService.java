@@ -60,6 +60,10 @@ public class UserService {
         return userRepository.findByRole(role);
     }
 
+    public Long countByRole(String role) {
+        return (long) userRepository.findByRole(role).size();
+    }
+
     public void deleteUser(String email) {
         userRepository.findByEmail(email).ifPresent(userRepository::delete);
     }

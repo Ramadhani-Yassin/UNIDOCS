@@ -46,11 +46,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/recent/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/*/generate").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/cv-requests/*/generate").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/letter-requests/count/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/students").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll() // <-- Add this for POST if needed
+                .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll()
                 .requestMatchers("/api/admin/**").permitAll()
                 // Everything else under /api/users/** requires role
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
