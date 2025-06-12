@@ -26,4 +26,7 @@ public class User {
 
     @Column(name = "role", nullable = false)
     private String role; // 'admin' or 'student'
+
+    @Column(name = "status", nullable = false)
+    private String status = "active"; // default to active
 }

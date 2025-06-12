@@ -39,7 +39,7 @@ public class SecurityConfig {
                     "/api/letter-requests",
                     "/api/cv-requests"
                 ).permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/letter-requests/{id}/status").permitAll() // <-- Add this line
+                .requestMatchers(HttpMethod.PUT, "/api/letter-requests/{id}/status").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/users/migrate-passwords").permitAll()
@@ -52,9 +52,12 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll()
                 .requestMatchers("/api/admin/**").permitAll()
+                // ADD THESE LINES:
+                .requestMatchers(HttpMethod.PUT, "/api/users/{id}/activate").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/users/{id}/deactivate").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
                 // Everything else under /api/users/** requires role
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
-                // Everything else
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // <-- Use stateless

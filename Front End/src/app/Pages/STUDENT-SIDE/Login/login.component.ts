@@ -42,8 +42,12 @@ export class LoginComponent {
         }, 1500);
       },
       error: (error) => {
-        const errorMsg = error.error?.error || 'Invalid credentials ❌';
-        this.showMessage(errorMsg, true);
+        if (error.status === 403 && error.error?.error?.includes('suspended')) {
+          this.showMessage('Your account is suspended. Please contact the Admin.', true);
+        } else {
+          const errorMsg = error.error?.error || 'Invalid credentials ❌';
+          this.showMessage(errorMsg, true);
+        }
         this.loading = false;
       }
     });

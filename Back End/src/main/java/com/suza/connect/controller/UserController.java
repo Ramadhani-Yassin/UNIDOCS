@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -38,20 +39,27 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginRequest) {
         try {
-            boolean valid = userService.validateUserByRole(
-                    loginRequest.getEmail(),
-                    loginRequest.getPassword(),
-                    loginRequest.getRole()
-            );
-            if (valid) {
-                return ResponseEntity.ok(Map.of(
-                        "message", "Login successful",
-                        "user", userService.findByEmail(loginRequest.getEmail()).orElse(null)
-                ));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(Map.of("error", "Invalid credentials for role ❌: " + loginRequest.getRole()));
+            Optional<User> userOpt = userService.getUserByEmailAndRole(loginRequest.getEmail(), loginRequest.getRole());
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                if ("suspended".equalsIgnoreCase(user.getStatus())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(Map.of("error", "Account suspended, please contact Admin"));
+                }
+                boolean valid = userService.validateUserByRole(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword(),
+                        loginRequest.getRole()
+                );
+                if (valid) {
+                    return ResponseEntity.ok(Map.of(
+                            "message", "Login successful",
+                            "user", user
+                    ));
+                }
             }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials for role ❌: " + loginRequest.getRole()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Login failed: " + e.getMessage()));
@@ -102,5 +110,17 @@ public class UserController {
     public ResponseEntity<?> deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok(Map.of("message", "User deleted"));
+    }
+
+    @PutMapping("/{id}/activate")
+    public ResponseEntity<?> activateStudent(@PathVariable Long id) {
+        User updated = userService.updateUserStatus(id, "active");
+        return ResponseEntity.ok(Map.of("message", "Student activated", "user", updated));
+    }
+
+    @PutMapping("/{id}/deactivate")
+    public ResponseEntity<?> deactivateStudent(@PathVariable Long id) {
+        User updated = userService.updateUserStatus(id, "suspended");
+        return ResponseEntity.ok(Map.of("message", "Student suspended", "user", updated));
     }
 }

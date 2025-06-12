@@ -78,19 +78,23 @@ export class StudentsManagementComponent implements OnInit {
   }
 
   suspendStudent(id: number): void {
-    const student = this.students.find(s => s.id === id);
-    if (student) {
-      student.status = 'suspended';
-      this.filterStudents();
-    }
+    this.http.put(`${environment.apiUrl}/api/users/${id}/deactivate`, {}).subscribe(() => {
+      const student = this.students.find(s => s.id === id);
+      if (student) {
+        student.status = 'suspended';
+        this.filterStudents();
+      }
+    });
   }
 
   activateStudent(id: number): void {
-    const student = this.students.find(s => s.id === id);
-    if (student) {
-      student.status = 'active';
-      this.filterStudents();
-    }
+    this.http.put(`${environment.apiUrl}/api/users/${id}/activate`, {}).subscribe(() => {
+      const student = this.students.find(s => s.id === id);
+      if (student) {
+        student.status = 'active';
+        this.filterStudents();
+      }
+    });
   }
 
   confirmDelete(id: number): void {

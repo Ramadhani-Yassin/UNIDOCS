@@ -35,7 +35,7 @@ public class UserService {
 
     public boolean validateUserByRole(String email, String password, String role) {
         return userRepository.findByEmailAndRole(email, role)
-                .map(user -> passwordEncoder.matches(password, user.getPassword()))
+                .map(user -> passwordEncoder.matches(password, user.getPassword()) && !"suspended".equalsIgnoreCase(user.getStatus()))
                 .orElse(false);
     }
 
@@ -48,7 +48,7 @@ public class UserService {
     }
 
 
-    public Optional<User> findByEmailAndRole(String email, String role) {
+    public Optional<User> getUserByEmailAndRole(String email, String role) {
         return userRepository.findByEmailAndRole(email, role);
     }
 
@@ -97,6 +97,13 @@ public class UserService {
         }
         // Optionally check currentPassword here if needed
 
+        return userRepository.save(user);
+    }
+
+    public User updateUserStatus(Long id, String status) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setStatus(status);
         return userRepository.save(user);
     }
 }
