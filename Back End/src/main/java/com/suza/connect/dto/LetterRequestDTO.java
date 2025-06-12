@@ -3,6 +3,7 @@ package com.suza.connect.dto;
 import java.util.Date;
 
 public class LetterRequestDTO {
+    private String id; // Add this line
     private String fullName;
     private String email;
     private String registrationNumber;
@@ -26,6 +27,9 @@ public class LetterRequestDTO {
     private String adminComment;
 
     // Getters and Setters
+    public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
+
     public String getFullName() {
         return fullName;
     }

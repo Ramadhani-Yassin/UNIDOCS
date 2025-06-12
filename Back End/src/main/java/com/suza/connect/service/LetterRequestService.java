@@ -92,6 +92,7 @@ public class LetterRequestService {
 
     private LetterRequestDTO toDTO(LetterRequest req) {
         LetterRequestDTO dto = new LetterRequestDTO();
+        dto.setId(req.getId().toString());
         dto.setFullName(req.getFullName());
         dto.setEmail(req.getEmail());
         dto.setRegistrationNumber(req.getRegistrationNumber());
@@ -122,18 +123,17 @@ public class LetterRequestService {
 
     public void updateStatus(UUID id, String status, String comment) {
         LetterRequest req = letterRequestRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Not found"));
+                .orElseThrow(() -> new RuntimeException("Not found"));
         req.setStatus(status);
-        // If you have an adminComment field:
-        // req.setAdminComment(comment);
+        req.setAdminComment(comment);
         letterRequestRepository.save(req);
     }
 
     public List<LetterRequestDTO> findAll() {
         return letterRequestRepository.findAllByOrderByRequestDateDesc()
-            .stream()
-            .map(this::toDTO)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 
     public List<LetterRequest> getAllLetterRequests() {
@@ -142,7 +142,7 @@ public class LetterRequestService {
 
     public List<LetterRequestDTO> findAllByEmail(String email) {
         List<LetterRequest> requests = letterRequestRepository.findAllByEmailOrderByRequestDateDesc(email);
-        return requests.stream().map(this::toDTO).toList();
+        return requests.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     public Long getTotalLetterRequests() {

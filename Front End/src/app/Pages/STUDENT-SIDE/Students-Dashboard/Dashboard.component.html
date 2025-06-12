@@ -84,35 +84,41 @@
           <i class="bx bx-filter"></i>
         </div>
           <table>
-              <thead>
-                  <tr>
-                      <th>Letter Type</th>
-                      <th>Request Date</th>
-                      <th>Status</th>
-                  </tr>
-                  </thead>
-                  <tbody>
-                  <tr *ngFor="let request of recentRequests">
-                      <td>
-                          <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
-                          <p>{{ request.letterType }}</p>
-                      </td>
-                      <td>{{ formatDate(request.requestDate) }}</td>
-
-                      <td>
-                          <span class="status {{ getStatusClass(request.status) }}">
-                              {{ request.status || 'Completed' }}
-                          </span>
-                      </td>
-                  </tr>
-                  <tr *ngIf="recentRequestsLoading">
-                      <td colspan="3" class="loading-indicator">Loading recent requests...</td>
-                  </tr>
-                  <tr *ngIf="!recentRequestsLoading && recentRequests.length === 0">
-                      <td colspan="3" class="no-requests">No letter requests found</td>
-                  </tr>
-              </tbody>
-          </table>
+  <thead>
+    <tr>
+      <th>Letter Type</th>
+      <th>Request Date</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let request of recentRequests">
+      <td>
+        <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
+        <p>{{ request.letterType }}</p>
+      </td>
+      <td>{{ formatDate(request.requestDate) }}</td>
+      <td class="status-cell" style="min-width: 160px;">
+        <span
+          class="status-badge"
+          [ngClass]="{
+            'pending': request.status === 'PENDING',
+            'approved': request.status === 'APPROVED',
+            'declined': request.status === 'DECLINED'
+          }"
+        >
+          {{ request.status ? (request.status | titlecase) : 'Completed' }}
+        </span>
+      </td>
+    </tr>
+    <tr *ngIf="recentRequestsLoading">
+      <td colspan="3" class="loading-indicator">Loading recent requests...</td>
+    </tr>
+    <tr *ngIf="!recentRequestsLoading && recentRequests.length === 0">
+      <td colspan="3" class="no-requests">No letter requests found</td>
+    </tr>
+  </tbody>
+</table>
       </div>
     </div>
   </main>

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/letter-requests")
@@ -177,13 +178,27 @@ public class LetterRequestController {
 
     @GetMapping
     public ResponseEntity<?> getAllLetterRequests() {
-        // Replace with your actual service call
-        return ResponseEntity.ok(letterRequestService.getAllLetterRequests());
+        return ResponseEntity.ok(letterRequestService.findAll()); // Use the sorted method
     }
 
     @GetMapping("/all/{email}")
     public ResponseEntity<List<LetterRequestDTO>> getAllRequestsByEmail(@PathVariable String email) {
         List<LetterRequestDTO> allRequests = letterRequestService.findAllByEmail(email);
         return ResponseEntity.ok(allRequests);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<?> updateStatus(
+            @PathVariable String id,
+            @RequestBody Map<String, String> payload) {
+        try {
+            String status = payload.get("status");
+            String adminComment = payload.getOrDefault("adminComment", "");
+            letterRequestService.updateStatus(UUID.fromString(id), status, adminComment);
+            return ResponseEntity.ok(Map.of("message", "Status updated successfully"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(Map.of("error", e.getMessage()));
+        }
     }
 }

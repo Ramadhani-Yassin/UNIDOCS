@@ -26,6 +26,18 @@
             <i class="bx bx-filter"></i>
           </div>
         </div>
+        <!-- Modal Overlay for Update -->
+        <div *ngIf="isUpdating" class="modal-overlay">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="spinner"></div>
+              <div class="modal-text" style="font-weight:600;">
+                We are working on updates. Please wait...
+              </div>
+            </div>
+          </div>
+        </div>
+
         <table>
           <thead>
             <tr>

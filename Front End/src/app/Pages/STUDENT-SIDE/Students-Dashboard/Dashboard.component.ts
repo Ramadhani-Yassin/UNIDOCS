@@ -98,6 +98,10 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+  refreshRecentRequests(): void {
+    this.loadRecentRequests();
+  }
+
   getStatusClass(status: string): string {
     switch ((status || '').toUpperCase()) {
       case 'APPROVED': return 'approved';
@@ -110,23 +114,16 @@ export class DashboardComponent implements OnInit {
   formatDate(date: any): string {
     try {
       // If date is an array: [year, month, day, hour, minute, second, nano]
-      if (Array.isArray(date) && date.length >= 6) {
+      if (Array.isArray(date) && date.length >= 3) {
         const jsDate = new Date(
           date[0],           // year
           date[1] - 1,       // month (0-based)
-          date[2],           // day
-          date[3],           // hour
-          date[4],           // minute
-          date[5],           // second
-          Math.floor(date[6] / 1000000) // nanoseconds to milliseconds
+          date[2]            // day
         );
-        return jsDate.toLocaleString('en-US', {
+        return jsDate.toLocaleDateString('en-US', {
           year: 'numeric',
           month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
+          day: '2-digit'
         }).replace(/\//g, '-');
       }
       // Fallback for string dates
@@ -138,13 +135,10 @@ export class DashboardComponent implements OnInit {
         if (isNaN(parsedDate.getTime())) {
           return date;
         }
-        return parsedDate.toLocaleString('en-US', {
+        return parsedDate.toLocaleDateString('en-US', {
           year: 'numeric',
           month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
+          day: '2-digit'
         }).replace(/\//g, '-');
       }
       return '-';

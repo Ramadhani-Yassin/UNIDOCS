@@ -49,6 +49,18 @@
           <i class="bx bx-search"></i>
           <i class="bx bx-filter"></i>
         </div>
+
+        <div *ngIf="isUpdating" class="modal-overlay">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="spinner"></div>
+              <div class="modal-text" style="font-weight:600;">
+                We are working on updates. Please wait...
+              </div>
+            </div>
+          </div>
+        </div>
+
         <table>
           <thead>
             <tr>
@@ -86,7 +98,6 @@
                 <select
                   *ngIf="editingStatusIndex === i"
                   [(ngModel)]="request.status"
-                  (blur)="saveStatus(request, i)"
                   (change)="saveStatus(request, i)"
                   autofocus
                 >

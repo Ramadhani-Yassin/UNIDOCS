@@ -34,6 +34,10 @@ export class MyApplicationsComponent implements OnInit {
     });
   }
 
+  refreshApplications(): void {
+    this.loadMyApplications();
+  }
+
   getStatusClass(status: string): string {
     switch ((status || '').toUpperCase()) {
       case 'APPROVED': return 'approved';

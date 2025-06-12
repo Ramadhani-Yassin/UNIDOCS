@@ -62,6 +62,37 @@
 .status.pending { color: orange; }
 .status.completed { color: gray; }
 
+/* Status badge styles cloned from my-applications.component.css */
+.status-badge {
+  display: inline-block;
+  min-width: 90px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin-right: 8px;
+  color: #fff;
+  background: #bdbdbd;
+  vertical-align: middle;
+  text-transform: capitalize;
+}
+
+.status-badge.pending {
+  background: #FFCE26;
+  color: #342E37;
+}
+
+.status-badge.approved {
+  background: #006e06;
+  color: #fff;
+}
+
+.status-badge.declined {
+  background: #FD7238;
+  color: #fff;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;

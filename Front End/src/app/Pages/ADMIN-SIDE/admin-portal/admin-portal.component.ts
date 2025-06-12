@@ -13,6 +13,7 @@ export class AdminPortalComponent implements OnInit {
   letterRequests: any[] = [];
   statuses = ['PENDING', 'APPROVED', 'DECLINED'];
   editingStatusIndex: number | null = null;
+  isUpdating: boolean = false; // <-- Add this line
 
   totalLettersGenerated: number = 0;
   totalRegisteredStudents: number = 0;
@@ -89,8 +90,23 @@ export class AdminPortalComponent implements OnInit {
   }
 
   updateStatus(request: any) {
-    this.adminLetterService.updateStatus(request.id, request.status, request.adminComment || '').subscribe(() => {
-      this.loadLetterRequests();
+    this.isUpdating = true; // Show modal
+    const idx = this.letterRequests.findIndex(r => r.id === request.id);
+    this.adminLetterService.updateStatus(request.id, request.status, request.adminComment || '').subscribe({
+      next: () => {
+        if (idx !== -1) {
+          this.letterRequests[idx].status = request.status;
+          this.letterRequests[idx].adminComment = request.adminComment;
+        }
+        setTimeout(() => {
+          this.isUpdating = false; // Hide modal after delay
+        }, 1000); // Adjust delay as needed
+      },
+      error: () => {
+        setTimeout(() => {
+          this.isUpdating = false;
+        }, 1000);
+      }
     });
   }
 
@@ -99,8 +115,13 @@ export class AdminPortalComponent implements OnInit {
   }
 
   saveStatus(request: any, idx: number) {
-    this.updateStatus(request);
-    this.editingStatusIndex = null;
+    // Do NOT show modal here, just update locally
+    this.adminLetterService.updateStatus(request.id, request.status, request.adminComment || '').subscribe(() => {
+      this.letterRequests[idx].status = request.status;
+      this.letterRequests[idx].adminComment = request.adminComment;
+      this.editingStatusIndex = null;
+      // No modal here!
+    });
   }
 
   formatDate(date: any): string {
