@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SidebarService } from '../../../services/sidebar.service';
 import { AdminLetterService } from '../../../services/admin-letter.service';
+import { AdminSearchService } from '../../../services/admin-search.service';
 
 @Component({
   selector: 'app-all-request',
@@ -12,14 +13,21 @@ export class AllRequestComponent implements OnInit {
   statuses = ['PENDING', 'APPROVED', 'DECLINED'];
   editingStatusIndex: number | null = null;
   isUpdating: boolean = false; // <-- Add this line
+  searchTerm: string = '';
+  localSearchTerm: string = '';
 
   constructor(
     public sidebarService: SidebarService,
-    private adminLetterService: AdminLetterService
+    private adminLetterService: AdminLetterService,
+    private adminSearchService: AdminSearchService // <-- Add this
   ) {}
 
   ngOnInit() {
     this.loadLetterRequests();
+    this.adminSearchService.searchTerm$.subscribe(term => {
+      this.searchTerm = term;
+      this.localSearchTerm = term; // Keep local input in sync with navbar
+    });
   }
 
   loadLetterRequests() {
@@ -108,5 +116,21 @@ export class AllRequestComponent implements OnInit {
     } catch {
       return '-';
     }
+  }
+
+  onLocalSearchChange() {
+    // Update the shared search term so navbar and table stay in sync
+    this.adminSearchService.setSearchTerm(this.localSearchTerm);
+  }
+
+  get filteredLetterRequests() {
+    if (!this.searchTerm) return this.letterRequests;
+    const term = this.searchTerm.toLowerCase();
+    return this.letterRequests.filter(r =>
+      (r.fullName && r.fullName.toLowerCase().includes(term)) ||
+      (r.letterType && r.letterType.toLowerCase().includes(term)) ||
+      (r.status && r.status.toLowerCase().includes(term)) ||
+      (r.adminComment && r.adminComment.toLowerCase().includes(term))
+    );
   }
 }

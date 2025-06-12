@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, HostListener, Renderer2 } from '@angular/
 import { SidebarService } from '../../services/sidebar.service';
 import { Subscription } from 'rxjs';
 import { Router } from '@angular/router'; // <-- Add this
+import { AdminSearchService } from '../../services/admin-search.service';
 
 @Component({
   selector: 'app-admin-nav',
@@ -13,11 +14,13 @@ export class AdminNavComponent implements OnInit, OnDestroy {
   public isMobile = false;
   private mobileBreakpoint = 768;
   private readonly NAVBAR_HEIGHT = 56; // Match this with your navbar height
+  searchTerm: string = '';
 
   constructor(
     public sidebarService: SidebarService,
     private renderer: Renderer2,
-    private router: Router // <-- Add this
+    private router: Router,
+    private adminSearchService: AdminSearchService // <-- Add this
   ) {
     this.checkScreenSize();
   }
@@ -66,6 +69,10 @@ export class AdminNavComponent implements OnInit, OnDestroy {
       // Perform logout logic here (clear tokens, etc.)
       this.router.navigate(['/']); // Redirect to homepage
     }
+  }
+
+  onSearchChange() {
+    this.adminSearchService.setSearchTerm(this.searchTerm);
   }
 
   ngOnDestroy() {

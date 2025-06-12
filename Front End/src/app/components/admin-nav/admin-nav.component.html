@@ -60,12 +60,17 @@
 <!-- NAVBAR -->
 <nav [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
   <i (click)="toggleSidebar()" class="bx bx-menu"></i>
-  <a href="#" class="nav-link">Categories</a>
+ <a routerLink="/admin-portal" class="nav-link">Admin</a>
   <form action="#">
     <div class="form-input">
-      <input type="search" placeholder="Search letter requests..." />
-      <button type="button" class="search-btn">
-        <i class="bx bx-search"></i>
+      <input
+        type="search"
+        placeholder=""
+        readonly
+        style="background: #eee; cursor: not-allowed;"
+      />
+      <button type="button" class="search-btn" tabindex="-1" style="cursor: default;">
+        <i class="bx bxs-user"></i>
       </button>
     </div>
   </form>

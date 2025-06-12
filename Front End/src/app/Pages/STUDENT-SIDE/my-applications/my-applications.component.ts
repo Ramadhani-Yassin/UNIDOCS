@@ -10,6 +10,7 @@ import { LetterRequestService, LetterRequest } from '../../../services/letter-re
 export class MyApplicationsComponent implements OnInit {
   myApplications: LetterRequest[] = [];
   myApplicationsLoading = true;
+  localSearchTerm: string = '';
 
   constructor(
     public sidebarService: StudentSidebarService,
@@ -92,5 +93,19 @@ export class MyApplicationsComponent implements OnInit {
     } catch {
       return '-';
     }
+  }
+
+  onLocalSearchChange() {
+    // No need for a shared service, just local filtering
+  }
+
+  get filteredApplications() {
+    if (!this.localSearchTerm) return this.myApplications;
+    const term = this.localSearchTerm.toLowerCase();
+    return this.myApplications.filter(r =>
+      (r.letterType && r.letterType.toLowerCase().includes(term)) ||
+      (r.status && r.status.toLowerCase().includes(term)) ||
+      (r.adminComment && r.adminComment.toLowerCase().includes(term))
+    );
   }
 }

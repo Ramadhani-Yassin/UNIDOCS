@@ -69,12 +69,17 @@
 <!-- NAVBAR -->
 <nav [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
   <i (click)="toggleSidebar()" class="bx bx-menu"></i>
-  <a href="#" class="nav-link">{{ currentPageTitle }}</a>
+  <a routerLink="/dashboard" class="nav-link">Student</a>
   <form action="#">
     <div class="form-input">
-      <input type="search" [placeholder]="'Search ' + currentPageTitle + '...'" />
+    <input
+        type="search"
+        placeholder=""
+        readonly
+        style="background: #eee; cursor: not-allowed;"
+      />
       <button type="button" class="search-btn">
-        <i class="bx bx-search"></i>
+        <i class="bx bx-user"></i>
       </button>
     </div>
   </form>

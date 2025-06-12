@@ -3,10 +3,10 @@
   <main>
     <div class="head-title">
       <div class="left">
-        <h1>My Applications</h1>
+        <h1>All My Letters</h1>
         <ul class="breadcrumb">
           <li>
-            <a href="#" style="text-decoration: none;">My Applications</a>
+            <a href="#" style="text-decoration: none;">All My Letters</a>
           </li>
           <li><i class="bx bx-chevron-right"></i></li>
           <li>
@@ -15,14 +15,19 @@
         </ul>
       </div>
     </div>
-
     <div class="table-data">
       <div class="order">
         <div class="head">
-          <h3></h3>
-          <div class="table-actions">
+          <h3 style="margin-right: auto;">All My Letters</h3>
+          <div class="search-filter" style="margin-bottom: 0;">
             <i class="bx bx-search"></i>
-            <i class="bx bx-filter"></i>
+            <input
+              type="text"
+              placeholder="Search letter requests..."
+              [(ngModel)]="localSearchTerm"
+              (input)="onLocalSearchChange()"
+              style="width: 250px; margin-right: 8px;"
+            />
           </div>
         </div>
         <table>
@@ -35,9 +40,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let request of myApplications">
+            <tr *ngFor="let request of filteredApplications">
               <td>{{ request.letterType }}</td>
-              <td> {{ request.requestDate ? formatDate(request.requestDate) : '-' }}</td>
+              <td>{{ request.requestDate ? formatDate(request.requestDate) : '-' }}</td>
               <td class="status-cell" style="min-width: 160px;">
                 <span
                   class="status-badge"

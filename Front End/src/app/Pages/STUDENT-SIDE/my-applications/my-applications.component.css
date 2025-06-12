@@ -65,6 +65,33 @@
   }
 }
 
+
+
+/* Search and filter */
+.search-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-left: auto;
+}
+
+.search-filter input {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  font-family: 'Poppins', sans-serif;
+  min-width: 200px;
+}
+
+.search-filter select {
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid #ddd;
+  background-color: white;
+  font-family: 'Poppins', sans-serif;
+}
+
+
 .loading-indicator,
 .no-requests {
   text-align: center;
@@ -207,6 +234,14 @@
 
 .table-data .order table tr:last-child td {
   border-bottom: none;
+}
+
+.table-data .order .head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
 /* Responsive for small screens */

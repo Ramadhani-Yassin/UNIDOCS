@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { SidebarService } from '../../../services/sidebar.service';
 import { AdminLetterService } from '../../../services/admin-letter.service';
 import { UserService } from '../../../services/user.service';
+import { AdminSearchService } from '../../../services/admin-search.service';
 import { interval, Subscription } from 'rxjs';
 
 @Component({
@@ -14,6 +15,8 @@ export class AdminPortalComponent implements OnInit {
   statuses = ['PENDING', 'APPROVED', 'DECLINED'];
   editingStatusIndex: number | null = null;
   isUpdating: boolean = false; // <-- Add this line
+  searchTerm: string = '';
+  localSearchTerm: string = '';
 
   totalLettersGenerated: number = 0;
   totalRegisteredStudents: number = 0;
@@ -31,13 +34,19 @@ export class AdminPortalComponent implements OnInit {
   constructor(
     public sidebarService: SidebarService,
     private adminLetterService: AdminLetterService,
-    private userService: UserService
+    private userService: UserService,
+    private adminSearchService: AdminSearchService,
+    private cdr: ChangeDetectorRef // <-- Add this
   ) {}
 
   ngOnInit() {
     this.loadLetterRequests();
     this.loadCounts();
     this.animateCount('templates', this.totalLetterTemplates); // Animate on init
+    this.adminSearchService.searchTerm$.subscribe(term => {
+      this.searchTerm = term;
+      this.cdr.detectChanges(); // <-- Force view update
+    });
   }
 
   loadCounts() {
@@ -168,5 +177,21 @@ export class AdminPortalComponent implements OnInit {
     } catch {
       return '-';
     }
+  }
+
+  get filteredLetterRequests() {
+    if (!this.searchTerm) return this.letterRequests;
+    const term = this.searchTerm.toLowerCase();
+    return this.letterRequests.filter(r =>
+      (r.fullName && r.fullName.toLowerCase().includes(term)) ||
+      (r.letterType && r.letterType.toLowerCase().includes(term)) ||
+      (r.status && r.status.toLowerCase().includes(term)) ||
+      (r.adminComment && r.adminComment.toLowerCase().includes(term))
+    );
+  }
+
+  onLocalSearchChange() {
+    // Update the shared search term so navbar and table stay in sync
+    this.adminSearchService.setSearchTerm(this.localSearchTerm);
   }
 }

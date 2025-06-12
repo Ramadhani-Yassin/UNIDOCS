@@ -20,11 +20,17 @@
     <div class="table-data">
       <div class="order">
         <div class="head">
-          <h3></h3>
-          <div class="table-actions">
-            <i class="bx bx-search"></i>
-            <i class="bx bx-filter"></i>
-          </div>
+          <h3>All Letters</h3>
+        <div class="search-filter" style="margin-bottom: 16px;">
+          <i class="bx bx-search"></i>
+          <input
+            type="text"
+            placeholder="Search letter requests..."
+            [(ngModel)]="localSearchTerm"
+            (input)="onLocalSearchChange()"
+            style="width: 250px; margin-right: 8px;"
+          />
+        </div>
         </div>
         <!-- Modal Overlay for Update -->
         <div *ngIf="isUpdating" class="modal-overlay">
@@ -50,7 +56,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let request of letterRequests; let i = index">
+            <tr *ngFor="let request of filteredLetterRequests; let i = index">
               <td>{{ request.fullName }}</td>
               <td>{{ request.letterType }}</td>
               <td>{{ formatDate(request.requestDate) }}</td>

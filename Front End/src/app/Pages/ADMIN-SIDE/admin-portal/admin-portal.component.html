@@ -46,9 +46,18 @@
       <div class="order">
         <div class="head">
           <h3>Recent Letters Generated</h3>
+        <div class="search-filter" style="margin-bottom: 16px;">
           <i class="bx bx-search"></i>
-          <i class="bx bx-filter"></i>
-        </div>
+          <input
+            type="text"
+            placeholder="Search letter requests..."
+            [(ngModel)]="localSearchTerm"
+            (input)="onLocalSearchChange()"
+            style="width: 250px; margin-right: 8px;"
+          />
+      </div>
+    </div>
+
 
         <div *ngIf="isUpdating" class="modal-overlay">
           <div class="modal-dialog">
@@ -74,7 +83,7 @@
           </thead>
           <tbody>
             <!-- Show only the top 20 requests -->
-            <tr *ngFor="let request of letterRequests | slice:0:20; let i = index">
+            <tr *ngFor="let request of filteredLetterRequests | slice:0:20; let i = index">
               <td>{{ request.fullName }}</td>
               <td>{{ request.letterType }}</td>
               <!--<td>{{ formatDate(request.requestDate) }}</td>-->
