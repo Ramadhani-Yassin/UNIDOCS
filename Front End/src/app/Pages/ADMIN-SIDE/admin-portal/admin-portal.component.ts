@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SidebarService } from '../../../services/sidebar.service';
 import { AdminLetterService } from '../../../services/admin-letter.service';
 import { UserService } from '../../../services/user.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-admin-portal',
@@ -15,6 +16,16 @@ export class AdminPortalComponent implements OnInit {
 
   totalLettersGenerated: number = 0;
   totalRegisteredStudents: number = 0;
+  totalLetterTemplates: number = 8; // Set this dynamically if needed
+
+  // Animated values
+  animatedLettersGenerated: number = 0;
+  animatedRegisteredStudents: number = 0;
+  animatedLetterTemplates: number = 0;
+
+  private lettersSub?: Subscription;
+  private studentsSub?: Subscription;
+  private templatesSub?: Subscription;
 
   constructor(
     public sidebarService: SidebarService,
@@ -25,15 +36,50 @@ export class AdminPortalComponent implements OnInit {
   ngOnInit() {
     this.loadLetterRequests();
     this.loadCounts();
+    this.animateCount('templates', this.totalLetterTemplates); // Animate on init
   }
 
   loadCounts() {
     this.adminLetterService.getTotalLettersGenerated().subscribe(count => {
       this.totalLettersGenerated = count;
+      this.animateCount('letters', count);
     });
     this.userService.getStudentCount().subscribe(count => {
       this.totalRegisteredStudents = count;
+      this.animateCount('students', count);
     });
+  }
+
+  animateCount(type: 'letters' | 'students' | 'templates', target: number) {
+    const duration = 1000; // ms
+    const frameRate = 30; // frames per second
+    const totalFrames = Math.round(duration / (1000 / frameRate));
+    let frame = 0;
+
+    if (type === 'letters' && this.lettersSub) this.lettersSub.unsubscribe();
+    if (type === 'students' && this.studentsSub) this.studentsSub.unsubscribe();
+    if (type === 'templates' && this.templatesSub) this.templatesSub.unsubscribe();
+
+    const sub = interval(1000 / frameRate).subscribe(() => {
+      frame++;
+      const progress = Math.min(frame / totalFrames, 1);
+      const value = Math.floor(progress * target);
+
+      if (type === 'letters') this.animatedLettersGenerated = value;
+      if (type === 'students') this.animatedRegisteredStudents = value;
+      if (type === 'templates') this.animatedLetterTemplates = value;
+
+      if (progress === 1) {
+        if (type === 'letters') this.animatedLettersGenerated = target;
+        if (type === 'students') this.animatedRegisteredStudents = target;
+        if (type === 'templates') this.animatedLetterTemplates = target;
+        sub.unsubscribe();
+      }
+    });
+
+    if (type === 'letters') this.lettersSub = sub;
+    if (type === 'students') this.studentsSub = sub;
+    if (type === 'templates') this.templatesSub = sub;
   }
 
   loadLetterRequests() {

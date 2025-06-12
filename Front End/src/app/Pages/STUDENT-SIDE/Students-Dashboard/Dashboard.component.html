@@ -34,16 +34,13 @@
           <i class="bx bxs-envelope"></i>
           <span class="text" style="display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
             <h4>Letters You Requested</h4>
-            
             <div *ngIf="isLoading" class="loading-indicator">
               Loading...
             </div>
-            
             <div *ngIf="!isLoading && errorMessage" class="error-message">
               {{ errorMessage }}
             </div>
-            
-            <h3 *ngIf="!isLoading && !errorMessage">{{ requestCount }}</h3>
+            <h3 *ngIf="!isLoading && !errorMessage">{{ animatedRequestCount }}</h3>
           </span>
         </li>
     </ul>
@@ -51,7 +48,7 @@
     <div class="table-data">
       <div class="todo">
         <div class="head">
-          <h3>Letters You can Request</h3>
+          <h4>Letters You can Request</h4>
           <i class="bx bx-filter"></i>
         </div>
         
@@ -82,7 +79,7 @@
 
       <div class="order">
         <div class="head">
-          <h3>Recent Applications</h3>
+          <h4>Recent Applications</h4>
           <i class="bx bx-search"></i>
           <i class="bx bx-filter"></i>
         </div>

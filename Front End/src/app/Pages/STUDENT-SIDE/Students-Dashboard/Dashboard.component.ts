@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { StudentSidebarService } from '../../../services/student-sidebar.service';
 import { LetterRequestService, LetterRequest } from '../../../services/letter-request.service';
 import { UserService } from '../../../services/user.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-students',
@@ -12,10 +13,12 @@ import { UserService } from '../../../services/user.service';
 export class DashboardComponent implements OnInit {
   fullName: string = 'Loading...';
   requestCount: number = 0;
+  animatedRequestCount: number = 0;
   isLoading: boolean = true;
   errorMessage: string | null = null;
   recentRequests: LetterRequest[] = [];
   recentRequestsLoading: boolean = true;
+  private requestCountSub?: Subscription;
 
   constructor(
     public sidebarService: StudentSidebarService,
@@ -48,12 +51,34 @@ export class DashboardComponent implements OnInit {
     this.letterRequestService.getLetterRequestCount().subscribe({
       next: (count) => {
         this.requestCount = count;
+        this.animateRequestCount(count);
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Failed to load request count', err);
         this.errorMessage = 'Failed to load request count';
         this.isLoading = false;
+      }
+    });
+  }
+
+  private animateRequestCount(target: number) {
+    const duration = 1000; // ms
+    const frameRate = 30;
+    const totalFrames = Math.round(duration / (1000 / frameRate));
+    let frame = 0;
+
+    if (this.requestCountSub) this.requestCountSub.unsubscribe();
+
+    this.animatedRequestCount = 0;
+    this.requestCountSub = interval(1000 / frameRate).subscribe(() => {
+      frame++;
+      const progress = Math.min(frame / totalFrames, 1);
+      this.animatedRequestCount = Math.floor(progress * target);
+
+      if (progress === 1) {
+        this.animatedRequestCount = target;
+        this.requestCountSub?.unsubscribe();
       }
     });
   }
