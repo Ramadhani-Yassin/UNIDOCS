@@ -4,6 +4,6 @@
 # Assign TypeScript language to all .ts files
 *.ts linguist-language=TypeScript
 
-# Optionally, if you have .tsx files (React TSX), classify them as TypeScript as well
+# Optionaally, if you have .tsx files (React TSX), classify them as TypeScript as well
 *.tsx linguist-language=TypeScript
 
