@@ -1,0 +1,8 @@
+# Assign Java language to all .java files
+*.java linguist-language=Java
+
+# Assign TypeScript language to all .ts files
+*.ts linguist-language=TypeScript
+
+# Optionally, if you have .tsx files (React TSX), classify them as TypeScript as well
+*.tsx linguist-language=TypeScript
