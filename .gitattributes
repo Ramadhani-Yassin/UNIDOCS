@@ -6,3 +6,4 @@
 
 # Optionally, if you have .tsx files (React TSX), classify them as TypeScript as well
 *.tsx linguist-language=TypeScript
+
