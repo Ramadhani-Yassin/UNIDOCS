@@ -1,9 +1,28 @@
-# Assign Java language to all .java files
-*.java linguist-language=Java
+# Language control
+*.vue linguist-language=Vue  # Force Vue as primary
+*.php linguist-vendored=true # Reduce PHP weight
+*.css linguist-detectable=true
+*.js linguist-detectable=true
+*.ts linguist-detectable=true  # Enable TypeScript detection
+*.java linguist-language=Java  # Force Java as primary
+*.jsp linguist-language=JavaScript  # Treat JSP as JavaScript (if required)
 
-# Assign TypeScript language to all .ts files
-*.ts linguist-language=TypeScript
+# Non-code files
+/docs/* linguist-documentation=true
+/public/* linguist-vendored=true
 
-# Optionaally, if you have .tsx files (React TSX), classify them as TypeScript as well
-*.tsx linguist-language=TypeScript
+# File type handling
+* text=auto eol=lf
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+*.java diff=java  # Java diff configuration
+*.ts diff=typescript  # TypeScript diff configuration
+*.js diff=javascript  # JavaScript diff configuration
 
+# Excluded paths
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore
