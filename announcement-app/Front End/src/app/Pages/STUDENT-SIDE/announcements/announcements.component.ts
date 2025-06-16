@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AnnouncementService } from '../../../services/announcement.service';
-import { Announcement, AnnouncementAttachment } from '../../../models/announcement.model';
-import { SidebarService } from '../../../services/sidebar.service'; // Adjust path if needed
+import { Announcement } from '../../../models/announcement.model';
 
 @Component({
   selector: 'app-announcements',
@@ -13,10 +12,7 @@ export class AnnouncementsComponent implements OnInit {
   isLoading: boolean = true;
   errorMessage: string = '';
 
-  constructor(
-    private announcementService: AnnouncementService,
-    public sidebarService: SidebarService // <-- add this
-  ) {}
+  constructor(private announcementService: AnnouncementService) {}
 
   ngOnInit(): void {
     this.loadAnnouncements();
@@ -33,9 +29,5 @@ export class AnnouncementsComponent implements OnInit {
         this.isLoading = false;
       }
     });
-  }
-
-  downloadAttachment(attachment: AnnouncementAttachment) {
-    window.open(attachment.fileUrl, '_blank');
   }
 }

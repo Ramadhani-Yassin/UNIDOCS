@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { AnnouncementService } from '../../../services/announcement.service';
-import { SidebarService } from '../../../services/sidebar.service'; // Adjust path as needed
 
 interface AnnouncementForm {
   title: string;
@@ -25,10 +24,7 @@ export class PublishAnnouncementsComponent {
   submitSuccess = false;
   submitError = '';
 
-  constructor(
-    private announcementService: AnnouncementService,
-    public sidebarService: SidebarService // <-- add this
-  ) {}
+  constructor(private announcementService: AnnouncementService) {}
 
   onFileChange(event: any) {
     this.form.attachments = Array.from(event.target.files);

@@ -1,4 +1,5 @@
 <app-student-nav></app-student-nav>
+
 <section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
   <main>
     <div class="head-title">
@@ -6,11 +7,11 @@
         <h1>Announcements</h1>
         <ul class="breadcrumb">
           <li>
-            <a href="#" class="grey">Announcements</a>
+            <a href="#" class="active">Dashboard</a>
           </li>
-          <li><i class="bx bx-chevron-right"></i></li>
+          <li><i class='bx bx-chevron-right'></i></li>
           <li>
-            <a class="active" href="#">Back to Dashboard</a>
+            <a class="active">Announcements</a>
           </li>
         </ul>
       </div>
@@ -57,12 +58,12 @@
         <div class="announcement-content">
           <p>{{ announcement.content }}</p>
         </div>
-        <div *ngIf="announcement.attachments && announcement.attachments.length > 0" class="announcement-attachments">
+        <div *ngIf="announcement.attachments.length > 0" class="announcement-attachments">
           <h4><i class='bx bx-paperclip'></i> Attachments</h4>
           <ul>
             <li *ngFor="let attachment of announcement.attachments">
-              <a href="{{ attachment.fileUrl }}" target="_blank" (click)="downloadAttachment(attachment); $event.preventDefault()">
-                <i class='bx bx-file'></i> {{ attachment.fileName }}
+              <a href="{{ attachment.url }}" target="_blank" (click)="downloadAttachment(attachment); $event.preventDefault()">
+                <i class='bx bx-file'></i> {{ attachment.name }}
               </a>
             </li>
           </ul>

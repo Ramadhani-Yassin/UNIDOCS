@@ -1,4 +1,8 @@
-/* MAIN CONTENT */
+@import '../../ADMIN-SIDE/admin-portal/admin-portal.component.css';
+
+/* Override or add styles for announcements page to match dashboard look */
+
+/* Main content alignment and padding */
 #content {
   position: relative;
   width: calc(100% - 280px);
@@ -12,145 +16,171 @@
   margin-left: 60px;
 }
 
-/* MAIN */
-#content main {
-  width: 100%;
-  padding: 36px 24px;
-  font-family: 'Poppins', sans-serif;
-  min-height: calc(100vh - 56px);
-}
-
-/* HEAD TITLE */
-#content main .head-title {
+/* Head title styles */
+.head-title {
   display: flex;
   align-items: center;
   justify-content: space-between;
   grid-gap: 16px;
   flex-wrap: wrap;
+  margin-bottom: 24px;
 }
 
-#content main .head-title .left h1 {
+.head-title .left h1 {
   font-size: 36px;
   font-weight: 600;
   margin-bottom: 10px;
-  color: #342E37;
+  color: #342e37;
+  letter-spacing: 0.5px;
 }
 
-#content main .head-title .left .breadcrumb {
+.head-title .left .breadcrumb {
   display: flex;
   align-items: center;
   grid-gap: 16px;
 }
 
-#content main .head-title .left .breadcrumb li {
-  color: #342E37;
+.head-title .left .breadcrumb li {
+  color: #342e37;
+  font-size: 15px;
+  font-weight: 500;
 }
 
-#content main .head-title .left .breadcrumb li a {
+.head-title .left .breadcrumb li a {
   color: #AAAAAA;
   pointer-events: none;
-  text-decoration: none;
+  text-decoration: none !important;
+  transition: color 0.2s;
 }
 
-#content main .head-title .left .breadcrumb li a.active {
-  color: #3C91E6;
+.head-title .left .breadcrumb li a.grey {
+  color: #AAAAAA !important; /* Grey for Dashboard */
+}
+
+.head-title .left .breadcrumb li a.active {
+  color: #3C91E6 !important; /* Blue for Announcements */
   pointer-events: unset;
+  text-decoration: none !important;
 }
 
-#content main .head-title .btn-download {
+.head-title .left .breadcrumb li i {
+  color: #AAAAAA;
+  font-size: 18px;
+}
+
+.btn-download {
   height: 36px;
   padding: 0 16px;
   border-radius: 36px;
-  background: #3C91E6;
-  color: #F9F9F9;
+  background: #3c91e6;
+  color: #f9f9f9;
   display: flex;
   justify-content: center;
   align-items: center;
   grid-gap: 10px;
   font-weight: 500;
-  text-decoration: none; 
+  text-decoration: none !important;
+  box-shadow: 0 2px 8px rgba(60, 145, 230, 0.1);
+  transition: background 0.2s;
 }
 
-/* ANNOUNCEMENTS STYLES */
+.btn-download:hover {
+  background: #2563eb;
+  color: #fff;
+  text-decoration: none !important;
+}
+
+/* Announcements container */
 .announcements-container {
-  margin-top: 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  margin-top: 20px;
 }
 
+/* Announcement card styling */
 .announcement-card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 24px;
+  background-color: #f9f9f9;
+  transition: box-shadow 0.3s;
+  box-shadow: 0 2px 10px rgba(60, 145, 230, 0.05);
 }
 
 .announcement-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(60, 145, 230, 0.12);
 }
 
 .announcement-header {
   display: flex;
-  flex-direction: column;
-  margin-bottom: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #eee;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
 }
 
 .announcement-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #342e37;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 10px;
+  gap: 14px;
 }
 
-.announcement-title h3 {
-  font-size: 18px;
-  color: #333;
-  margin: 0;
-  flex: 1;
+.status-badge {
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin-left: 10px;
+  color: #fff;
+  background: #bdbdbd;
+  text-transform: capitalize;
+  letter-spacing: 0.5px;
+}
+
+.status-badge.new {
+  background: #3c91e6;
+}
+
+.status-badge.important {
+  background: #fd7238;
+}
+
+.status-badge.update {
+  background: #ffce26;
+  color: #342e37;
 }
 
 .announcement-meta {
+  font-size: 0.98em;
+  color: #6c757d;
   display: flex;
-  gap: 15px;
-  font-size: 13px;
-  color: #999;
+  gap: 18px;
+  align-items: center;
 }
 
-.announcement-meta span {
-  display: flex;
-  align-items: center;
-  gap: 5px;
+.announcement-meta i {
+  color: #3c91e6;
+  margin-right: 4px;
 }
 
 .announcement-content {
-  margin-bottom: 15px;
-}
-
-.announcement-content p {
-  color: #666;
-  font-size: 14px;
+  margin-top: 12px;
+  color: #342e37;
+  font-size: 1.08em;
   line-height: 1.6;
-  margin: 0;
 }
 
 .announcement-attachments {
-  margin-top: 15px;
-  padding-top: 15px;
-  border-top: 1px solid #eee;
+  margin-top: 14px;
 }
 
 .announcement-attachments h4 {
-  font-size: 14px;
-  color: #333;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
+  margin-bottom: 7px;
+  color: #3c91e6;
+  font-size: 1em;
+  font-weight: 600;
 }
 
 .announcement-attachments ul {
@@ -160,160 +190,73 @@
 }
 
 .announcement-attachments li {
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
 .announcement-attachments a {
-  color: #3C91E6; /* Changed to match dashboard primary color */
-  text-decoration: none;
-  font-size: 13px;
+  color: #2563eb;
+  text-decoration: none !important;
+  font-weight: 500;
+  transition: color 0.2s;
   display: flex;
   align-items: center;
-  gap: 5px;
-  transition: color 0.3s ease;
+  gap: 6px;
 }
 
 .announcement-attachments a:hover {
-  color: #2a7bc8; /* Darker shade of primary */
-}
-
-/* STATUS BADGES - Unified with dashboard */
-.status-badge {
-  padding: 4px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-}
-
-.status-badge.new {
-  background: #f6ffed;
-  color: #52c41a;
-  border: 1px solid #b7eb8f;
-}
-
-.status-badge.important {
-  background: #fff1f0;
-  color: #ff4d4f;
-  border: 1px solid #ffa39e;
-}
-
-.status-badge.update {
-  background: #e6f7ff;
-  color: #3C91E6; /* Changed to match dashboard primary */
-  border: 1px solid #91d5ff;
-}
-
-/* LOADING STATES - Unified with dashboard */
-.loading-indicator {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 20px;
-  color: #666;
-  font-size: 14px;
+  color: #10b981;
+  text-decoration: none !important;
 }
 
 .no-data {
   text-align: center;
-  padding: 30px;
-  color: #999;
+  color: #6c757d;
+  margin: 32px 0;
+  font-size: 1.1em;
 }
 
-.no-data i {
-  font-size: 24px;
-  margin-bottom: 10px;
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2em;
+  color: #3c91e6;
+  gap: 8px;
+  margin: 32px 0;
 }
 
-.no-data p {
-  margin: 0;
-  font-size: 14px;
-}
-
-/* ANALYTICS STYLES (Existing) */
-.summary-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 20px;
-  margin: 20px 0;
-}
-
-.card {
-  background: #fff;
-  border-radius: 10px;
-  padding: 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+.alert.alert-danger {
+  background: #fef2f2;
+  color: #ef4444;
+  border-left: 4px solid #ef4444;
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-weight: 500;
   display: flex;
   align-items: center;
+  gap: 8px;
+  margin-bottom: 18px;
 }
 
-/* ... (rest of your existing analytics styles remain unchanged) ... */
-
-/* RESPONSIVE ADJUSTMENTS */
-@media (max-width: 1200px) {
-  #content main {
-    padding: 24px 16px;
-  }
+.alert .close {
+  background: none;
+  border: none;
+  font-size: 1.2em;
+  color: #ef4444;
+  margin-left: auto;
+  cursor: pointer;
+  padding: 0 8px;
 }
 
-@media (max-width: 992px) {
-  .chart-row,
-  .request-container {
-    flex-direction: column;
+/* Responsive adjustments */
+@media screen and (max-width: 992px) {
+  #content {
+    padding: 16px 8px;
   }
-  
-  .chart-card,
-  .form-column,
-  .instructions-column {
-    width: 100%;
-  }
-}
-
-@media (max-width: 768px) {
-  .summary-cards {
-    grid-template-columns: 1fr 1fr;
-  }
-  
-  .announcement-title {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  
-  .announcement-meta {
-    flex-direction: column;
-    gap: 5px;
-  }
-  
-  #content main .head-title .left h1 {
-    font-size: 24px;
-  }
-  
-  .breadcrumb li:not(:last-child) {
-    display: none;
-  }
-  
-  .breadcrumb li:last-child {
-    margin-left: 0;
-  }
-  
-  .breadcrumb li i {
-    display: none;
-  }
-}
-
-@media (max-width: 576px) {
-  #content main {
-    padding: 16px 12px;
-  }
-  
-  .summary-cards,
   .announcement-card {
-    grid-template-columns: 1fr;
-    padding: 16px;
+    padding: 16px 10px;
   }
-  
-  #content main .head-title .left h1 {
+  .head-title .left h1 {
     font-size: 24px;
   }
 }
