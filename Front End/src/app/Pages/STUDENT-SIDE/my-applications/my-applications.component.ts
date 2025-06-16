@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentSidebarService } from '../../../services/student-sidebar.service';
 import { LetterRequestService, LetterRequest } from '../../../services/letter-request.service';
+import { UserService } from '../../../services/user.service'; // Add this import
 
 @Component({
   selector: 'app-my-applications',
@@ -14,7 +15,8 @@ export class MyApplicationsComponent implements OnInit {
 
   constructor(
     public sidebarService: StudentSidebarService,
-    private letterRequestService: LetterRequestService
+    private letterRequestService: LetterRequestService,
+    private userService: UserService // Inject UserService
   ) {}
 
   ngOnInit(): void {
@@ -107,5 +109,32 @@ export class MyApplicationsComponent implements OnInit {
       (r.status && r.status.toLowerCase().includes(term)) ||
       (r.adminComment && r.adminComment.toLowerCase().includes(term))
     );
+  }
+
+  openLetterInNewTab(request: LetterRequest) {
+    this.letterRequestService.getGeneratedLetter(request.id, 'pdf').subscribe({
+      next: (blob: Blob) => {
+        // Get user's first and last name for filename
+        const user = this.userService.getCurrentUser();
+        const firstName = user?.firstName || 'User';
+        const lastName = user?.lastName || '';
+        const fileName = `${firstName}_${lastName}_letter.pdf`;
+
+        const url = window.URL.createObjectURL(blob);
+        // Open the PDF in a new tab for viewing
+        const newTab = window.open(url, '_blank');
+        // Optionally, revoke the object URL after some time
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+
+        // Optionally, if you want to force download with custom filename, use the anchor trick:
+        // const a = document.createElement('a');
+        // a.href = url;
+        // a.download = fileName;
+        // a.click();
+      },
+      error: () => {
+        alert('Failed to load letter.');
+      }
+    });
   }
 }

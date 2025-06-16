@@ -40,7 +40,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let request of filteredApplications">
+            <tr *ngFor="let request of filteredApplications" (click)="openLetterInNewTab(request)" style="cursor:pointer;">
               <td>{{ request.letterType }}</td>
               <td>{{ request.requestDate ? formatDate(request.requestDate) : '-' }}</td>
               <td class="status-cell" style="min-width: 160px;">

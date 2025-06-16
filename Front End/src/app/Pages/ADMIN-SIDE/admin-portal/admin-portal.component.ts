@@ -194,4 +194,32 @@ export class AdminPortalComponent implements OnInit {
     // Update the shared search term so navbar and table stay in sync
     this.adminSearchService.setSearchTerm(this.localSearchTerm);
   }
+
+  openLetterInNewTab(request: any) {
+    let firstName = 'User';
+    let lastName = '';
+    if (request.fullName) {
+      const parts = request.fullName.trim().split(/\s+/);
+      firstName = parts[0] || 'User';
+      lastName = parts.length > 1 ? parts[parts.length - 1] : '';
+    }
+    const fileName = `${firstName}_${lastName}_letter.pdf`;
+
+    const newTab = window.open('', '_blank');
+    this.adminLetterService.getGeneratedLetter(request.id, 'pdf').subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        if (newTab) {
+          newTab.location.href = url;
+        } else {
+          window.open(url, '_blank');
+        }
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+      },
+      error: () => {
+        if (newTab) newTab.close();
+        alert('Failed to load letter.');
+      }
+    });
+  }
 }

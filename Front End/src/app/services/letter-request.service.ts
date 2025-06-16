@@ -102,6 +102,18 @@ export class LetterRequestService {
         );
     }
 
+    getGeneratedLetter(id: string, format: 'pdf' | 'docx' = 'pdf'): Observable<Blob> {
+        const headers = new HttpHeaders({
+            'Authorization': `Bearer ${this.getAuthToken()}`
+        });
+        return this.http.get(
+            `${this.apiUrl}/${id}/generate?format=${format}`,
+            { headers, responseType: 'blob' }
+        ).pipe(
+            catchError(this.handleError)
+        );
+    }
+
     private formatRequestData(request: any): any {
         return {
             fullName: request.fullName,

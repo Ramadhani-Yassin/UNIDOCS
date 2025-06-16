@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { StudentSidebarService } from '../../../services/student-sidebar.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { LetterRequestService, LetterRequest } from '../../../services/letter-request.service';
 import { UserService } from '../../../services/user.service';
 import { interval, Subscription } from 'rxjs';
@@ -20,11 +21,20 @@ export class DashboardComponent implements OnInit {
   recentRequestsLoading: boolean = true;
   private requestCountSub?: Subscription;
 
+  // Modal and letter viewing properties
+  showLetterModal = false;
+  letterUrl: SafeResourceUrl | null = null;
+  letterLoading = false;
+  letterError = '';
+  selectedRequest: LetterRequest | null = null;
+  showLetterSpinner: boolean = false;
+
   constructor(
     public sidebarService: StudentSidebarService,
     private router: Router,
     private userService: UserService,
-    private letterRequestService: LetterRequestService
+    private letterRequestService: LetterRequestService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -157,5 +167,74 @@ export class DashboardComponent implements OnInit {
     if (confirmLogout) {
       this.router.navigate(['/home']);
     }
+  }
+
+  openLetterModal(request: LetterRequest) {
+    this.selectedRequest = request;
+    this.showLetterModal = true;
+    this.letterLoading = true;
+    this.letterError = '';
+    this.letterUrl = null;
+
+    this.letterRequestService.getGeneratedLetter(request.id, 'pdf').subscribe({
+      next: (blob: Blob) => {
+        this.letterUrl = this.sanitizer.bypassSecurityTrustResourceUrl(URL.createObjectURL(blob));
+        this.letterLoading = false;
+      },
+      error: (err) => {
+        this.letterError = 'Failed to load letter.';
+        this.letterLoading = false;
+      }
+    });
+  }
+
+  closeLetterModal() {
+    // Open in new tab before closing modal
+    if (this.letterUrl) {
+      const url = (this.letterUrl as any).changingThisBreaksApplicationSecurity || this.letterUrl;
+      window.open(url, '_blank');
+    }
+    this.showLetterModal = false;
+    this.letterUrl = null;
+    this.selectedRequest = null;
+  }
+
+  downloadLetter() {
+    if (!this.selectedRequest) return;
+    this.letterRequestService.getGeneratedLetter(this.selectedRequest.id, 'pdf').subscribe(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'letter.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+    });
+  }
+
+  openLetterInNewTab(request: LetterRequest) {
+    this.letterLoading = true; // Show spinner
+    this.showLetterSpinner = true; // New property to control spinner modal
+
+    this.letterRequestService.getGeneratedLetter(request.id, 'pdf').subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        this.letterLoading = false;
+        this.showLetterSpinner = false;
+        window.open(url, '_blank');
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+      },
+      error: () => {
+        this.letterLoading = false;
+        this.showLetterSpinner = false;
+        alert('Failed to load letter.');
+      }
+    });
+  }
+
+  openCurrentLetterInNewTab() {
+    if (!this.letterUrl) return;
+    // letterUrl is a SafeResourceUrl, so we need to extract the actual URL string
+    const url = (this.letterUrl as any).changingThisBreaksApplicationSecurity || this.letterUrl;
+    window.open(url, '_blank');
   }
 }

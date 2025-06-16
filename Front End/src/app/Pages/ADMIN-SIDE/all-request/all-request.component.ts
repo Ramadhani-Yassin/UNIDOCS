@@ -133,4 +133,36 @@ export class AllRequestComponent implements OnInit {
       (r.adminComment && r.adminComment.toLowerCase().includes(term))
     );
   }
+
+  openLetterInNewTab(request: any) {
+    // Optionally, you can check status here if you only want to allow for APPROVED
+    // if (request.status !== 'APPROVED') return;
+
+    let firstName = 'User';
+    let lastName = '';
+    if (request.fullName) {
+      const parts = request.fullName.trim().split(/\s+/);
+      firstName = parts[0] || 'User';
+      lastName = parts.length > 1 ? parts[parts.length - 1] : '';
+    }
+    const fileName = `${firstName}_${lastName}_letter.pdf`;
+
+    // Open a blank tab synchronously to avoid popup blockers
+    const newTab = window.open('', '_blank');
+    this.adminLetterService.getGeneratedLetter(request.id, 'pdf').subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        if (newTab) {
+          newTab.location.href = url;
+        } else {
+          window.open(url, '_blank');
+        }
+        setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+      },
+      error: () => {
+        if (newTab) newTab.close();
+        alert('Failed to load letter.');
+      }
+    });
+  }
 }

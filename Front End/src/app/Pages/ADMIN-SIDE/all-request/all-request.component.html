@@ -56,7 +56,9 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let request of filteredLetterRequests; let i = index">
+            <tr *ngFor="let request of filteredLetterRequests; let i = index"
+                (click)="openLetterInNewTab(request)"
+                style="cursor:pointer;">
               <td>{{ request.fullName }}</td>
               <td>{{ request.letterType }}</td>
               <td>{{ formatDate(request.requestDate) }}</td>
@@ -70,7 +72,7 @@
                     'approved': request.status === 'APPROVED',
                     'declined': request.status === 'DECLINED'
                   }"
-                  (click)="setEditingStatus(i)"
+                  (click)="setEditingStatus(i); $event.stopPropagation()"
                   style="cursor:pointer"
                   title="Click to change status"
                 >
@@ -82,16 +84,17 @@
                   [(ngModel)]="request.status"
                   (blur)="saveStatus(request, i)"
                   (change)="saveStatus(request, i)"
+                  (click)="$event.stopPropagation()"
                   autofocus
                 >
                   <option *ngFor="let s of statuses" [value]="s">{{ s | titlecase }}</option>
                 </select>
               </td>
               <td>
-                <input [(ngModel)]="request.adminComment" placeholder="Add comment" />
+                <input [(ngModel)]="request.adminComment" placeholder="Add comment" (click)="$event.stopPropagation()" />
               </td>
               <td>
-                <button (click)="updateStatus(request)">Update</button>
+                <button (click)="updateStatus(request); $event.stopPropagation()">Update</button>
               </td>
             </tr>
           </tbody>

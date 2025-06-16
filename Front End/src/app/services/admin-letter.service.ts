@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AdminLetterService {
-  private apiUrl = `${environment.apiUrl}/api/letter-requests`;
+  private apiUrl = 'http://localhost:8088/api/letter-requests'; // <-- Use your backend URL
 
   constructor(private http: HttpClient) {}
 
@@ -22,4 +22,12 @@ export class AdminLetterService {
   getTotalLettersGenerated(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/count-all`);
   }
+
+  getGeneratedLetter(id: string, format: 'pdf' | 'docx' = 'pdf'): Observable<Blob> {
+    return this.http.get(
+      `${this.apiUrl}/${id}/generate?format=${format}`,
+      { responseType: 'blob' }
+    );
+  }
+
 }

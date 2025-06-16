@@ -48,7 +48,7 @@
     <div class="table-data">
       <div class="todo">
         <div class="head">
-          <h4>Letters You can Request</h4>
+          <h5>Letters You can Request</h5>
           <i class="bx bx-filter"></i>
         </div>
         
@@ -79,7 +79,7 @@
 
       <div class="order">
         <div class="head">
-          <h4>Recent Applications</h4>
+          <h5>Recent Applications</h5>
           <i class="bx bx-search"></i>
           <i class="bx bx-filter"></i>
         </div>
@@ -92,7 +92,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let request of recentRequests">
+    <tr *ngFor="let request of recentRequests"
+    (click)="openLetterInNewTab(request)"
+    style="cursor:pointer;">
       <td>
         <img src="https://media.istockphoto.com/id/1400628312/vector/a-blank-sheet-of-white-paper-in-a-yellow-envelope-a-copy-space-template.jpg?s=612x612&w=0&k=20&c=v6lwMwXS8R_l1rRPKPxs6DXhyVKB4Yj3pgtbL5gKTZI=" />
         <p>{{ request.letterType }}</p>
@@ -123,3 +125,23 @@
     </div>
   </main>
 </section>
+
+<div *ngIf="showLetterModal" class="letter-modal-backdrop">
+  <div class="letter-modal">
+    <button class="close-btn" (click)="closeLetterModal()">Close</button>
+    <button class="save-btn" (click)="downloadLetter()">Save</button>
+    <ng-container *ngIf="letterUrl">
+      <iframe [src]="letterUrl" width="100%" height="600px"></iframe>
+    </ng-container>
+    <div *ngIf="letterLoading" class="custom-spinner-backdrop">
+  <div class="custom-spinner">
+    <div class="lds-roller">
+      <div></div><div></div><div></div><div></div>
+      <div></div><div></div><div></div><div></div>
+    </div>
+    <div class="spinner-text">Loading your letter...</div>
+  </div>
+</div>
+    <div *ngIf="letterError">{{ letterError }}</div>
+  </div>
+</div>
