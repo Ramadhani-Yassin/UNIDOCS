@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { SidebarService } from '../../../services/sidebar.service'; // Adjust path as needed
+import { Announcement } from '../../../models/announcement.model';
 
 interface AnnouncementForm {
   title: string;
@@ -25,6 +26,8 @@ export class PublishAnnouncementsComponent {
   submitSuccess = false;
   submitError = '';
 
+  @Output() announcementPublished = new EventEmitter<void>();
+
   constructor(
     private announcementService: AnnouncementService,
     public sidebarService: SidebarService // <-- add this
@@ -39,17 +42,20 @@ export class PublishAnnouncementsComponent {
     this.submitSuccess = false;
     this.submitError = '';
 
-    const formData = new FormData();
-    formData.append('title', this.form.title);
-    formData.append('content', this.form.content);
-    formData.append('status', this.form.status);
-    this.form.attachments.forEach(file => formData.append('attachments', file));
+    // Build the announcement object
+    const announcement = {
+      title: this.form.title,
+      content: this.form.content,
+      status: this.form.status
+      // Add attachments if needed
+    };
 
-    this.announcementService.createAnnouncement(formData).subscribe({
+    this.announcementService.createAnnouncementJson(announcement).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.submitSuccess = true;
         this.resetForm();
+        this.announcementPublished.emit();
       },
       error: (error) => {
         this.isSubmitting = false;

@@ -16,6 +16,10 @@ export class AnnouncementService {
     return this.http.post('/api/announcements', formData);
   }
 
+  createAnnouncementJson(announcement: any): Observable<any> {
+    return this.http.post(this.apiUrl, announcement);
+  }
+
   getRecentAnnouncements(limit: number = 5): Observable<Announcement[]> {
     return this.http.get<Announcement[]>(`${this.apiUrl}/recent?limit=${limit}`);
   }

@@ -52,15 +52,16 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/letter-requests/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/letter-requests").permitAll()
                 .requestMatchers("/api/admin/**").permitAll()
-                // ADD THESE LINES:
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/activate").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/deactivate").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/announcements/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/announcements").permitAll()
                 // Everything else under /api/users/** requires role
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
                 .anyRequest().authenticated()
             )
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)); // <-- Use stateless
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         return http.build();
     }
@@ -68,7 +69,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200", "http://192.168.106.248:4200"));
+        configuration.setAllowedOriginPatterns(List.of("*")); // Allow all origins (any IP/domain)
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With"));
         configuration.setExposedHeaders(List.of("Authorization"));
