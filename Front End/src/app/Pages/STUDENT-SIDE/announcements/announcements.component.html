@@ -50,8 +50,14 @@
             </span>
           </div>
           <div class="announcement-meta">
-            <span><i class='bx bx-calendar'></i> {{ announcement.createdDate | date:'mediumDate' }}</span>
-            <span><i class='bx bx-user'></i> {{ announcement.author }}</span>
+            <span>
+              <i class='bx bx-calendar'></i>
+              {{ fetchDate | date:'mediumDate' }}
+            </span>
+            <span>
+              <i class='bx bx-user'></i>
+              {{ announcement.author || 'Admin' }}
+            </span>
           </div>
         </div>
         <div class="announcement-content">

@@ -12,10 +12,11 @@ export class AnnouncementsComponent implements OnInit {
   announcements: Announcement[] = [];
   isLoading: boolean = true;
   errorMessage: string = '';
+  fetchDate: Date = new Date(); // Add this line
 
   constructor(
     private announcementService: AnnouncementService,
-    public sidebarService: SidebarService // <-- add this
+    public sidebarService: SidebarService
   ) {}
 
   ngOnInit(): void {
@@ -23,9 +24,13 @@ export class AnnouncementsComponent implements OnInit {
   }
 
   loadAnnouncements(): void {
+    this.isLoading = true;
+    this.fetchDate = new Date(); // Set fetch date when loading starts
     this.announcementService.getRecentAnnouncements().subscribe({
       next: (data) => {
-        this.announcements = data;
+        this.announcements = data.sort(
+          (a, b) => new Date(b.createdDate).getTime() - new Date(a.createdDate).getTime()
+        );
         this.isLoading = false;
       },
       error: (error) => {
