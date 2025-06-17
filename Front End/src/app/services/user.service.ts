@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
-import { tap, catchError, map } from 'rxjs/operators';
+import { tap, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +16,6 @@ export class UserService {
     this.loadStoredUser();
   }
 
-  // Load user from localStorage on service initialization
-  private loadStoredUser(): void {
-    const storedUser = localStorage.getItem('currentUser');
-    if (storedUser) {
-      this.currentUserSubject.next(JSON.parse(storedUser));
-    }
-  }
-
   // Register new user
   register(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user).pipe(
@@ -35,16 +27,16 @@ export class UserService {
   login(credentials: { email: string, password: string, role: string }): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {
-  if (response.user) {
-    const normalizedUser = {
-      id: response.user.id,
-      firstName: response.user.firstName,
-      lastName: response.user.lastName,
-      email: response.user.email
-    };
-    this.storeUserData(normalizedUser);
-  }
-  }),
+        if (response.user) {
+          const normalizedUser = {
+            id: response.user.id,
+            firstName: response.user.firstName,
+            lastName: response.user.lastName,
+            email: response.user.email
+          };
+          this.storeUserData(normalizedUser);
+        }
+      }),
 
       catchError(this.handleError)
     );
@@ -52,6 +44,11 @@ export class UserService {
 
   // Store user data in localStorage and BehaviorSubject
   public storeUserData(user: any): void {
+    if (!user) {
+      console.warn('Attempted to store null/undefined user in localStorage!');
+      return;
+    }
+    console.log('Storing user in localStorage:', user);
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.currentUserSubject.next(user);
   }
@@ -82,13 +79,14 @@ export class UserService {
 
   // Logout user
   logout(): void {
+    console.log('Removing currentUser from localStorage');
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
   }
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return this.currentUserSubject.value !== null;
+    return !!localStorage.getItem('currentUser');
   }
 
   // Get student count
@@ -100,5 +98,14 @@ export class UserService {
   private handleError(error: any): Observable<never> {
     console.error('An error occurred:', error);
     return throwError(() => new Error(error.message || 'Server error'));
+  }
+
+  // Load user from localStorage on service initialization
+  private loadStoredUser(): void {
+    const storedUser = localStorage.getItem('currentUser');
+    console.log('Loaded user from localStorage on init:', storedUser);
+    if (storedUser) {
+      this.currentUserSubject.next(JSON.parse(storedUser));
+    }
   }
 }
