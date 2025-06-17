@@ -162,9 +162,13 @@ public class LetterRequestService {
         Map<String, Long> letterTypeDistribution = requests.stream()
                 .collect(Collectors.groupingBy(LetterRequest::getLetterType, Collectors.counting()));
 
-        // Status distribution (normalize to lowercase for frontend)
+        // Status distribution (group 'declined' and 'rejected' together)
         Map<String, Long> statusDistribution = requests.stream()
-                .collect(Collectors.groupingBy(r -> r.getStatus().toLowerCase(), Collectors.counting()));
+                .collect(Collectors.groupingBy(r -> {
+                    String status = r.getStatus().toLowerCase();
+                    if (status.equals("declined")) return "rejected";
+                    return status;
+                }, Collectors.counting()));
 
         // Totals for summary cards
         long totalRequests = requests.size();
@@ -210,9 +214,13 @@ public class LetterRequestService {
         Map<String, Long> letterTypeDistribution = requests.stream()
                 .collect(Collectors.groupingBy(LetterRequest::getLetterType, Collectors.counting()));
 
-        // Status distribution
+        // Status distribution (group 'declined' and 'rejected' together as 'rejected')
         Map<String, Long> statusDistribution = requests.stream()
-                .collect(Collectors.groupingBy(r -> r.getStatus().toLowerCase(), Collectors.counting()));
+                .collect(Collectors.groupingBy(r -> {
+                    String status = r.getStatus().toLowerCase();
+                    if (status.equals("declined")) return "rejected";
+                    return status;
+                }, Collectors.counting()));
 
         // Totals for summary cards
         long totalRequests = requests.size();
