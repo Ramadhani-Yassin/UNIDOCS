@@ -88,6 +88,20 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody Map<String, Object> updates) {
         try {
+            // Require email and currentPassword in the request
+            String email = (String) updates.get("email");
+            String currentPassword = (String) updates.get("currentPassword");
+            if (email == null || currentPassword == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Email and current password are required."));
+            }
+
+            boolean valid = userService.validateUser(email, currentPassword);
+            if (!valid) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Invalid email or password."));
+            }
+
             User updatedUser = userService.updateUser(id, updates);
             return ResponseEntity.ok(updatedUser);
         } catch (RuntimeException e) {
