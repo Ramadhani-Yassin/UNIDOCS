@@ -129,72 +129,40 @@ export class GeneralAnalyticsComponent implements OnInit {
   }
 
   loadAnalyticsData(): void {
-    // Mock data - replace with actual API call
-    this.analyticsData = {
-      totalRequests: 125,
-      approvedRequests: 85,
-      pendingRequests: 25,
-      rejectedRequests: 15,
-      percentageChanges: {
-        total: 12.5,
-        approved: 8.2,
-        pending: -3.1,
-        rejected: 5.3
+    this.letterRequestService.getGeneralAnalytics(this.selectedDateRange).subscribe({
+      next: (data: any) => {
+        // Convert objects to arrays for charting if needed
+        data.letterTypeDistribution = this.objectToArray(data.letterTypeDistribution, 'type', 'count');
+        data.programDistribution = this.objectToArray(data.programDistribution, 'program', 'count');
+        this.analyticsData = data;
+        this.recentRequests = data.recentRequests || [];
+        this.letterTypes = data.letterTypeDistribution.map((item: any) => item.type) || [];
+        this.topPrograms = data.programDistribution.map((item: any) => item.program) || [];
+        this.updateCharts();
       },
-      letterTypeDistribution: [
-        { type: 'Introduction', count: 45 },
-        { type: 'Postponement', count: 30 },
-        { type: 'Feasibility', count: 25 },
-        { type: 'Discontinuation', count: 15 },
-        { type: 'Recommendation', count: 10 }
-      ],
-      statusDistribution: {
-        approved: 85,
-        pending: 25,
-        rejected: 15
-      },
-      timeSeries: [
-        { date: '2023-01-01', count: 5 },
-        { date: '2023-01-02', count: 8 },
-        { date: '2023-01-03', count: 12 },
-        { date: '2023-01-04', count: 7 },
-        { date: '2023-01-05', count: 15 }
-      ],
-      approvalTimeDistribution: {
-        lessThan1Day: 40,
-        oneToTwoDays: 25,
-        threeToFiveDays: 15,
-        sixToTenDays: 5,
-        moreThan10Days: 0
-      },
-      programDistribution: [
-        { program: 'BITA', count: 45 },
-        { program: 'BIT', count: 30 },
-        { program: 'BIS', count: 25 },
-        { program: 'BCS', count: 15 },
-        { program: 'BSE', count: 10 }
-      ],
-      recentRequests: [
-        { id: 1001, studentName: 'John Doe', letterType: 'Introduction', requestDate: '2023-01-01', status: 'Approved', approvalTime: '1 day' },
-        { id: 1002, studentName: 'Jane Smith', letterType: 'Postponement', requestDate: '2023-01-02', status: 'Pending' },
-        { id: 1003, studentName: 'Mike Johnson', letterType: 'Feasibility', requestDate: '2023-01-03', status: 'Rejected' }
-      ]
-    };
+      error: (err: any) => {
+        console.error('Failed to load analytics data:', err);
+      }
+    });
+  }
 
-    this.recentRequests = this.analyticsData.recentRequests;
-    this.letterTypes = this.analyticsData.letterTypeDistribution.map((item: any) => item.type);
-    this.topPrograms = this.analyticsData.programDistribution.map((item: any) => item.program);
-
-    this.updateCharts();
+  // Helper to convert object to array
+  objectToArray(obj: any, keyName: string, valueName: string) {
+    if (!obj) return [];
+    return Object.keys(obj).map(key => ({
+      [keyName]: key,
+      [valueName]: obj[key]
+    }));
   }
 
   updateCharts(): void {
     // Letter Type Distribution
+    const letterTypeDist = this.analyticsData.letterTypeDistribution || [];
     this.letterTypeChartData = {
-      labels: this.analyticsData.letterTypeDistribution.map((item: any) => item.type),
+      labels: letterTypeDist.map((item: any) => item.type),
       datasets: [{
-        data: this.analyticsData.letterTypeDistribution.map((item: any) => item.count),
-        backgroundColor: this.analyticsData.letterTypeDistribution.map((item: any, index: number) =>
+        data: letterTypeDist.map((item: any) => item.count),
+        backgroundColor: letterTypeDist.map((item: any, index: number) =>
           this.getColorForLetterType(item.type, index)
         ),
         hoverOffset: 4
@@ -202,54 +170,27 @@ export class GeneralAnalyticsComponent implements OnInit {
     };
 
     // Status Distribution
+    const statusDist = this.analyticsData.statusDistribution || {};
     this.statusChartData = {
       labels: ['Approved', 'Pending', 'Rejected'],
       datasets: [{
         data: [
-          this.analyticsData.statusDistribution.approved || 0,
-          this.analyticsData.statusDistribution.pending || 0,
-          this.analyticsData.statusDistribution.rejected || 0
+          statusDist.approved || 0,
+          statusDist.pending || 0,
+          statusDist.rejected || 0
         ],
         backgroundColor: ['#52c41a', '#faad14', '#ff4d4f'],
         hoverOffset: 4
       }]
     };
 
-    // Time Series
-    this.timeSeriesChartData = {
-      labels: this.analyticsData.timeSeries.map((item: any) => item.date),
-      datasets: [{
-        label: 'Requests',
-        data: this.analyticsData.timeSeries.map((item: any) => item.count),
-        fill: true,
-        backgroundColor: 'rgba(24, 144, 255, 0.2)',
-        borderColor: '#1890ff',
-        tension: 0.4
-      }]
-    };
-
-    // Approval Time
-    this.approvalTimeChartData = {
-      labels: ['<1 day', '1-2 days', '3-5 days', '6-10 days', '>10 days'],
-      datasets: [{
-        label: 'Requests',
-        data: [
-          this.analyticsData.approvalTimeDistribution.lessThan1Day || 0,
-          this.analyticsData.approvalTimeDistribution.oneToTwoDays || 0,
-          this.analyticsData.approvalTimeDistribution.threeToFiveDays || 0,
-          this.analyticsData.approvalTimeDistribution.sixToTenDays || 0,
-          this.analyticsData.approvalTimeDistribution.moreThan10Days || 0
-        ],
-        backgroundColor: '#1890ff'
-      }]
-    };
-
     // Program Distribution
+    const programDist = this.analyticsData.programDistribution || [];
     this.programChartData = {
-      labels: this.analyticsData.programDistribution.map((item: any) => item.program),
+      labels: programDist.map((item: any) => item.program),
       datasets: [{
-        data: this.analyticsData.programDistribution.map((item: any) => item.count),
-        backgroundColor: this.analyticsData.programDistribution.map((item: any, index: number) =>
+        data: programDist.map((item: any) => item.count),
+        backgroundColor: programDist.map((item: any, index: number) =>
           this.getColorForProgram(item.program, index)
         ),
         hoverOffset: 4
@@ -286,5 +227,43 @@ export class GeneralAnalyticsComponent implements OnInit {
     ];
 
     return index !== undefined ? colors[index % colors.length] : colors[0];
+  }
+
+  formatDate(date: any): string {
+    try {
+      if (Array.isArray(date) && date.length >= 6) {
+        const jsDate = new Date(
+          date[0], date[1] - 1, date[2], date[3], date[4], date[5], Math.floor(date[6] / 1000000)
+        );
+        return jsDate.toLocaleString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        }).replace(/\//g, '-');
+      }
+      if (typeof date === 'string') {
+        if (date && !date.endsWith('Z') && !date.includes('+')) {
+          date = date + 'Z';
+        }
+        const parsedDate = new Date(date);
+        if (isNaN(parsedDate.getTime())) {
+          return date;
+        }
+        return parsedDate.toLocaleString('en-US', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        }).replace(/\//g, '-');
+      }
+      return '-';
+    } catch {
+      return '-';
+    }
   }
 }

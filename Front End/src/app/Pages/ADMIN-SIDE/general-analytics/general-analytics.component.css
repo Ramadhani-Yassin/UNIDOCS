@@ -217,28 +217,33 @@ th {
 }
 
 .status-badge {
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
+  display: inline-block;
+  min-width: 60px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: center;
+  margin-right: 8px;
+  color: #fff;
+  background: #bdbdbd;
+  vertical-align: middle;
+  text-transform: capitalize;
 }
 
 .status-badge.approved {
-  background: #f6ffed;
-  color: #52c41a;
-  border: 1px solid #b7eb8f;
+  background: #006e06;
+  color: #fff;
 }
 
 .status-badge.pending {
-  background: #fffbe6;
-  color: #faad14;
-  border: 1px solid #ffe58f;
+  background: #FFCE26;
+  color: #342E37;
 }
 
-.status-badge.rejected {
-  background: #fff1f0;
-  color: #ff4d4f;
-  border: 1px solid #ffa39e;
+.status-badge.declined {
+  background: #FD7238;
+  color: #fff;
 }
 
 .no-data {

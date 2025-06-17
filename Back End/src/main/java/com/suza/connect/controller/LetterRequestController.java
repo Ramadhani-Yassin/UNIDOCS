@@ -201,4 +201,22 @@ public class LetterRequestController {
                     .body(Map.of("error", e.getMessage()));
         }
     }
+
+    @GetMapping("/analytics/{email}")
+    public ResponseEntity<?> getUserAnalytics(
+            @PathVariable String email,
+            @RequestParam(defaultValue = "30") int range // days
+    ) {
+        // Implement this in your service to return analytics for the user
+        Map<String, Object> analytics = letterRequestService.getUserAnalytics(email, range);
+        return ResponseEntity.ok(analytics);
+    }
+
+    @GetMapping("/analytics/general")
+    public ResponseEntity<?> getGeneralAnalytics(
+            @RequestParam(defaultValue = "30") int range // days
+    ) {
+        Map<String, Object> analytics = letterRequestService.getGeneralAnalytics(range);
+        return ResponseEntity.ok(analytics);
+    }
 }

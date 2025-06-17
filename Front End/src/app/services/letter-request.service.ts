@@ -86,6 +86,14 @@ export class LetterRequestService {
         return this.http.get(`/api/analytics?range=${dateRange}`);
     }
 
+    getUserAnalytics(email: string, range: string): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/analytics/${encodeURIComponent(email)}?range=${range}`);
+    }
+
+    getGeneralAnalytics(range: string): Observable<any> {
+        return this.http.get<any>(`${this.apiUrl}/analytics/general?range=${range}`);
+    }
+
     getAllMyLetterRequests(): Observable<LetterRequest[]> {
         const user = this.userService.getCurrentUser();
         if (!user || !user.email) {

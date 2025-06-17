@@ -34,8 +34,7 @@
         </div>
         <div class="card-info">
           <h3>Total Requests</h3>
-          <h2>{{ analyticsData?.totalRequests || 0 }}</h2>
-          <p>{{ getPercentageChange('total') }}% from last period</p>
+          <h2>{{ analyticsData?.totalRequests || 0 }}</h2>      
         </div>
       </div>
       
@@ -46,7 +45,6 @@
         <div class="card-info">
           <h3>Approved</h3>
           <h2>{{ analyticsData?.approvedRequests || 0 }}</h2>
-          <p>{{ getPercentageChange('approved') }}% from last period</p>
         </div>
       </div>
       
@@ -57,7 +55,6 @@
         <div class="card-info">
           <h3>Pending</h3>
           <h2>{{ analyticsData?.pendingRequests || 0 }}</h2>
-          <p>{{ getPercentageChange('pending') }}% from last period</p>
         </div>
       </div>
       
@@ -111,60 +108,6 @@
           </div>
         </div>
       </div>
-
-      <!-- Row 2 -->
-      <div class="chart-row">
-        <!-- Requests Over Time -->
-        <div class="chart-card wide">
-          <div class="chart-header">
-            <h3>Requests Over Time</h3>
-          </div>
-          <div class="chart-container">
-            <canvas baseChart
-              [data]="timeSeriesChartData"
-              [type]="'line'"
-              [options]="lineChartOptions">
-            </canvas>
-          </div>
-        </div>
-      </div>
-
-      <!-- Row 3 -->
-      <div class="chart-row">
-        <!-- Approval Time Distribution -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3>Approval Time (Days)</h3>
-          </div>
-          <div class="chart-container">
-            <canvas baseChart
-              [data]="approvalTimeChartData"
-              [type]="'bar'"
-              [options]="barChartOptions">
-            </canvas>
-          </div>
-        </div>
-
-        <!-- Requests by Program -->
-        <div class="chart-card">
-          <div class="chart-header">
-            <h3>Requests by Program</h3>
-            <div class="chart-legend">
-              <div *ngFor="let program of topPrograms; let i = index" class="legend-item">
-                <span class="legend-color" [style.background]="getColorForProgram(program, i)"></span>
-                {{ program }}
-              </div>
-            </div>
-          </div>
-          <div class="chart-container">
-            <canvas baseChart
-              [data]="programChartData"
-              [type]="'polarArea'"
-              [options]="polarAreaChartOptions">
-            </canvas>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Recent Requests Table -->
@@ -174,28 +117,25 @@
         <table>
           <thead>
             <tr>
-              <th>Request ID</th>
-              <th>Student Name</th>
               <th>Letter Type</th>
               <th>Date Requested</th>
               <th>Status</th>
-              <th>Approval Time</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let request of recentRequests">
-              <td>{{ request.id }}</td>
-              <td>{{ request.studentName }}</td>
               <td>{{ request.letterType }}</td>
-              <td>{{ request.requestDate | date:'mediumDate' }}</td>
+              <td>{{ request.requestDate }}</td>
               <td>
-                <span class="status-badge" [class.approved]="request.status === 'Approved'"
-                  [class.pending]="request.status === 'Pending'"
-                  [class.rejected]="request.status === 'Rejected'">
+                <span class="status-badge"
+                  [ngClass]="{
+                    'approved': request.status?.toLowerCase() === 'approved',
+                    'pending': request.status?.toLowerCase() === 'pending',
+                    'declined': request.status?.toLowerCase() === 'declined' || request.status?.toLowerCase() === 'rejected'
+                  }">
                   {{ request.status }}
                 </span>
               </td>
-              <td>{{ request.approvalTime || '-' }}</td>
             </tr>
             <tr *ngIf="recentRequests.length === 0">
               <td colspan="6" class="no-data">No recent requests found</td>

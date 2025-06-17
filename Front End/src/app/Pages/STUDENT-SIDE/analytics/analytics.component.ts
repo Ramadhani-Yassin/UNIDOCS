@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StudentSidebarService } from '../../../services/student-sidebar.service';
 import { LetterRequestService } from '../../../services/letter-request.service';
+import { UserService } from '../../../services/user.service';
 import { ChartConfiguration, ChartData, ChartType } from 'chart.js';
 
 @Component({
@@ -117,7 +118,8 @@ export class AnalyticsComponent implements OnInit {
 
   constructor(
     public sidebarService: StudentSidebarService,
-    private letterRequestService: LetterRequestService
+    private letterRequestService: LetterRequestService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -125,79 +127,35 @@ export class AnalyticsComponent implements OnInit {
   }
 
   loadAnalyticsData(): void {
-    // Mock data - replace with actual API call
-    this.analyticsData = {
-      totalRequests: 125,
-      approvedRequests: 85,
-      pendingRequests: 25,
-      rejectedRequests: 15,
-      percentageChanges: {
-        total: 12.5,
-        approved: 8.2,
-        pending: -3.1,
-        rejected: 5.3
-      },
-      letterTypeDistribution: [
-        { type: 'Introduction', count: 45 },
-        { type: 'Postponement', count: 30 },
-        { type: 'Feasibility', count: 25 },
-        { type: 'Discontinuation', count: 15 },
-        { type: 'Recommendation', count: 10 }
-      ],
-      statusDistribution: {
-        approved: 85,
-        pending: 25,
-        rejected: 15
-      },
-      timeSeries: [
-        { date: '2023-01-01', count: 5 },
-        { date: '2023-01-02', count: 8 },
-        { date: '2023-01-03', count: 12 },
-        { date: '2023-01-04', count: 7 },
-        { date: '2023-01-05', count: 15 }
-      ],
-      approvalTimeDistribution: {
-        lessThan1Day: 40,
-        oneToTwoDays: 25,
-        threeToFiveDays: 15,
-        sixToTenDays: 5,
-        moreThan10Days: 0
-      },
-      programDistribution: [
-        { program: 'BITA', count: 45 },
-        { program: 'BIT', count: 30 },
-        { program: 'BIS', count: 25 },
-        { program: 'BCS', count: 15 },
-        { program: 'BSE', count: 10 }
-      ],
-      recentRequests: [
-        { id: 1001, studentName: 'John Doe', letterType: 'Introduction', requestDate: '2023-01-01', status: 'Approved', approvalTime: '1 day' },
-        { id: 1002, studentName: 'Jane Smith', letterType: 'Postponement', requestDate: '2023-01-02', status: 'Pending' },
-        { id: 1003, studentName: 'Mike Johnson', letterType: 'Feasibility', requestDate: '2023-01-03', status: 'Rejected' }
-      ]
-    };
+    const user = this.userService.getCurrentUser();
+    if (!user || !user.email) {
+      this.analyticsData = {};
+      this.recentRequests = [];
+      return;
+    }
 
-    this.recentRequests = this.analyticsData.recentRequests;
-    this.letterTypes = this.analyticsData.letterTypeDistribution.map((item: any) => item.type);
-    this.topPrograms = this.analyticsData.programDistribution.map((item: any) => item.program);
-    
-    this.updateCharts();
-    
-    // Uncomment this when your API is ready
-    /*
-    this.letterRequestService.getLetterAnalytics(this.selectedDateRange).subscribe({
+    this.letterRequestService.getUserAnalytics(user.email, this.selectedDateRange).subscribe({
       next: (data: any) => {
+        // Convert objects to arrays for charting
+        data.letterTypeDistribution = this.objectToArray(data.letterTypeDistribution, 'type', 'count');
+        data.programDistribution = this.objectToArray(data.programDistribution, 'program', 'count');
+        // Convert date arrays in recentRequests
+        if (Array.isArray(data.recentRequests)) {
+          data.recentRequests = data.recentRequests.map((req: any) => ({
+            ...req,
+            requestDate: this.arrayDateToString(req.requestDate)
+          }));
+        }
         this.analyticsData = data;
         this.recentRequests = data.recentRequests || [];
-        this.letterTypes = data.letterTypeDistribution?.map((item: any) => item.type) || [];
-        this.topPrograms = data.programDistribution?.map((item: any) => item.program) || [];
+        this.letterTypes = data.letterTypeDistribution.map((item: any) => item.type) || [];
+        this.topPrograms = data.programDistribution.map((item: any) => item.program) || [];
         this.updateCharts();
       },
       error: (err: any) => {
         console.error('Failed to load analytics data:', err);
       }
     });
-    */
   }
 
   updateCharts(): void {
@@ -298,5 +256,28 @@ export class AnalyticsComponent implements OnInit {
     ];
     
     return index !== undefined ? colors[index % colors.length] : colors[0];
+  }
+
+  // Helper: Convert object to array for charting
+  objectToArray(obj: any, keyName: string, valueName: string) {
+    if (!obj) return [];
+    return Object.keys(obj).map(key => ({
+      [keyName]: key,
+      [valueName]: obj[key]
+    }));
+  }
+
+  // Helper: Convert array date to string
+  arrayDateToString(date: any): string {
+    if (Array.isArray(date) && date.length >= 6) {
+      const jsDate = new Date(
+        date[0], date[1] - 1, date[2], date[3], date[4], date[5], Math.floor(date[6] / 1000000)
+      );
+      return jsDate.toLocaleString();
+    }
+    if (typeof date === 'string') {
+      return new Date(date).toLocaleString();
+    }
+    return '-';
   }
 }

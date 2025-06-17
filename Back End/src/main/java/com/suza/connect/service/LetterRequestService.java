@@ -9,8 +9,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -147,5 +150,97 @@ public class LetterRequestService {
 
     public Long getTotalLetterRequests() {
         return letterRequestRepository.count();
+    }
+
+    public Map<String, Object> getUserAnalytics(String email, int range) {
+        Map<String, Object> analytics = new HashMap<>();
+
+        LocalDateTime since = LocalDateTime.now().minusDays(range);
+        List<LetterRequest> requests = letterRequestRepository.findByEmailAndRequestDateAfterOrderByRequestDateDesc(email, since);
+
+        // Letter type distribution
+        Map<String, Long> letterTypeDistribution = requests.stream()
+                .collect(Collectors.groupingBy(LetterRequest::getLetterType, Collectors.counting()));
+
+        // Status distribution (normalize to lowercase for frontend)
+        Map<String, Long> statusDistribution = requests.stream()
+                .collect(Collectors.groupingBy(r -> r.getStatus().toLowerCase(), Collectors.counting()));
+
+        // Totals for summary cards
+        long totalRequests = requests.size();
+        long approvedRequests = statusDistribution.getOrDefault("approved", 0L);
+        long pendingRequests = statusDistribution.getOrDefault("pending", 0L);
+        long rejectedRequests = statusDistribution.getOrDefault("rejected", 0L);
+
+        // Recent requests (last 5)
+        List<LetterRequestDTO> recentRequests = requests.stream()
+                .limit(5)
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+
+        // Program distribution
+        Map<String, Long> programDistribution = requests.stream()
+                .collect(Collectors.groupingBy(LetterRequest::getProgramOfStudy, Collectors.counting()));
+
+        analytics.put("letterTypeDistribution", letterTypeDistribution);
+        analytics.put("statusDistribution", statusDistribution);
+        analytics.put("recentRequests", recentRequests);
+        analytics.put("programDistribution", programDistribution);
+
+        // Add summary numbers for frontend cards
+        analytics.put("totalRequests", totalRequests);
+        analytics.put("approvedRequests", approvedRequests);
+        analytics.put("pendingRequests", pendingRequests);
+        analytics.put("rejectedRequests", rejectedRequests);
+
+        // Optionally: analytics.put("percentageChanges", ...);
+
+        return analytics;
+    }
+
+    public Map<String, Object> getGeneralAnalytics(int range) {
+        Map<String, Object> analytics = new HashMap<>();
+
+        LocalDateTime since = LocalDateTime.now().minusDays(range);
+        List<LetterRequest> requests = letterRequestRepository.findAll().stream()
+                .filter(r -> r.getRequestDate().isAfter(since))
+                .collect(Collectors.toList());
+
+        // Letter type distribution
+        Map<String, Long> letterTypeDistribution = requests.stream()
+                .collect(Collectors.groupingBy(LetterRequest::getLetterType, Collectors.counting()));
+
+        // Status distribution
+        Map<String, Long> statusDistribution = requests.stream()
+                .collect(Collectors.groupingBy(r -> r.getStatus().toLowerCase(), Collectors.counting()));
+
+        // Totals for summary cards
+        long totalRequests = requests.size();
+        long approvedRequests = statusDistribution.getOrDefault("approved", 0L);
+        long pendingRequests = statusDistribution.getOrDefault("pending", 0L);
+        long rejectedRequests = statusDistribution.getOrDefault("rejected", 0L);
+
+        // Recent requests (last 5)
+        List<LetterRequestDTO> recentRequests = requests.stream()
+                .sorted((a, b) -> b.getRequestDate().compareTo(a.getRequestDate()))
+                .limit(5)
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+
+        // Program distribution
+        Map<String, Long> programDistribution = requests.stream()
+                .collect(Collectors.groupingBy(LetterRequest::getProgramOfStudy, Collectors.counting()));
+
+        analytics.put("letterTypeDistribution", letterTypeDistribution);
+        analytics.put("statusDistribution", statusDistribution);
+        analytics.put("recentRequests", recentRequests);
+        analytics.put("programDistribution", programDistribution);
+
+        analytics.put("totalRequests", totalRequests);
+        analytics.put("approvedRequests", approvedRequests);
+        analytics.put("pendingRequests", pendingRequests);
+        analytics.put("rejectedRequests", rejectedRequests);
+
+        return analytics;
     }
 }
