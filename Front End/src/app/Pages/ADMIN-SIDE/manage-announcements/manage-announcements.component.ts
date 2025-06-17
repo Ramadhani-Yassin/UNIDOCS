@@ -1,23 +1,14 @@
-import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { SidebarService } from '../../../services/sidebar.service';
 import { Announcement } from '../../../models/announcement.model';
 
 @Component({
-  selector: 'app-publish-announcements',
-  templateUrl: './publish-announcements.component.html',
-  styleUrls: ['./publish-announcements.component.css']
+  selector: 'app-manage-announcements',
+  templateUrl: './manage-announcements.component.html',
+  styleUrls: ['./manage-announcements.component.css']
 })
-export class PublishAnnouncementsComponent implements OnInit {
-  form = {
-    title: '',
-    content: '',
-    status: 'new',
-    attachments: []
-  };
-  isSubmitting = false;
-  submitSuccess = false;
-  submitError = '';
+export class ManageAnnouncementsComponent implements OnInit {
   announcements: Announcement[] = [];
   filteredAnnouncements: Announcement[] = [];
   paginatedAnnouncements: Announcement[] = [];
@@ -26,8 +17,7 @@ export class PublishAnnouncementsComponent implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 10;
   editingAnnouncement: Announcement | null = null;
-
-  @Output() announcementPublished = new EventEmitter<void>();
+  editForm: { title: string; content: string; status: string } = { title: '', content: '', status: 'new' };
 
   constructor(
     private announcementService: AnnouncementService,
@@ -70,35 +60,30 @@ export class PublishAnnouncementsComponent implements OnInit {
 
   startEdit(announcement: Announcement): void {
     this.editingAnnouncement = { ...announcement };
-    this.form = {
+    this.editForm = {
       title: announcement.title,
       content: announcement.content,
-      status: announcement.status,
-      attachments: []
+      status: announcement.status
     };
   }
 
   cancelEdit(): void {
     this.editingAnnouncement = null;
-    this.resetForm();
+    this.editForm = { title: '', content: '', status: 'new' };
   }
 
   saveEdit(): void {
     if (!this.editingAnnouncement) return;
     const updated = {
-      ...this.editingAnnouncement,
-      title: this.form.title,
-      content: this.form.content,
-      status: this.form.status
+      title: this.editForm.title,
+      content: this.editForm.content,
+      status: this.editForm.status
     };
-    this.announcementService.createAnnouncementJson(updated).subscribe({
+    this.announcementService.updateAnnouncement(this.editingAnnouncement.id, updated).subscribe({
       next: () => {
         this.editingAnnouncement = null;
-        this.resetForm();
+        this.editForm = { title: '', content: '', status: 'new' };
         this.loadAnnouncements();
-      },
-      error: (err) => {
-        this.submitError = err.message || 'Failed to update announcement';
       }
     });
   }
@@ -109,40 +94,6 @@ export class PublishAnnouncementsComponent implements OnInit {
         this.loadAnnouncements();
       });
     }
-  }
-
-  submitAnnouncement() {
-    this.isSubmitting = true;
-    this.submitSuccess = false;
-    this.submitError = '';
-    const announcement = {
-      title: this.form.title,
-      content: this.form.content,
-      status: this.form.status
-    };
-    this.announcementService.createAnnouncementJson(announcement).subscribe({
-      next: () => {
-        this.isSubmitting = false;
-        this.submitSuccess = true;
-        this.resetForm();
-        this.loadAnnouncements();
-        this.announcementPublished.emit();
-      },
-      error: (error) => {
-        this.isSubmitting = false;
-        this.submitError = error.message || 'Failed to publish announcement';
-      }
-    });
-  }
-
-  private resetForm() {
-    this.form = {
-      title: '',
-      content: '',
-      status: 'new',
-      attachments: []
-    };
-    this.editingAnnouncement = null;
   }
 
   nextPage(): void {
@@ -170,5 +121,9 @@ export class PublishAnnouncementsComponent implements OnInit {
       return new Date(date).toLocaleString();
     }
     return '-';
+  }
+
+  truncate(text: string, length: number = 60): string {
+    return text.length > length ? text.slice(0, length) + '...' : text;
   }
 }

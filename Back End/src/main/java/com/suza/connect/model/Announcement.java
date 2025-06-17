@@ -26,8 +26,5 @@ public class Announcement {
     @Column(name = "created_date", nullable = false)
     private LocalDateTime createdDate;
 
-    @OneToMany(mappedBy = "announcement", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private java.util.List<AnnouncementAttachment> attachments = new java.util.ArrayList<>();
-
     // Additional fields can be added as needed
 }

@@ -17,6 +17,7 @@ import { PublishAnnouncementsComponent } from './Pages/ADMIN-SIDE/publish-announ
 import { GeneralAnalyticsComponent } from './Pages/ADMIN-SIDE/general-analytics/general-analytics.component';
 import { AdminNavComponent } from './components/admin-nav/admin-nav.component';
 import { StudentsManagementComponent } from './Pages/ADMIN-SIDE/students-management/students-management.component';
+import { ManageAnnouncementsComponent} from './Pages/ADMIN-SIDE/manage-announcements/manage-announcements.component';
 import { StudentNavComponent } from './components/student-nav/student-nav.component'; 
 import { CVGeneratorComponent } from './Pages/STUDENT-SIDE/cv-generator/cv-generator.component';
 import { StudentSettingsShellComponent } from './Pages/STUDENT-SIDE/student-settings-shell/student-settings-shell.component';
@@ -49,6 +50,7 @@ const routes: Routes = [
   { path: 'general-analytics', component: GeneralAnalyticsComponent, canActivate: [AuthGuard] },
   { path: 'admin-nav', component: AdminNavComponent, canActivate: [AuthGuard] },
   { path: 'generate-cv', component: CVGeneratorComponent, canActivate: [AuthGuard] },
+  { path: 'manage-announcements', component: ManageAnnouncementsComponent, canActivate: [AuthGuard] },
   { path: 'students-management', component: StudentsManagementComponent, canActivate: [AuthGuard] },
   { path: 'student-nav', component: StudentNavComponent, canActivate: [AuthGuard] },
   { path: '**', component: HomeComponent }

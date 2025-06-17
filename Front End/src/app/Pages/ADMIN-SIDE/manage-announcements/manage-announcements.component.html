@@ -1,0 +1,97 @@
+<app-admin-nav></app-admin-nav>
+<section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
+  <main>
+    <div class="head-title">
+      <div class="left">
+        <h1>Manage Announcements</h1>
+        <ul class="breadcrumb">
+          <li><a href="#" style="text-decoration: none;">Dashboard</a></li>
+          <li><i class="bx bx-chevron-right"></i></li>
+          <li><a class="active" href="#" style="text-decoration: none;">Manage Announcements</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="table-data">
+      <div class="order">
+        <div class="head">
+          <h3>Announcements</h3>
+          <div class="search-filter" style="margin-bottom: 16px;">
+            <i class="bx bx-search"></i>
+            <input
+              type="text"
+              placeholder="Search announcements..."
+              [(ngModel)]="searchQuery"
+              (input)="filterAnnouncements()"
+              style="width: 250px; margin-right: 8px;"
+            />
+            <i class="bx bx-filter"></i>
+            <select [(ngModel)]="statusFilter" (change)="filterAnnouncements()">
+              <option value="all">All Statuses</option>
+              <option value="new">New</option>
+              <option value="important">Important</option>
+              <option value="update">Update</option>
+            </select>
+          </div>
+        </div>
+        <table>
+          <thead>
+            <tr>
+              <th class="centered">Title</th>
+              <!--<th class="centered">Status</th>-->
+              <th class="centered">Published</th>
+              <th>Content</th>
+              <th class="centered">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let announcement of paginatedAnnouncements">
+              <td class="centered">
+                <span *ngIf="editingAnnouncement?.id !== announcement.id" [title]="announcement.title">
+                  {{ announcement.title }}
+                </span>
+                <input *ngIf="editingAnnouncement?.id === announcement.id" [(ngModel)]="editForm.title" />
+              </td>
+              <!--<td class="centered">
+                <span class="status-badge" [ngClass]="announcement.status">{{ announcement.status | titlecase }}</span>
+              </td>-->
+              <td class="centered">{{ formatDate(announcement.createdDate) }}</td>
+              <td>
+                <span
+                  *ngIf="editingAnnouncement?.id !== announcement.id"
+                  [title]="announcement.content"
+                  style="display: inline-block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+                >
+                  {{ truncate(announcement.content, 60) }}
+                </span>
+                <textarea *ngIf="editingAnnouncement?.id === announcement.id" [(ngModel)]="editForm.content"></textarea>
+              </td>
+              <td class="centered">
+                <button *ngIf="editingAnnouncement?.id !== announcement.id" class="btn-suspend" (click)="startEdit(announcement)">
+                  <i class="bx bx-edit"></i>
+                </button>
+                <button *ngIf="editingAnnouncement?.id === announcement.id" class="btn-activate" (click)="saveEdit()">
+                  <i class="bx bx-save"></i>
+                </button>
+                <button *ngIf="editingAnnouncement?.id === announcement.id" class="btn-delete" (click)="cancelEdit()">
+                  <i class="bx bx-x"></i>
+                </button>
+                <button class="btn-delete" (click)="deleteAnnouncement(announcement.id)">
+                  <i class="bx bx-trash"></i>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="pagination" *ngIf="filteredAnnouncements.length > itemsPerPage">
+          <button (click)="previousPage()" [disabled]="currentPage === 1">
+            <i class="bx bx-chevron-left"></i> Previous
+          </button>
+          <span>Page {{ currentPage }} of {{ totalPages }}</span>
+          <button (click)="nextPage()" [disabled]="currentPage === totalPages">
+            Next <i class="bx bx-chevron-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>

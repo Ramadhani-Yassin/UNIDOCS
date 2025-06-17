@@ -35,4 +35,12 @@ export class AnnouncementService {
   getAnnouncementCount(): Observable<number> {
     return this.http.get<number>(`${this.apiUrl}/count`);
   }
+
+  updateAnnouncement(id: number, announcement: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, announcement);
+  }
+
+  deleteAnnouncement(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}`);
+  }
 }

@@ -2,7 +2,6 @@ package com.suza.connect.service;
 
 import com.suza.connect.dto.AnnouncementDTO;
 import com.suza.connect.model.Announcement;
-import com.suza.connect.model.AnnouncementAttachment;
 import com.suza.connect.repository.AnnouncementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -47,37 +46,21 @@ public class AnnouncementService {
         return announcementRepository.findAll();
     }
 
-    public Announcement createAnnouncement(String title, String content, String status, List<MultipartFile> attachments) {
-        Announcement announcement = new Announcement();
-        announcement.setTitle(title);
-        announcement.setContent(content);
-        announcement.setStatus(status);
-        announcement.setCreatedDate(LocalDateTime.now());
+    public Announcement updateAnnouncement(Long id, AnnouncementDTO dto) {
+        return announcementRepository.findById(id).map(announcement -> {
+            announcement.setTitle(dto.getTitle());
+            announcement.setContent(dto.getContent());
+            announcement.setStatus(dto.getStatus());
+            announcement.setCreatedDate(java.time.LocalDateTime.now());
+            return announcementRepository.save(announcement);
+        }).orElse(null);
+    }
 
-        // Handle attachments
-        if (attachments != null && !attachments.isEmpty()) {
-            for (MultipartFile file : attachments) {
-                try {
-                    // Save file to disk (you can change the path as needed)
-                    String uploadDir = "uploads/announcements/";
-                    Files.createDirectories(Paths.get(uploadDir));
-                    String filePath = uploadDir + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-                    Path path = Paths.get(filePath);
-                    Files.write(path, file.getBytes());
-
-                    AnnouncementAttachment attachment = new AnnouncementAttachment();
-                    attachment.setFileName(file.getOriginalFilename());
-                    attachment.setFileUrl(filePath);
-                    attachment.setAnnouncement(announcement);
-
-                    announcement.getAttachments().add(attachment);
-                } catch (Exception e) {
-                    // Handle exception (log or rethrow)
-                    e.printStackTrace();
-                }
-            }
+    public boolean deleteAnnouncement(Long id) {
+        if (announcementRepository.existsById(id)) {
+            announcementRepository.deleteById(id);
+            return true;
         }
-
-        return announcementRepository.save(announcement);
+        return false;
     }
 }

@@ -19,14 +19,9 @@ public class AnnouncementController {
 
     private final AnnouncementService announcementService;
 
-    @PostMapping(consumes = {"multipart/form-data"})
-    public ResponseEntity<?> createAnnouncement(
-            @RequestPart("title") String title,
-            @RequestPart("content") String content,
-            @RequestPart("status") String status,
-            @RequestPart(value = "attachments", required = false) List<MultipartFile> attachments
-    ) {
-        Announcement createdAnnouncement = announcementService.createAnnouncement(title, content, status, attachments);
+    @PostMapping
+    public ResponseEntity<?> createAnnouncement(@RequestBody AnnouncementDTO announcementDTO) {
+        Announcement createdAnnouncement = announcementService.createAnnouncement(announcementDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdAnnouncement);
     }
 
@@ -53,5 +48,27 @@ public class AnnouncementController {
     public ResponseEntity<Long> getAnnouncementCount() {
         Long count = announcementService.countAnnouncements();
         return ResponseEntity.ok(count);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Announcement> updateAnnouncement(
+            @PathVariable Long id,
+            @RequestBody AnnouncementDTO announcementDTO) {
+        Announcement updated = announcementService.updateAnnouncement(id, announcementDTO);
+        if (updated != null) {
+            return ResponseEntity.ok(updated);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteAnnouncement(@PathVariable Long id) {
+        boolean deleted = announcementService.deleteAnnouncement(id);
+        if (deleted) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }

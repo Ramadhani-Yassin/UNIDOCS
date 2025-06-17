@@ -57,6 +57,8 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/announcements/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/announcements").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/announcements/{id}").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/announcements/{id}").permitAll()
                 // Everything else under /api/users/** requires role
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
                 .anyRequest().authenticated()
