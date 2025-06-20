@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { SidebarService } from '../../../services/sidebar.service';
 import { AdminLetterService } from '../../../services/admin-letter.service';
 import { AdminSearchService } from '../../../services/admin-search.service';
+import { UserService } from '../../../services/user.service'; // Import
 
 @Component({
   selector: 'app-all-request',
@@ -15,24 +16,45 @@ export class AllRequestComponent implements OnInit {
   isUpdating: boolean = false; // <-- Add this line
   searchTerm: string = '';
   localSearchTerm: string = '';
+  adminRole: string = '';
+  letterTypeFilter: string = 'all';
+  letterTypes: string[] = ['introduction', 'feasibility_study', 'recommendation']; // Add more as needed
 
   constructor(
     public sidebarService: SidebarService,
     private adminLetterService: AdminLetterService,
-    private adminSearchService: AdminSearchService // <-- Add this
+    private adminSearchService: AdminSearchService,
+    private userService: UserService // Inject
   ) {}
 
   ngOnInit() {
     this.loadLetterRequests();
     this.adminSearchService.searchTerm$.subscribe(term => {
       this.searchTerm = term;
-      this.localSearchTerm = term; // Keep local input in sync with navbar
+      this.localSearchTerm = term;
     });
+    const user = this.userService.getCurrentUser();
+    this.adminRole = user?.role || '';
   }
 
   loadLetterRequests() {
     this.adminLetterService.getAll().subscribe(data => {
       this.letterRequests = data;
+
+      const typesSet = new Set<string>();
+      this.letterRequests.forEach(r => {
+        if (!r.letterType) return;
+        const type = r.letterType.trim().toLowerCase();
+        if (type === 'discontinuation') return;
+        if (type === 'transcript' || type === 'scholarship') {
+          typesSet.add('recommendation');
+        } else {
+          typesSet.add(type);
+        }
+      });
+
+      this.letterTypes = Array.from(typesSet);
+      this.setDefaultFilterAndOrder(); // <-- Add this line
     });
   }
 
@@ -123,10 +145,28 @@ export class AllRequestComponent implements OnInit {
     this.adminSearchService.setSearchTerm(this.localSearchTerm);
   }
 
+  filterLetterRequests() {
+    // This will trigger Angular's change detection for filteredLetterRequests getter
+    // If you want to do more, you can implement it here
+  }
+
   get filteredLetterRequests() {
-    if (!this.searchTerm) return this.letterRequests;
+    let filtered = this.letterRequests;
+    if (this.letterTypeFilter !== 'all') {
+      filtered = filtered.filter(r => {
+        const type = r.letterType?.trim().toLowerCase();
+        if (type === 'transcript' || type === 'scholarship') {
+          return this.letterTypeFilter === 'recommendation';
+        }
+        if (type === 'discontinuation') {
+          return false;
+        }
+        return type === this.letterTypeFilter;
+      });
+    }
+    if (!this.searchTerm) return filtered;
     const term = this.searchTerm.toLowerCase();
-    return this.letterRequests.filter(r =>
+    return filtered.filter(r =>
       (r.fullName && r.fullName.toLowerCase().includes(term)) ||
       (r.letterType && r.letterType.toLowerCase().includes(term)) ||
       (r.status && r.status.toLowerCase().includes(term)) ||
@@ -164,5 +204,44 @@ export class AllRequestComponent implements OnInit {
         alert('Failed to load letter.');
       }
     });
+  }
+
+  canApprove(letterType: string): boolean {
+    const role = this.adminRole?.toLowerCase() || '';
+    switch (letterType.toLowerCase()) {
+      case 'introduction':
+        return role === 'vc' || role === 'admin';
+      case 'feasibility_study':
+        return role === 'hos' || role === 'secretary' || role === 'admin';
+      case 'recommendation':
+        return role === 'dsc' || role === 'lecturer' || role === 'admin';
+      default:
+        return role === 'admin';
+    }
+  }
+
+  setDefaultFilterAndOrder() {
+    const role = this.adminRole?.toLowerCase();
+    // Always include 'all' at the top
+    let types = this.letterTypes.filter(t => t !== 'all');
+    if (role === 'vc') {
+      this.letterTypeFilter = 'introduction';
+      this.letterTypes = ['all', 'introduction', ...types.filter(t => t !== 'introduction')];
+    } else if (role === 'hos') {
+      this.letterTypeFilter = 'feasibility_study';
+      this.letterTypes = ['all', 'feasibility_study', ...types.filter(t => t !== 'feasibility_study')];
+    } else if (role === 'dst') {
+      this.letterTypeFilter = 'postpone';
+      this.letterTypes = ['all', 'postpone', ...types.filter(t => t !== 'postpone')];
+    } else if (role === 'lecturer' || role === 'dsc') {
+      this.letterTypeFilter = 'recommendation';
+      this.letterTypes = ['all', 'recommendation', ...types.filter(t => t !== 'recommendation')];
+    } else if (role === 'admin') {
+      this.letterTypeFilter = 'all';
+      this.letterTypes = ['all', ...types];
+    } else {
+      this.letterTypeFilter = 'all';
+      this.letterTypes = ['all', ...types];
+    }
   }
 }

@@ -55,6 +55,9 @@
             (input)="onLocalSearchChange()"
             style="width: 250px; margin-right: 8px;"
           />
+          <select [(ngModel)]="letterTypeFilter" (change)="filterLetterRequests()" style="margin-left: 8px;">
+            <option *ngFor="let type of letterTypes" [value]="type">{{ type | titlecase }}</option>
+          </select>
       </div>
     </div>
 
@@ -98,14 +101,14 @@
                     'approved': request.status === 'APPROVED',
                     'declined': request.status === 'DECLINED'
                   }"
-                  (click)="setEditingStatus(i); $event.stopPropagation()"
-                  style="cursor:pointer"
-                  title="Click to change status"
+                  (click)="canApprove(request.letterType) && setEditingStatus(i); $event.stopPropagation()"
+                  [style.cursor]="canApprove(request.letterType) ? 'pointer' : 'not-allowed'"
+                  [title]="canApprove(request.letterType) ? 'Click to change status' : 'Not permitted'"
                 >
                   {{ request.status | titlecase }}
                 </span>
                 <select
-                  *ngIf="editingStatusIndex === i"
+                  *ngIf="editingStatusIndex === i && canApprove(request.letterType)"
                   [(ngModel)]="request.status"
                   (change)="saveStatus(request, i)"
                   (click)="$event.stopPropagation()"
@@ -115,10 +118,11 @@
                 </select>
               </td>
               <td>
-                <input [(ngModel)]="request.adminComment" placeholder="Add comment" (click)="$event.stopPropagation()" />
+                <input [(ngModel)]="request.adminComment" placeholder="Add comment" (click)="$event.stopPropagation()" [readonly]="!canApprove(request.letterType)" />
               </td>
               <td>
-                <button (click)="updateStatus(request); $event.stopPropagation()">Update</button>
+                <button *ngIf="canApprove(request.letterType)" (click)="updateStatus(request); $event.stopPropagation()">Update</button>
+                <span *ngIf="!canApprove(request.letterType)" style="color:gray;">View Only</span>
               </td>
             </tr>
           </tbody>

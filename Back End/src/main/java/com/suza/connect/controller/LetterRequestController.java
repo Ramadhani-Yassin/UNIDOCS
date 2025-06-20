@@ -190,10 +190,17 @@ public class LetterRequestController {
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateStatus(
             @PathVariable String id,
-            @RequestBody Map<String, String> payload) {
+            @RequestBody Map<String, String> payload,
+            @RequestHeader("X-User-Role") String userRole // Pass role from frontend
+    ) {
         try {
             String status = payload.get("status");
             String adminComment = payload.getOrDefault("adminComment", "");
+            LetterRequest req = letterRequestService.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+            if (!letterRequestService.canApprove(req.getLetterType(), userRole)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(Map.of("error", "You are not authorized to approve this letter type."));
+            }
             letterRequestService.updateStatus(UUID.fromString(id), status, adminComment);
             return ResponseEntity.ok(Map.of("message", "Status updated successfully"));
         } catch (Exception e) {

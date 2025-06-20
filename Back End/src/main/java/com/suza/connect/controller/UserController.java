@@ -2,11 +2,11 @@ package com.suza.connect.controller;
 
 import com.suza.connect.model.User;
 import com.suza.connect.service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,17 +39,23 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User loginRequest) {
         try {
-            Optional<User> userOpt = userService.getUserByEmailAndRole(loginRequest.getEmail(), loginRequest.getRole());
+            // Find user by email only
+            Optional<User> userOpt = userService.findByEmail(loginRequest.getEmail());
             if (userOpt.isPresent()) {
                 User user = userOpt.get();
+                // Allow these roles to login (admins and students)
+                List<String> allowedRoles = List.of("admin", "hos", "vc", "dsc", "dst");
+                if (!allowedRoles.contains(user.getRole().toLowerCase())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(Map.of("error", "You are not allowed to login here."));
+                }
                 if ("suspended".equalsIgnoreCase(user.getStatus())) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
                             .body(Map.of("error", "Account suspended, please contact Admin"));
                 }
-                boolean valid = userService.validateUserByRole(
+                boolean valid = userService.validateUser(
                         loginRequest.getEmail(),
-                        loginRequest.getPassword(),
-                        loginRequest.getRole()
+                        loginRequest.getPassword()
                 );
                 if (valid) {
                     return ResponseEntity.ok(Map.of(
@@ -59,13 +65,49 @@ public class UserController {
                 }
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(Map.of("error", "Invalid credentials for role ❌: " + loginRequest.getRole()));
+                    .body(Map.of("error", "Invalid credentials"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Login failed: " + e.getMessage()));
         }
     }
 
+    @PostMapping("/student-login")
+    public ResponseEntity<?> studentLogin(@RequestBody User loginRequest) {
+        try {
+            Optional<User> userOpt = userService.findByEmail(loginRequest.getEmail());
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                System.out.println("ROLE: " + user.getRole() + ", STATUS: " + user.getStatus());
+                System.out.println("DB PASSWORD: " + user.getPassword());
+                System.out.println("REQ PASSWORD: " + loginRequest.getPassword());
+                if (!"student".equalsIgnoreCase(user.getRole())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(Map.of("error", "Only students can login here."));
+                }
+                if ("suspended".equalsIgnoreCase(user.getStatus())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(Map.of("error", "Account suspended, please contact Admin"));
+                }
+                boolean valid = userService.validateUser(
+                        loginRequest.getEmail(),
+                        loginRequest.getPassword()
+                );
+                System.out.println("PASSWORD VALID: " + valid);
+                if (valid) {
+                    return ResponseEntity.ok(Map.of(
+                            "message", "Login successful",
+                            "user", user
+                    ));
+                }
+            }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid credentials"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Login failed: " + e.getMessage()));
+        }
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {

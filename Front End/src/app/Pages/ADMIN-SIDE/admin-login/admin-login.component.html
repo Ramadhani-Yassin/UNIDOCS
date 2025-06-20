@@ -50,8 +50,18 @@
           required
           placeholder="Password"
         />
-        <input type="hidden" [(ngModel)]="credentials.role" name="role" value="admin">
         
+        <!-- 
+        Add a select for role in the login form
+        <select [(ngModel)]="credentials.role" name="role" required>
+          <option value="admin">Admin</option>
+          <option value="hos">Head of School (HOS)</option>
+          <option value="vc">Vice Chancellor (VC)</option>
+          <option value="dsc">Dean of School (DSC)</option>
+          <option value="dst">Dean of Students (DSt)</option>
+          <option value="lecturer">Lecturer</option>
+        </select>
+        -->
         <button type="submit" [disabled]="loading">
           <span *ngIf="!loading">Login</span>
           <span *ngIf="loading">Authenticating...</span>

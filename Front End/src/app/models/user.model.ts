@@ -3,4 +3,5 @@ export class User {
   lastName!: string;
   email!: string;
   password!: string;
+  role!: string; // Add this line
 }

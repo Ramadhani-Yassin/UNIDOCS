@@ -41,7 +41,6 @@
         
         <input [(ngModel)]="credentials.email" name="email" type="email" required placeholder="Email">
         <input [(ngModel)]="credentials.password" name="password" type="password" required placeholder="Password">
-        <input type="hidden" [(ngModel)]="credentials.role" name="role" value="student">
         
         <button type="submit" [disabled]="loading">
           <span *ngIf="!loading">Login</span>

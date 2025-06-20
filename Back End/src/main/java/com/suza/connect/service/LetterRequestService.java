@@ -251,4 +251,17 @@ public class LetterRequestService {
 
         return analytics;
     }
+
+    public boolean canApprove(String letterType, String userRole) {
+        switch (letterType.toLowerCase()) {
+            case "introduction":
+                return userRole.equalsIgnoreCase("VC") || userRole.equalsIgnoreCase("admin");
+            case "feasibility_study":
+                return userRole.equalsIgnoreCase("HOS") || userRole.equalsIgnoreCase("SECRETARY") || userRole.equalsIgnoreCase("admin");
+            case "recommendation":
+                return userRole.equalsIgnoreCase("DSC") || userRole.equalsIgnoreCase("LECTURER") || userRole.equalsIgnoreCase("admin");
+            default:
+                return userRole.equalsIgnoreCase("admin");
+        }
+    }
 }

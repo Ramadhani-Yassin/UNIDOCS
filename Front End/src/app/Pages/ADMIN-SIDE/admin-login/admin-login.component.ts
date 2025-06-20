@@ -9,7 +9,7 @@ import { UserService } from 'src/app/services/user.service';
   styleUrls: ['./admin-login.component.css']
 })
 export class AdminLoginComponent {
-  credentials = { email: '', password: '', role: 'admin' };
+  credentials = { email: '', password: '' };
   isActive = false;
   loading = false;
   message = '';
@@ -19,7 +19,7 @@ export class AdminLoginComponent {
 
   toggleActive(state: boolean): void {
     this.isActive = state;
-    this.message = ''; // Clear messages when toggling
+    this.message = '';
   }
 
   onSubmit(loginForm: NgForm): void {
@@ -29,10 +29,14 @@ export class AdminLoginComponent {
     }
 
     this.loading = true;
-    this.message = ''; // Clear previous messages
+    this.message = '';
 
     this.userService.login(this.credentials).subscribe({
       next: (response) => {
+        // Store the user from backend response
+        if (response && response.user) {
+          this.userService.storeUserData(response.user);
+        }
         this.showMessage('Admin login successful! Redirecting...', false);
         setTimeout(() => {
           this.router.navigate(['/admin-portal']);
@@ -50,7 +54,7 @@ export class AdminLoginComponent {
     this.message = message;
     this.isError = isError;
     setTimeout(() => {
-      if (this.message === message) { // Only clear if it's the same message
+      if (this.message === message) {
         this.message = '';
       }
     }, 5000);

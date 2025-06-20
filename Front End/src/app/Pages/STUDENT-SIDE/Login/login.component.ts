@@ -11,7 +11,7 @@ import { UserService } from 'src/app/services/user.service';
 export class LoginComponent {
   isLoginForm = true;
   isActive = false;
-  credentials = { email: '', password: '', role: 'student' };
+  credentials = { email: '', password: '' };
   user = { firstName: '', lastName: '', email: '', password: '' };
   loading = false;
   message = '';
@@ -22,7 +22,7 @@ export class LoginComponent {
   toggleForm(isLogin: boolean): void {
     this.isLoginForm = isLogin;
     this.isActive = !isLogin;
-    this.message = ''; // Clear messages when toggling
+    this.message = '';
   }
 
   onLoginSubmit(loginForm: NgForm): void {
@@ -32,10 +32,14 @@ export class LoginComponent {
     }
 
     this.loading = true;
-    this.message = ''; // Clear previous messages
+    this.message = '';
 
-    this.userService.login(this.credentials).subscribe({
+    this.userService.studentLogin(this.credentials).subscribe({
       next: (response) => {
+        // Store the user from backend response
+        if (response && response.user) {
+          this.userService.storeUserData(response.user);
+        }
         this.showMessage('Login successful! Redirecting..✅', false);
         setTimeout(() => {
           this.router.navigate(['/dashboard']);
@@ -60,7 +64,7 @@ export class LoginComponent {
     }
 
     this.loading = true;
-    this.message = ''; // Clear previous messages
+    this.message = '';
 
     const userData = {
       firstName: this.user.firstName.trim(),
@@ -90,7 +94,7 @@ export class LoginComponent {
     this.message = message;
     this.isError = isError;
     setTimeout(() => {
-      if (this.message === message) { // Only clear if it's the same message
+      if (this.message === message) {
         this.message = '';
       }
     }, 5000);

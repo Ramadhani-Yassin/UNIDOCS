@@ -24,22 +24,13 @@ export class UserService {
   }
 
   // User login
-  login(credentials: { email: string, password: string, role: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
-      tap((response: any) => {
-        if (response.user) {
-          const normalizedUser = {
-            id: response.user.id,
-            firstName: response.user.firstName,
-            lastName: response.user.lastName,
-            email: response.user.email
-          };
-          this.storeUserData(normalizedUser);
-        }
-      }),
+  login(credentials: { email: string, password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/login`, credentials);
+  }
 
-      catchError(this.handleError)
-    );
+  // Student login (only students allowed)
+  studentLogin(credentials: { email: string, password: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/student-login`, credentials);
   }
 
   // Store user data in localStorage and BehaviorSubject

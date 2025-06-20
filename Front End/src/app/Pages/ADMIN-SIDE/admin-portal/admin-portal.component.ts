@@ -31,6 +31,10 @@ export class AdminPortalComponent implements OnInit {
   private studentsSub?: Subscription;
   private templatesSub?: Subscription;
 
+  adminRole: string = '';
+  letterTypeFilter: string = 'all';
+  letterTypes: string[] = ['introduction', 'feasibility_study', 'recommendation']; // Add more as needed
+
   constructor(
     public sidebarService: SidebarService,
     private adminLetterService: AdminLetterService,
@@ -42,11 +46,13 @@ export class AdminPortalComponent implements OnInit {
   ngOnInit() {
     this.loadLetterRequests();
     this.loadCounts();
-    this.animateCount('templates', this.totalLetterTemplates); // Animate on init
+    this.animateCount('templates', this.totalLetterTemplates);
     this.adminSearchService.searchTerm$.subscribe(term => {
       this.searchTerm = term;
-      this.cdr.detectChanges(); // <-- Force view update
+      this.cdr.detectChanges();
     });
+    const user = this.userService.getCurrentUser();
+    this.adminRole = user?.role || '';
   }
 
   loadCounts() {
@@ -95,7 +101,53 @@ export class AdminPortalComponent implements OnInit {
   loadLetterRequests() {
     this.adminLetterService.getAll().subscribe(data => {
       this.letterRequests = data;
+
+      // Collect unique types, mapping transcript/scholarship to Recommendation, and excluding discontinuation
+      const typesSet = new Set<string>();
+      this.letterRequests.forEach(r => {
+        if (!r.letterType) return;
+        const type = r.letterType.trim().toLowerCase();
+        if (type === 'discontinuation') return; // Exclude
+        if (type === 'transcript' || type === 'scholarship') {
+          typesSet.add('recommendation');
+        } else {
+          typesSet.add(type);
+        }
+      });
+
+      this.letterTypes = Array.from(typesSet);
+
+      // Set default filter and order after loading types
+      this.setDefaultFilterAndOrder();
     });
+  }
+
+  filterLetterRequests() {
+    // This will trigger Angular's change detection for filteredLetterRequests getter
+  }
+
+  get filteredLetterRequests() {
+    let filtered = this.letterRequests;
+    if (this.letterTypeFilter !== 'all') {
+      filtered = filtered.filter(r => {
+        const type = r.letterType?.trim().toLowerCase();
+        if (type === 'transcript' || type === 'scholarship') {
+          return this.letterTypeFilter === 'recommendation';
+        }
+        if (type === 'discontinuation') {
+          return false;
+        }
+        return type === this.letterTypeFilter;
+      });
+    }
+    if (!this.searchTerm) return filtered;
+    const term = this.searchTerm.toLowerCase();
+    return filtered.filter(r =>
+      (r.fullName && r.fullName.toLowerCase().includes(term)) ||
+      (r.letterType && r.letterType.toLowerCase().includes(term)) ||
+      (r.status && r.status.toLowerCase().includes(term)) ||
+      (r.adminComment && r.adminComment.toLowerCase().includes(term))
+    );
   }
 
   updateStatus(request: any) {
@@ -179,22 +231,6 @@ export class AdminPortalComponent implements OnInit {
     }
   }
 
-  get filteredLetterRequests() {
-    if (!this.searchTerm) return this.letterRequests;
-    const term = this.searchTerm.toLowerCase();
-    return this.letterRequests.filter(r =>
-      (r.fullName && r.fullName.toLowerCase().includes(term)) ||
-      (r.letterType && r.letterType.toLowerCase().includes(term)) ||
-      (r.status && r.status.toLowerCase().includes(term)) ||
-      (r.adminComment && r.adminComment.toLowerCase().includes(term))
-    );
-  }
-
-  onLocalSearchChange() {
-    // Update the shared search term so navbar and table stay in sync
-    this.adminSearchService.setSearchTerm(this.localSearchTerm);
-  }
-
   openLetterInNewTab(request: any) {
     let firstName = 'User';
     let lastName = '';
@@ -221,5 +257,45 @@ export class AdminPortalComponent implements OnInit {
         alert('Failed to load letter.');
       }
     });
+  }
+
+  onLocalSearchChange() {
+    // Update the shared search term so navbar and table stay in sync
+    this.adminSearchService.setSearchTerm(this.localSearchTerm);
+  }
+
+  canApprove(letterType: string): boolean {
+    const role = this.adminRole?.toLowerCase() || '';
+    switch (letterType.toLowerCase()) {
+      case 'introduction':
+        return role === 'vc' || role === 'admin';
+      case 'feasibility_study':
+        return role === 'hos' || role === 'secretary' || role === 'admin';
+      case 'recommendation':
+        return role === 'dsc' || role === 'lecturer' || role === 'admin';
+      default:
+        return role === 'admin';
+    }
+  }
+
+  setDefaultFilterAndOrder() {
+    const role = this.adminRole?.toLowerCase();
+    if (role === 'vc') {
+      this.letterTypeFilter = 'introduction';
+      this.letterTypes = ['introduction', ...this.letterTypes.filter(t => t !== 'introduction')];
+    } else if (role === 'hos') {
+      this.letterTypeFilter = 'feasibility_study';
+      this.letterTypes = ['feasibility_study', ...this.letterTypes.filter(t => t !== 'feasibility_study')];
+    } else if (role === 'dst') {
+      this.letterTypeFilter = 'postpone';
+      this.letterTypes = ['postpone', ...this.letterTypes.filter(t => t !== 'postpone')];
+    } else if (role === 'lecturer' || role === 'dsc') {
+      this.letterTypeFilter = 'recommendation';
+      this.letterTypes = ['recommendation', ...this.letterTypes.filter(t => t !== 'recommendation')];
+    } else if (role === 'admin') {
+      this.letterTypeFilter = 'all';
+      // Optionally, put 'all' at the top
+      this.letterTypes = ['all', ...this.letterTypes.filter(t => t !== 'all')];
+    }
   }
 }

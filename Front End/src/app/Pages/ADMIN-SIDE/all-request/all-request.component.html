@@ -30,6 +30,11 @@
             (input)="onLocalSearchChange()"
             style="width: 250px; margin-right: 8px;"
           />
+          <i class="bx bx-filter"></i>
+          <select [(ngModel)]="letterTypeFilter" (change)="filterLetterRequests()" style="margin-left: 8px;">
+            <option value="all">All Letter Types</option>
+            <option *ngFor="let type of letterTypes" [value]="type" [hidden]="type === 'all'">{{ type | titlecase }}</option>
+          </select>
         </div>
         </div>
         <!-- Modal Overlay for Update -->
@@ -63,7 +68,6 @@
               <td>{{ request.letterType }}</td>
               <td>{{ formatDate(request.requestDate) }}</td>
               <td class="status-cell" style="min-width: 160px;">
-                <!-- Show badge if not editing -->
                 <span
                   *ngIf="editingStatusIndex !== i"
                   class="status-badge"
@@ -72,15 +76,14 @@
                     'approved': request.status === 'APPROVED',
                     'declined': request.status === 'DECLINED'
                   }"
-                  (click)="setEditingStatus(i); $event.stopPropagation()"
-                  style="cursor:pointer"
-                  title="Click to change status"
+                  (click)="canApprove(request.letterType) && setEditingStatus(i); $event.stopPropagation()"
+                  [style.cursor]="canApprove(request.letterType) ? 'pointer' : 'not-allowed'"
+                  [title]="canApprove(request.letterType) ? 'Click to change status' : 'Not permitted'"
                 >
                   {{ request.status | titlecase }}
                 </span>
-                <!-- Show dropdown if editing -->
                 <select
-                  *ngIf="editingStatusIndex === i"
+                  *ngIf="editingStatusIndex === i && canApprove(request.letterType)"
                   [(ngModel)]="request.status"
                   (blur)="saveStatus(request, i)"
                   (change)="saveStatus(request, i)"
@@ -91,10 +94,11 @@
                 </select>
               </td>
               <td>
-                <input [(ngModel)]="request.adminComment" placeholder="Add comment" (click)="$event.stopPropagation()" />
+                <input [(ngModel)]="request.adminComment" placeholder="Add comment" (click)="$event.stopPropagation()" [readonly]="!canApprove(request.letterType)" />
               </td>
               <td>
-                <button (click)="updateStatus(request); $event.stopPropagation()">Update</button>
+                <button *ngIf="canApprove(request.letterType)" (click)="updateStatus(request); $event.stopPropagation()">Update</button>
+                <span *ngIf="!canApprove(request.letterType)" style="color:gray;">View Only</span>
               </td>
             </tr>
           </tbody>
