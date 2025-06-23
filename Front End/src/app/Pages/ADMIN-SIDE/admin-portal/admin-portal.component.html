@@ -90,7 +90,7 @@
                 (click)="openLetterInNewTab(request)"
                 style="cursor:pointer;">
               <td>{{ request.fullName }}</td>
-              <td>{{ request.letterType }}</td>
+              <td>{{ displayLetterType(request.letterType) }}</td>
               <!--<td>{{ formatDate(request.requestDate) }}</td>-->
               <td class="status-cell" style="min-width: 160px;">
                 <span

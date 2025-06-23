@@ -244,4 +244,14 @@ export class AllRequestComponent implements OnInit {
       this.letterTypes = ['all', ...types];
     }
   }
+
+  displayLetterType(type: string): string {
+    switch (type) {
+      case 'feasibility_study': return 'Feasibility Study';
+      case 'introduction': return 'Introduction Letter';
+      case 'recommendation': return 'Recommendation Letter';
+      case 'postponement': return 'Postponement';
+      default: return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+  }
 }

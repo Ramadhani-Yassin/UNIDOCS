@@ -41,7 +41,7 @@
         <div class="form-actions">
           <button type="submit" [disabled]="isSubmitting || !announcementForm.form.valid">
             <i class="bx bx-send"></i>
-            {{ isSubmitting ? 'Publishing...' : 'Publish Announcement' }}
+            {{ isSubmitting ? 'Published...' : 'Publish Announcement' }}
           </button>
         </div>
         <div *ngIf="submitSuccess" class="success-message">

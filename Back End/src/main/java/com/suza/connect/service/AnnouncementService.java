@@ -9,10 +9,17 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+
+@Configuration
+@EnableAsync
+class AsyncConfig {}
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +37,14 @@ public class AnnouncementService {
         announcement.setCreatedDate(LocalDateTime.now());
         Announcement saved = announcementRepository.save(announcement);
 
+        // Send emails asynchronously
+        sendAnnouncementEmailsAsync(announcementDTO);
+
+        return saved;
+    }
+
+    @Async
+    public void sendAnnouncementEmailsAsync(AnnouncementDTO announcementDTO) {
         // Notify all students
         userRepository.findAll().stream()
             .filter(user -> user.getRole().equalsIgnoreCase("student"))
@@ -49,15 +64,12 @@ public class AnnouncementService {
                 try {
                     emailService.sendEmail(email, "New Announcement", announcementDTO.getTitle());
                 } catch (Exception e) {
-                    // Log and continue
                     System.err.println("Failed to send email to " + email + ": " + e.getMessage());
                 }
             } else {
                 System.err.println("Invalid email skipped: " + email);
             }
         }
-
-        return saved;
     }
 
     public List<Announcement> getRecentAnnouncements(int limit) {

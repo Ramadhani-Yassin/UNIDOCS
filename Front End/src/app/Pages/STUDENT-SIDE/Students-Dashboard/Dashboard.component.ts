@@ -237,4 +237,15 @@ export class DashboardComponent implements OnInit {
     const url = (this.letterUrl as any).changingThisBreaksApplicationSecurity || this.letterUrl;
     window.open(url, '_blank');
   }
+
+  displayLetterType(type: string): string {
+    switch (type) {
+      case 'feasibility_study': return 'Feasibility Study';
+      case 'introduction': return 'Introduction Letter';
+      case 'recommendation': return 'Recommendation Letter';
+      case 'postponement': return 'Postponement';
+      // Add more as needed
+      default: return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    }
+  }
 }

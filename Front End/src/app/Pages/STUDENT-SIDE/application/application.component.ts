@@ -113,7 +113,7 @@ export class ApplicationComponent implements OnInit {
     const selectElement = event.target as HTMLSelectElement;
     this.selectedLetterType = selectElement.value;
     this.resetAllFields();
-    
+
     switch(this.selectedLetterType) {
       case 'introduction':
         this.showIntroductionFields = true;
@@ -124,7 +124,7 @@ export class ApplicationComponent implements OnInit {
       case 'discontinuation':
         this.showDiscontinuationFields = true;
         break;
-      case 'scholarship':
+      case 'recommendation': // changed from 'scholarship'
         this.showRecommendationFields = true;
         break;
       case 'transcript':

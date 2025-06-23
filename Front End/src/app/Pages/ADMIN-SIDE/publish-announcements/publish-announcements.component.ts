@@ -120,6 +120,7 @@ export class PublishAnnouncementsComponent implements OnInit {
       content: this.form.content,
       status: this.form.status
     };
+    // Backend will handle email sending asynchronously, so success appears instantly
     this.announcementService.createAnnouncementJson(announcement).subscribe({
       next: () => {
         this.isSubmitting = false;
