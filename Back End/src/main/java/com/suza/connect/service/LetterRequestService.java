@@ -24,6 +24,7 @@ public class LetterRequestService {
 
     private final LetterRequestRepository letterRequestRepository;
     private final UserRepository userRepository;
+    private final EmailService emailService; // Inject EmailService
 
     public LetterRequest createLetterRequest(LetterRequestDTO requestDTO) {
         User user = userRepository.findByEmail(requestDTO.getEmail())
@@ -130,6 +131,17 @@ public class LetterRequestService {
         req.setStatus(status);
         req.setAdminComment(comment);
         letterRequestRepository.save(req);
+
+        // Send email notification to student
+        String subject = "Update on Your Letter Request";
+        String text = String.format(
+            "Dear %s,\n\nYour letter request (%s) has been %s.\n\nComment: %s\n\nRegards,\nSUZA Admin",
+            req.getFullName(),
+            req.getLetterType(),
+            status,
+            comment == null ? "No comment" : comment
+        );
+        emailService.sendEmail(req.getEmail(), subject, text);
     }
 
     public List<LetterRequestDTO> findAll() {
