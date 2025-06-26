@@ -132,16 +132,64 @@ public class LetterRequestService {
         req.setAdminComment(comment);
         letterRequestRepository.save(req);
 
-        // Send email notification to student
+        // Choose avatar based on status
+        String avatarPath;
+        switch (status.toLowerCase()) {
+            case "approved":
+                avatarPath = "/home/ramah/Documents/FYP/Front End/src/assets/images/approved.png";
+                break;
+            case "declined":
+            case "rejected":
+                avatarPath = "/home/ramah/Documents/FYP/Front End/src/assets/images/cancel.png";
+                break;
+            case "pending":
+            default:
+                avatarPath = "/home/ramah/Documents/FYP/Front End/src/assets/images/pending.png";
+                break;
+        }
+
         String subject = "Update on Your Letter Request";
-        String text = String.format(
-            "Dear %s,\n\nYour letter request (%s) has been %s.\n\nComment: %s\n\nRegards,\nSUZA Admin",
+        String htmlBody = String.format(
+            "<div style='font-family: Arial, sans-serif;'>"
+            + "<h2 style='color:#2d3748;'>Dear %s,</h2>"
+            + "<p>Your letter request for <b>%s</b> has been <b style='color:%s;'>%s</b>.</p>"
+            + "<p><b>Admin Comment:</b> %s</p>"
+            + "<p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
+            + "<br><p>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
+            + "<div style='text-align:center; margin-top:24px;'>"
+            + "<img src='cid:statusAvatar' alt='%s' style='width:64px;height:64px;display:inline-block;'/>"
+            + "</div>"
+            + "</div>",
             req.getFullName(),
-            req.getLetterType(),
-            status,
-            comment == null ? "No comment" : comment
+            displayLetterType(req.getLetterType()),
+            statusColor(status),
+            status.toUpperCase(),
+            (comment == null || comment.trim().isEmpty()) ? "No additional comments." : comment.trim(),
+            status
         );
-        emailService.sendEmail(req.getEmail(), subject, text);
+
+        emailService.sendEmailWithAvatar(req.getEmail(), subject, htmlBody, avatarPath);
+    }
+
+    // Helper for display name
+    private String displayLetterType(String type) {
+        switch (type) {
+            case "feasibility_study": return "Feasibility Study";
+            case "introduction": return "Introduction Letter";
+            case "recommendation": return "Recommendation Letter";
+            case "postponement": return "Postponement";
+            default: return type.replace("_", " ");
+        }
+    }
+
+    // Helper for status color
+    private String statusColor(String status) {
+        switch (status.toLowerCase()) {
+            case "approved": return "#28a745";
+            case "declined":
+            case "rejected": return "#dc3545";
+            case "pending": default: return "#ffc107";
+        }
     }
 
     public List<LetterRequestDTO> findAll() {
