@@ -15,6 +15,7 @@ export class StudentNavComponent implements OnInit, OnDestroy {
   public isMobile = false;
   private mobileBreakpoint = 768;
   public currentPageTitle = 'Dashboard';
+  public showHelpModal = false;
 
   constructor(
     public sidebarService: StudentSidebarService,
@@ -78,6 +79,14 @@ export class StudentNavComponent implements OnInit, OnDestroy {
     } else if (url.includes('announcements')) {
       this.currentPageTitle = 'Announcements';
     }
+  }
+
+  openHelp() {
+    this.showHelpModal = true;
+  }
+
+  closeHelp() {
+    this.showHelpModal = false;
   }
 
   ngOnDestroy() {
