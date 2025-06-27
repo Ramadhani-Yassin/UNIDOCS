@@ -15,6 +15,7 @@ export class AdminNavComponent implements OnInit, OnDestroy {
   private mobileBreakpoint = 768;
   private readonly NAVBAR_HEIGHT = 56; // Match this with your navbar height
   searchTerm: string = '';
+  public showHelpModal = false;
 
   constructor(
     public sidebarService: SidebarService,

@@ -80,11 +80,37 @@
       </button>
     </div>
   </form>
-  <a href="#" class="notification">
-    <i class="bx bxs-bell"></i>
-    <span class="num">5</span>
-  </a>
-  <a href="#" class="profile">
-    <img src="https://secure.gravatar.com/avatar/admin" />
-  </a>
+    <button
+      type="button"
+      class="help-btn stylish-help"
+      aria-label="Help"
+      (click)="showHelpModal = true"
+    >
+      <i class="bx bxs-info-circle"></i>
+    </button>
 </nav>
+
+<div class="help-modal-backdrop" *ngIf="showHelpModal">
+  <div class="help-modal">
+    <button class="close-btn" (click)="showHelpModal = false" aria-label="Close">&times;</button>
+    <div class="help-modal-header">
+      <i class="bx bxs-info-circle"></i>
+      <h2>Need Help?</h2>
+    </div>
+    <div class="help-modal-body">
+      <p>
+        Welcome to <strong>UNIDOCS Admin Portal</strong>!<br>
+        For assistance, please contact
+        <a href="mailto:unidocs.ramadhani@gmail.com">unidocs.ramadhani@gmail.com</a>
+        or visit our
+        <a [routerLink]="['/home']">Help Center</a>.<br>
+        You can also check our
+        <a [routerLink]="['/about-us']">FAQ</a>
+        for common questions.
+      </p>
+    </div>
+    <div class="help-modal-footer">
+      <button class="contact-btn" (click)="showHelpModal = false">Got it!</button>
+    </div>
+  </div>
+</div>
