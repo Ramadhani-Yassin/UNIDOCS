@@ -66,6 +66,16 @@
   align-items: center;
   grid-gap: 10px;
   font-weight: 500;
+  border: none !important;      /* Remove border */
+  box-shadow: 0 2px 8px #3C91E633; /* Optional: subtle shadow */
+  outline: none !important;     /* Remove outline on click */
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+#content main .head-title .btn-download:focus,
+#content main .head-title .btn-download:active {
+  outline: none !important;
+  border: none !important;
 }
 
 #content main .table-data {

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SidebarService } from '../../../services/sidebar.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 interface Student {
   id: number;
@@ -46,9 +48,18 @@ export class StudentsManagementComponent implements OnInit {
         ...s,
         avatar: this.defaultAvatar,
         registrationDate: s.registrationDate ? new Date(s.registrationDate) : undefined,
-        lettersRequested: s.lettersRequested ?? 0,
+        lettersRequested: 0,
         status: s.status ?? 'active'
       }));
+
+      // Fetch letter count for each student
+      this.students.forEach(student => {
+        this.http.get<number>(`${environment.apiUrl}/api/letter-requests/count/${encodeURIComponent(student.email)}`)
+          .subscribe(count => {
+            student.lettersRequested = count;
+          });
+      });
+
       this.filterStudents();
     });
   }
@@ -135,5 +146,27 @@ export class StudentsManagementComponent implements OnInit {
   reviewSuspendedAccounts(): void {
     this.statusFilter = 'suspended';
     this.filterStudents();
+  }
+
+  exportToExcel(): void {
+    // Prepare data for export (use filteredStudents or students as needed)
+    const exportData = this.filteredStudents.map(student => ({
+      Name: `${student.firstName} ${student.lastName}`,
+      Email: student.email,
+      Status: student.status,
+      'Letters Requested': student.lettersRequested ?? 0,
+      // Add more fields if needed
+    }));
+
+    // Create worksheet and workbook
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(exportData);
+    const workbook: XLSX.WorkBook = { Sheets: { 'Students': worksheet }, SheetNames: ['Students'] };
+
+    // Generate buffer
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    // Save file
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    saveAs(blob, 'students-list.xlsx');
   }
 }
