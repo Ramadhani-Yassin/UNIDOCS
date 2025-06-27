@@ -16,6 +16,7 @@ export class StudentNavComponent implements OnInit, OnDestroy {
   private mobileBreakpoint = 768;
   public currentPageTitle = 'Dashboard';
   public showHelpModal = false;
+  public showLogoutModal = false;
 
   constructor(
     public sidebarService: StudentSidebarService,
@@ -87,6 +88,17 @@ export class StudentNavComponent implements OnInit, OnDestroy {
 
   closeHelp() {
     this.showHelpModal = false;
+  }
+
+  openLogoutModal(event: Event) {
+    event.preventDefault();
+    this.showLogoutModal = true;
+  }
+
+  performLogout() {
+    this.showLogoutModal = false;
+    // Add your logout logic here (clear tokens, etc.)
+    this.router.navigate(['/']);
   }
 
   ngOnDestroy() {

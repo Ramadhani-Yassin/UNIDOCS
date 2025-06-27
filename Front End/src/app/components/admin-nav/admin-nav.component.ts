@@ -16,6 +16,7 @@ export class AdminNavComponent implements OnInit, OnDestroy {
   private readonly NAVBAR_HEIGHT = 56; // Match this with your navbar height
   searchTerm: string = '';
   public showHelpModal = false;
+  public showLogoutModal = false;
 
   constructor(
     public sidebarService: SidebarService,
@@ -74,6 +75,17 @@ export class AdminNavComponent implements OnInit, OnDestroy {
 
   onSearchChange() {
     this.adminSearchService.setSearchTerm(this.searchTerm);
+  }
+
+  openLogoutModal(event: Event) {
+    event.preventDefault();
+    this.showLogoutModal = true;
+  }
+
+  performLogout() {
+    this.showLogoutModal = false;
+    // Your logout logic here (clear tokens, etc.)
+    this.router.navigate(['/']);
   }
 
   ngOnDestroy() {

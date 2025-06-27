@@ -55,7 +55,7 @@
       </a>
     </li>-->
     <li>
-      <a href="#" class="logout" (click)="confirmLogout($event)">
+      <a href="#" class="logout" (click)="openLogoutModal($event)">
         <i class="bx bxs-log-out-circle"></i>
         <span class="text">Logout</span>
       </a>
@@ -111,6 +111,23 @@
     </div>
     <div class="help-modal-footer">
       <button class="contact-btn" (click)="showHelpModal = false">Got it!</button>
+    </div>
+  </div>
+</div>
+
+<div class="logout-modal-backdrop" *ngIf="showLogoutModal">
+  <div class="logout-modal">
+    <button class="close-btn" (click)="showLogoutModal = false" aria-label="Close">&times;</button>
+    <div class="logout-modal-header">
+      <i class="bx bxs-log-out-circle"></i>
+      <h2>Confirm Logout</h2>
+    </div>
+    <div class="logout-modal-body">
+      <p>Are you sure you want to logout from <strong>UNIDOCS Admin Portal</strong>?</p>
+    </div>
+    <div class="logout-modal-footer">
+      <button class="contact-btn" (click)="showLogoutModal = false">Cancel</button>
+      <button class="logout-btn" (click)="performLogout()">Logout</button>
     </div>
   </div>
 </div>

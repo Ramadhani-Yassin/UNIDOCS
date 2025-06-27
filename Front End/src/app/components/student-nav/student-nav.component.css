@@ -459,3 +459,64 @@
 .close-btn:hover {
   color: #3C91E6;
 }
+
+/* Logout Modal Styles */
+.logout-modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30, 41, 59, 0.65);
+  z-index: 4000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s;
+}
+.logout-modal {
+  background: #fff;
+  color: #23272f;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px 0 #DB504A44;
+  padding: 2.5rem 2rem 1.5rem 2rem;
+  min-width: 320px;
+  max-width: 90vw;
+  position: relative;
+  animation: popIn 0.3s;
+}
+.logout-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+.logout-modal-header .bxs-log-out-circle {
+  font-size: 2.5rem;
+  color: #DB504A;
+  filter: drop-shadow(0 0 10px #DB504Aaa);
+}
+.logout-modal-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.logout-modal-body {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+.logout-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+}
+.logout-btn {
+  background: #DB504A;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 0.5rem 1.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.logout-btn:hover {
+  background: #b71c1c;
+}
