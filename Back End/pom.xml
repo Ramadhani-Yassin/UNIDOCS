@@ -56,6 +56,19 @@
     <artifactId>jakarta.mail</artifactId>
     <version>2.0.1</version>
    </dependency>
+   <!-- Jakarta Bean Validation API -->
+    <dependency>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>3.0.2</version>
+    </dependency>
+
+    <!-- Hibernate Validator (implementation of Jakarta Validation) -->
+    <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>7.0.5.Final</version>
+    </dependency>
 
         <dependency>
             <groupId>commons-validator</groupId>

@@ -83,7 +83,7 @@ export class LoginComponent {
         }, 1500);
       },
       error: (error) => {
-        const errorMsg = error.error?.error || 'Registration failed. Email may already be in use.';
+        const errorMsg = error.error?.error || 'Registration failed. Invalid Email or Already used.';
         this.showMessage(errorMsg, true);
         this.loading = false;
       }

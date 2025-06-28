@@ -1,6 +1,8 @@
 package com.suza.connect.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Entity
@@ -19,6 +21,8 @@ public class User {
     private String lastName;
 
     @Column(name = "email", nullable = false, unique = true)
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email format")
     private String email;
 
     @Column(name = "password", nullable = false, length = 255)
