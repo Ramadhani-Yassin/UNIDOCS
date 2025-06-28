@@ -1,8 +1,6 @@
 package com.suza.connect.service;
 
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.apache.poi.xwpf.usermodel.XWPFParagraph;
-import org.apache.poi.xwpf.usermodel.XWPFRun;
+import org.apache.poi.xwpf.usermodel.*;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -20,18 +18,7 @@ public class CVGenerationService {
         try (FileInputStream fis = new FileInputStream(templateFile);
              XWPFDocument doc = new XWPFDocument(fis)) {
 
-            // Replace placeholders in paragraphs
-            for (XWPFParagraph paragraph : doc.getParagraphs()) {
-                for (XWPFRun run : paragraph.getRuns()) {
-                    String text = run.getText(0);
-                    if (text != null) {
-                        for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-                            text = text.replace("{{" + entry.getKey() + "}}", entry.getValue() != null ? entry.getValue() : "");
-                        }
-                        run.setText(text, 0);
-                    }
-                }
-            }
+            replacePlaceholdersInDocument(doc, placeholders);
 
             // Save filled DOCX to temp file
             File filledDocx = File.createTempFile("filled_cv", ".docx");
@@ -58,5 +45,36 @@ public class CVGenerationService {
             throw new IOException("Failed to convert DOCX to PDF using LibreOffice.");
         }
         return pdfFile;
+    }
+
+    public void replacePlaceholdersInDocument(XWPFDocument doc, Map<String, String> placeholders) {
+        // Replace in paragraphs
+        for (XWPFParagraph paragraph : doc.getParagraphs()) {
+            replaceInParagraph(paragraph, placeholders);
+        }
+        // Replace in tables
+        for (XWPFTable table : doc.getTables()) {
+            for (XWPFTableRow row : table.getRows()) {
+                for (XWPFTableCell cell : row.getTableCells()) {
+                    for (XWPFParagraph paragraph : cell.getParagraphs()) {
+                        replaceInParagraph(paragraph, placeholders);
+                    }
+                }
+            }
+        }
+    }
+
+    private void replaceInParagraph(XWPFParagraph paragraph, Map<String, String> placeholders) {
+        for (XWPFRun run : paragraph.getRuns()) {
+            String text = run.getText(0);
+            if (text != null) {
+                for (Map.Entry<String, String> entry : placeholders.entrySet()) {
+                    text = text.replace("{{" + entry.getKey() + "}}", entry.getValue());
+                    text = text.replace("${" + entry.getKey() + "}", entry.getValue());
+                    text = text.replace("<<" + entry.getKey() + ">>", entry.getValue());
+                }
+                run.setText(text, 0);
+            }
+        }
     }
 }
