@@ -180,4 +180,15 @@ public class UserController {
         User updated = userService.updateUserStatus(id, "suspended");
         return ResponseEntity.ok(Map.of("message", "Student suspended", "user", updated));
     }
+
+    @DeleteMapping("/students/{id}")
+    public ResponseEntity<?> deleteStudentById(@PathVariable Long id) {
+        Optional<User> userOpt = userService.findById(id);
+        if (userOpt.isPresent() && "student".equalsIgnoreCase(userOpt.get().getRole())) {
+            userService.deleteUserById(id);
+            return ResponseEntity.ok(Map.of("message", "Student deleted"));
+        }
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Map.of("error", "User is not a student or does not exist"));
+    }
 }

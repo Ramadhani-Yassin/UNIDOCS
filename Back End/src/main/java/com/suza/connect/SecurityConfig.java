@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST,
                     "/api/users/register",
                     "/api/users/login",
-                    "/api/users/student-login", // <-- ADD THIS LIN
+                    "/api/users/student-login",
                     "/api/admin/register",
                     "/api/admin/login",
                     "/api/letter-requests",
@@ -57,7 +57,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/admin/**").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/activate").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/users/{id}/deactivate").permitAll()
-                .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/users/students/**").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/announcements/**").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/announcements").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/announcements/{id}").permitAll()
@@ -74,13 +74,16 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:4200")); // Only allow your frontend origin
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:4200",
+            "http://192.168.167.248:4200"
+        ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of(
             "Authorization", 
             "Content-Type", 
             "X-Requested-With", 
-            "X-User-Role" // <-- ADD THIS LINE
+            "X-User-Role"
         ));
         configuration.setExposedHeaders(List.of("Authorization"));
         configuration.setAllowCredentials(true);

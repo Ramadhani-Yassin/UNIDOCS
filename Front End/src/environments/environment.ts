@@ -1,7 +1,7 @@
 // src/environments/environment.ts
 export const environment = {
   production: false,
-  apiUrl: 'http://192.168.135.248:8088' // Your existing API URL
+  apiUrl: 'http://192.168.167.248:8088' // Your existing API URL
   // Add this if you want to use apiBaseUrl instead:
-  // apiBaseUrl: 'http://192.168.135.248:8088'
+  // apiBaseUrl: 'http://192.168.167.248:8088'
 };
