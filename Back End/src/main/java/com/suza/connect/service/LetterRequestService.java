@@ -219,7 +219,7 @@ public class LetterRequestService {
             + "<p>Your letter request for <b>%s</b> has been <b style='color:%s;'>%s</b>.</p>"
             + "<p><b>Admin Comment:</b> %s</p>"
             + "<p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
-            + "<br><p>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
+            + "<br><p>Best regards,<br><b>UNIDOCS Team</b><br>The State University of Zanzibar</p>"
             + "<div style='text-align:center; margin-top:24px;'>"
             + "<img src='cid:statusAvatar' alt='%s' style='width:64px;height:64px;display:inline-block;'/>"
             + "</div>"
@@ -243,11 +243,11 @@ public class LetterRequestService {
             + "<p style='font-size:16px;'>Your letter request for <b style='color:#007bff;'>%s</b> is attached to this email as a PDF document for your reference.</p>"
             + "<div style='margin:24px 0; text-align:center;'>"
             + "<span style='display:inline-block; background:#e9f7ef; color:#28a745; font-weight:600; padding:8px 24px; border-radius:24px;'>"
-            + "UNIDOCS - State University of Zanzibar"
+            + "UNIDOCS - The State University of Zanzibar"
             + "</span>"
             + "</div>"
             + "<p style='font-size:15px;'>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
-            + "<br><p style='font-size:15px;'>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
+            + "<br><p style='font-size:15px;'>Best regards,<br><b>UNIDOCS Team</b><br>The State University of Zanzibar</p>"
             + "</div>",
             user.getFirstName(),
             displayLetterType(letterType)
