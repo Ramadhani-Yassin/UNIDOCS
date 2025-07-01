@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
@@ -24,7 +25,8 @@ public class LetterRequestService {
 
     private final LetterRequestRepository letterRequestRepository;
     private final UserRepository userRepository;
-    private final EmailService emailService; // Inject EmailService
+    private final EmailService emailService;
+    private final LetterGenerationService letterGenerationService; // <-- Add this
 
     public LetterRequest createLetterRequest(LetterRequestDTO requestDTO) {
         User user = userRepository.findByEmail(requestDTO.getEmail())
@@ -77,7 +79,88 @@ public class LetterRequestService {
             request.setDeliveryMethod(requestDTO.getDeliveryMethod());
         }
 
-        return letterRequestRepository.save(request);
+        LetterRequest savedRequest = letterRequestRepository.save(request);
+
+        try {
+            // --- NEW: Generate the letter file from template and request data ---
+            String templateFileName;
+            switch (savedRequest.getLetterType()) {
+                case "introduction":
+                    templateFileName = "IntroductionLetter.docx";
+                    break;
+                case "feasibility_study":
+                    templateFileName = "FeasibilityStudyApproval.docx";
+                    break;
+                case "discontinuation":
+                    templateFileName = "DiscontinuationLetter.docx";
+                    break;
+                case "postponement":
+                    templateFileName = "postponeTemplate.docx";
+                    break;
+                case "scholarship":
+                    templateFileName = "RecommendationLetter.docx";
+                    break;
+                case "transcript":
+                    templateFileName = "TranscriptRequestLetter.docx";
+                    break;
+                default:
+                    throw new RuntimeException("Unknown letter type: " + savedRequest.getLetterType());
+            }
+            String templatePath = "/home/ramah/Documents/FYP/templates/" + templateFileName;
+
+            // Prepare placeholders map from request fields
+            Map<String, String> placeholders = new HashMap<>();
+            placeholders.put("fullName", safe(savedRequest.getFullName()));
+            placeholders.put("organizationName", safe(savedRequest.getOrganizationName()));
+            placeholders.put("yearOfStudy", safe(savedRequest.getYearOfStudy()));
+            placeholders.put("programOfStudy", safe(savedRequest.getProgramOfStudy()));
+            placeholders.put("registrationNumber", safe(savedRequest.getRegistrationNumber()));
+            placeholders.put("startDate", safe(savedRequest.getStartDate()));
+            placeholders.put("endDate", safe(savedRequest.getEndDate()));
+            placeholders.put("phoneNumber", safe(savedRequest.getPhoneNumber()));
+            placeholders.put("email", safe(savedRequest.getEmail()));
+            placeholders.put("date", java.time.LocalDate.now().toString());
+            placeholders.put("researchTitle", safe(savedRequest.getResearchTitle()));
+            placeholders.put("reasonForRequest", safe(savedRequest.getReasonForRequest()));
+            placeholders.put("effectiveDate", safe(savedRequest.getEffectiveDate()));
+            placeholders.put("recommendationPurpose", safe(savedRequest.getRecommendationPurpose()));
+            placeholders.put("receivingInstitution", safe(savedRequest.getReceivingInstitution()));
+            placeholders.put("submissionDeadline", safe(savedRequest.getSubmissionDeadline()));
+            placeholders.put("transcriptPurpose", safe(savedRequest.getTranscriptPurpose()));
+            placeholders.put("deliveryMethod", safe(savedRequest.getDeliveryMethod()));
+
+            // Generate the filled DOCX
+            File filledDocx = letterGenerationService.fillTemplate(templatePath, placeholders);
+
+            // Convert to PDF (if you want to send PDF)
+            File pdfFile = letterGenerationService.convertDocxToPdf(filledDocx);
+
+            // --- NEW: Send the email with PDF attachment ---
+            String subject = "Your Requested University Letter";
+            String htmlBody = "<p>Dear " + user.getFirstName() + ",</p>"
+                + "<p>Your requested letter is attached to this email.</p>"
+                + "<p>Best regards,<br>UNIDOCS Team</p>";
+            // Build a user-friendly filename
+            String firstName = user.getFirstName() != null ? user.getFirstName().replaceAll("\\s+", "") : "User";
+            String lastName = user.getLastName() != null ? user.getLastName().replaceAll("\\s+", "") : "";
+            String letterType = savedRequest.getLetterType() != null ? savedRequest.getLetterType().replaceAll("\\s+", "_") : "Letter";
+            String fileName = firstName + "_" + lastName + "_" + letterType + ".pdf";
+
+            // --- Send the email with the custom filename ---
+            emailService.sendEmailWithAttachment(
+                user.getEmail(),
+                subject,
+                htmlBody,
+                pdfFile,
+                fileName
+            );
+        } catch (Exception e) {
+            // Log and optionally notify admin
+            e.printStackTrace();
+            throw new RuntimeException("Failed to generate or send letter: " + e.getMessage());
+        }
+
+        return savedRequest;
     }
 
     public Optional<LetterRequest> findById(String id) {
@@ -169,6 +252,21 @@ public class LetterRequestService {
         );
 
         emailService.sendEmailWithAvatar(req.getEmail(), subject, htmlBody, avatarPath);
+    }
+
+    // After generating the letter file:
+    public void sendLetterFile(User user, File letterFile) {
+        String subject = "Your Requested University Letter";
+        String htmlBody = "<p>Dear " + user.getFirstName() + ",</p>"
+            + "<p>Your requested letter is attached to this email.</p>"
+            + "<p>Best regards,<br>UNIDOCS Team</p>";
+        emailService.sendEmailWithAttachment(
+            user.getEmail(),
+            subject,
+            htmlBody,
+            letterFile,
+            letterFile.getName()
+        );
     }
 
     // Helper for display name
@@ -323,5 +421,13 @@ public class LetterRequestService {
             default:
                 return userRole.equalsIgnoreCase("admin");
         }
+    }
+
+    // Helper for null safety
+    private String safe(Object value) {
+        if (value == null) return "";
+        if (value instanceof java.time.LocalDate) return value.toString();
+        if (value instanceof java.time.LocalDateTime) return value.toString();
+        return value.toString();
     }
 }

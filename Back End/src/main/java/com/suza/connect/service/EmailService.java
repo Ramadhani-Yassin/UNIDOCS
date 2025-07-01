@@ -49,4 +49,21 @@ public class EmailService {
             e.printStackTrace();
         }
     }
+
+    public void sendEmailWithAttachment(String to, String subject, String htmlBody, File attachment, String attachmentName) {
+        try {
+            MimeMessage message = mailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setText(htmlBody, true); // HTML email
+            helper.setFrom("unidocs.ramadhani@gmail.com", "UNIDOCS");
+            if (attachment != null && attachment.exists()) {
+                helper.addAttachment(attachmentName, attachment);
+            }
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
