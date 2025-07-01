@@ -257,9 +257,47 @@ public class LetterRequestService {
     // After generating the letter file:
     public void sendLetterFile(User user, File letterFile) {
         String subject = "Your Requested University Letter";
-        String htmlBody = "<p>Dear " + user.getFirstName() + ",</p>"
-            + "<p>Your requested letter is attached to this email.</p>"
-            + "<p>Best regards,<br>UNIDOCS Team</p>";
+        String htmlBody = String.format(
+            "<div style='font-family: Arial, sans-serif;'>"
+            + "<h2 style='color:#2d3748;'>Dear %s,</h2>"
+            + "<p>Your letter request for <b style='color:#007bff;'>%s</b> is attached to this email as a PDF document for your reference.</p>"
+            + "<div style='margin:24px 0; text-align:center;'>"
+            + "<span style='display:inline-block; background:#e9f7ef; color:#28a745; font-weight:600; padding:8px 24px; border-radius:24px;'>"
+            + "UNIDOCS - State University of Zanzibar"
+            + "</span>"
+            + "</div>"
+            + "<p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
+            + "<br><p>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
+            + "</div>",
+            user.getFirstName(),
+            displayLetterType(displayLetterType(null))
+        );
+        emailService.sendEmailWithAttachment(
+            user.getEmail(),
+            subject,
+            htmlBody,
+            letterFile,
+            letterFile.getName()
+        );
+    }
+
+    public void sendLetterFile(User user, File letterFile, String letterType) {
+        String subject = "Your Requested University Letter";
+        String htmlBody = String.format(
+            "<div style='font-family: Arial, sans-serif;'>"
+            + "<h2 style='color:#2d3748;'>Dear %s,</h2>"
+            + "<p>Your letter request for <b style='color:#007bff;'>%s</b> is attached to this email as a PDF document for your reference.</p>"
+            + "<div style='margin:24px 0; text-align:center;'>"
+            + "<span style='display:inline-block; background:#e9f7ef; color:#28a745; font-weight:600; padding:8px 24px; border-radius:24px;'>"
+            + "UNIDOCS - State University of Zanzibar"
+            + "</span>"
+            + "</div>"
+            + "<p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
+            + "<br><p>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
+            + "</div>",
+            user.getFirstName(),
+            displayLetterType(letterType)
+        );
         emailService.sendEmailWithAttachment(
             user.getEmail(),
             subject,
