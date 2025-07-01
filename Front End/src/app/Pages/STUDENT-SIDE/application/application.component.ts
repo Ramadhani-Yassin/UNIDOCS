@@ -163,7 +163,8 @@ export class ApplicationComponent implements OnInit {
       return;
     }
 
-    this.isLoading = true;
+    // Show the modal instantly
+    this.isGenerating = true;
     this.setBodyModalClass(true);
     this.showAlert = false;
 
@@ -172,12 +173,12 @@ export class ApplicationComponent implements OnInit {
     this.letterRequestService.submitLetterRequest(requestData).subscribe({
       next: (response: any) => {
         this.handleSuccessResponse(response);
-        this.isLoading = false;
+        this.isGenerating = false;
         this.setBodyModalClass(false);
       },
       error: (error: HttpErrorResponse) => {
         this.handleErrorResponse(error);
-        this.isLoading = false;
+        this.isGenerating = false;
         this.setBodyModalClass(false);
       }
     });
@@ -221,7 +222,7 @@ export class ApplicationComponent implements OnInit {
         this.downloadUrl = `${environment.apiUrl}/api/letter-requests/${response.requestId}/generate?format=docx`;
         this.setBodyModalClass(true);
       }
-    }, 3000);
+    }, 600);
 
     this.showAlertMessage(
       response.message || 'Letter request submitted successfully!', 

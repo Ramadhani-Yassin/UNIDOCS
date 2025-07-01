@@ -4,23 +4,11 @@
 <section id="content" [class.sidebar-collapsed]="!(sidebarService.isOpen$ | async)">
   <main>
     <!-- MODAL DIALOG -->
-    <div *ngIf="isLoading" class="modal-overlay">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="spinner"></div>
-          <div class="modal-text">Processing your request, please wait...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Synchronous Generating Modal -->
     <div *ngIf="isGenerating" class="modal-overlay">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="spinner"></div>
-          <div class="modal-text" style="font-weight:600;">
-            There You Are The Letter is Already Generated!
-          </div>
+          <div class="modal-text">Processing your request, please wait...</div>
         </div>
       </div>
     </div>
@@ -334,11 +322,11 @@
             </div>
 
             <div class="form-actions">
-              <button type="submit" class="btn-submit" [disabled]="isLoading">
+              <button type="submit" class="btn-submit" [disabled]="isGenerating">
                 <i class='bx bx-send'></i> 
-                {{ isLoading ? 'Submitting...' : 'Submit Request' }}
+                Submit Request
               </button>
-              <button type="button" class="btn-cancel" (click)="clearForm()" [disabled]="isLoading">
+              <button type="button" class="btn-cancel" (click)="clearForm()" [disabled]="isGenerating">
                 <i class='bx bx-reset'></i> Clear Form
               </button>
             </div>

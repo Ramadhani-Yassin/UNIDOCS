@@ -26,7 +26,7 @@ public class LetterRequestService {
     private final LetterRequestRepository letterRequestRepository;
     private final UserRepository userRepository;
     private final EmailService emailService;
-    private final LetterGenerationService letterGenerationService; // <-- Add this
+    private final LetterGenerationService letterGenerationService;
 
     public LetterRequest createLetterRequest(LetterRequestDTO requestDTO) {
         User user = userRepository.findByEmail(requestDTO.getEmail())
@@ -82,7 +82,7 @@ public class LetterRequestService {
         LetterRequest savedRequest = letterRequestRepository.save(request);
 
         try {
-            // --- NEW: Generate the letter file from template and request data ---
+            // Generate the letter file from template and request data
             String templateFileName;
             switch (savedRequest.getLetterType()) {
                 case "introduction":
@@ -131,31 +131,12 @@ public class LetterRequestService {
 
             // Generate the filled DOCX
             File filledDocx = letterGenerationService.fillTemplate(templatePath, placeholders);
-
-            // Convert to PDF (if you want to send PDF)
             File pdfFile = letterGenerationService.convertDocxToPdf(filledDocx);
 
-            // --- NEW: Send the email with PDF attachment ---
-            String subject = "Your Requested University Letter";
-            String htmlBody = "<p>Dear " + user.getFirstName() + ",</p>"
-                + "<p>Your requested letter is attached to this email.</p>"
-                + "<p>Best regards,<br>UNIDOCS Team</p>";
-            // Build a user-friendly filename
-            String firstName = user.getFirstName() != null ? user.getFirstName().replaceAll("\\s+", "") : "User";
-            String lastName = user.getLastName() != null ? user.getLastName().replaceAll("\\s+", "") : "";
-            String letterType = savedRequest.getLetterType() != null ? savedRequest.getLetterType().replaceAll("\\s+", "_") : "Letter";
-            String fileName = firstName + "_" + lastName + "_" + letterType + ".pdf";
+            // Send the styled letter email (same style as update)
+            sendLetterFile(user, pdfFile, savedRequest.getLetterType());
 
-            // --- Send the email with the custom filename ---
-            emailService.sendEmailWithAttachment(
-                user.getEmail(),
-                subject,
-                htmlBody,
-                pdfFile,
-                fileName
-            );
         } catch (Exception e) {
-            // Log and optionally notify admin
             e.printStackTrace();
             throw new RuntimeException("Failed to generate or send letter: " + e.getMessage());
         }
@@ -233,7 +214,7 @@ public class LetterRequestService {
 
         String subject = "Update on Your Letter Request";
         String htmlBody = String.format(
-            "<div style='font-family: Arial, sans-serif;'>"
+            "<div style='font-family: Arial, sans-serif; background:#f9f9f9; padding:24px;'>"
             + "<h2 style='color:#2d3748;'>Dear %s,</h2>"
             + "<p>Your letter request for <b>%s</b> has been <b style='color:%s;'>%s</b>.</p>"
             + "<p><b>Admin Comment:</b> %s</p>"
@@ -254,56 +235,37 @@ public class LetterRequestService {
         emailService.sendEmailWithAvatar(req.getEmail(), subject, htmlBody, avatarPath);
     }
 
-    // After generating the letter file:
-    public void sendLetterFile(User user, File letterFile) {
-        String subject = "Your Requested University Letter";
-        String htmlBody = String.format(
-            "<div style='font-family: Arial, sans-serif;'>"
-            + "<h2 style='color:#2d3748;'>Dear %s,</h2>"
-            + "<p>Your letter request for <b style='color:#007bff;'>%s</b> is attached to this email as a PDF document for your reference.</p>"
-            + "<div style='margin:24px 0; text-align:center;'>"
-            + "<span style='display:inline-block; background:#e9f7ef; color:#28a745; font-weight:600; padding:8px 24px; border-radius:24px;'>"
-            + "UNIDOCS - State University of Zanzibar"
-            + "</span>"
-            + "</div>"
-            + "<p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
-            + "<br><p>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
-            + "</div>",
-            user.getFirstName(),
-            displayLetterType(displayLetterType(null))
-        );
-        emailService.sendEmailWithAttachment(
-            user.getEmail(),
-            subject,
-            htmlBody,
-            letterFile,
-            letterFile.getName()
-        );
-    }
-
     public void sendLetterFile(User user, File letterFile, String letterType) {
         String subject = "Your Requested University Letter";
         String htmlBody = String.format(
-            "<div style='font-family: Arial, sans-serif;'>"
+            "<div style='font-family: Arial, sans-serif; background:#f9f9f9; padding:24px;'>"
             + "<h2 style='color:#2d3748;'>Dear %s,</h2>"
-            + "<p>Your letter request for <b style='color:#007bff;'>%s</b> is attached to this email as a PDF document for your reference.</p>"
+            + "<p style='font-size:16px;'>Your letter request for <b style='color:#007bff;'>%s</b> is attached to this email as a PDF document for your reference.</p>"
             + "<div style='margin:24px 0; text-align:center;'>"
             + "<span style='display:inline-block; background:#e9f7ef; color:#28a745; font-weight:600; padding:8px 24px; border-radius:24px;'>"
             + "UNIDOCS - State University of Zanzibar"
             + "</span>"
             + "</div>"
-            + "<p>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
-            + "<br><p>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
+            + "<p style='font-size:15px;'>If you have any questions or require further assistance, please do not hesitate to contact us.</p>"
+            + "<br><p style='font-size:15px;'>Best regards,<br><b>UNIDOCS Team</b><br>State University of Zanzibar</p>"
             + "</div>",
             user.getFirstName(),
             displayLetterType(letterType)
         );
+
+        // Generate attachment name: "Firstname Lastname LetterType.pdf"
+        String attachmentName = String.format("%s %s %s.pdf",
+            user.getFirstName(),
+            user.getLastName(),
+            displayLetterType(letterType)
+        ).replaceAll("\\s+", " ").trim();
+
         emailService.sendEmailWithAttachment(
             user.getEmail(),
             subject,
             htmlBody,
             letterFile,
-            letterFile.getName()
+            attachmentName
         );
     }
 
@@ -392,8 +354,6 @@ public class LetterRequestService {
         analytics.put("approvedRequests", approvedRequests);
         analytics.put("pendingRequests", pendingRequests);
         analytics.put("rejectedRequests", rejectedRequests);
-
-        // Optionally: analytics.put("percentageChanges", ...);
 
         return analytics;
     }
