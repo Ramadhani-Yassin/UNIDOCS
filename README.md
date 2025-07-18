@@ -1,25 +1,25 @@
-# Announcement App
+# UNIDOCS App
 
 ## Overview
-The Announcement App is a full-stack application designed to manage announcements for students and administrators. It consists of a back-end built with Spring Boot and a front-end developed using Angular. The application allows users to publish, view, and manage announcements efficiently.
+The UNIDOCS App is a full-stack application designed to manage UNIDOCSs for students and administrators. It consists of a back-end built with Spring Boot and a front-end developed using Angular. The application allows users to publish, view, and manage UNIDOCSs efficiently.
 
 ## Project Structure
 The project is organized into two main directories: `Back End` and `Front End`.
 
 ### Back End
-- **Controller**: Contains the `AnnouncementController` class, which handles HTTP requests related to announcements.
-- **DTO**: Contains the `AnnouncementDTO` class, which is used to transfer announcement data between the client and server.
-- **Model**: Contains the `Announcement` class, representing the announcement entity in the database.
-- **Repository**: Contains the `AnnouncementRepository` interface for performing CRUD operations on announcements.
-- **Service**: Contains the `AnnouncementService` class, which includes business logic for managing announcements.
+- **Controller**: Contains the `UNIDOCSController` class, which handles HTTP requests related to UNIDOCSs.
+- **DTO**: Contains the `UNIDOCSDTO` class, which is used to transfer UNIDOCS data between the client and server.
+- **Model**: Contains the `UNIDOCS` class, representing the UNIDOCS entity in the database.
+- **Repository**: Contains the `UNIDOCSRepository` interface for performing CRUD operations on UNIDOCSs.
+- **Service**: Contains the `UNIDOCSService` class, which includes business logic for managing UNIDOCSs.
 - **Resources**: Contains the `application.properties` file for configuration settings.
 
 ### Front End
 - **Pages**: Contains components for both the admin and student sides of the application.
-  - **ADMIN-SIDE**: Includes the `PublishAnnouncementsComponent` for creating and publishing announcements.
-  - **STUDENT-SIDE**: Includes the `AnnouncementsComponent` for displaying announcements to students.
-- **Models**: Contains the `Announcement` interface, defining the structure of an announcement object.
-- **Services**: Contains the `AnnouncementService` class for handling API calls related to announcements.
+  - **ADMIN-SIDE**: Includes the `PublishUNIDOCSsComponent` for creating and publishing UNIDOCSs.
+  - **STUDENT-SIDE**: Includes the `UNIDOCSsComponent` for displaying UNIDOCSs to students.
+- **Models**: Contains the `UNIDOCS` interface, defining the structure of an UNIDOCS object.
+- **Services**: Contains the `UNIDOCSService` class for handling API calls related to UNIDOCSs.
 - **Environments**: Contains environment-specific configuration settings.
 
 ## Setup Instructions
@@ -53,8 +53,8 @@ The project is organized into two main directories: `Back End` and `Front End`.
 - **GET /api/letter-requests/count/{email}**: Get the count of letter requests by email.
 
 ## Usage
-- Administrators can publish announcements through the admin interface.
-- Students can view announcements on the student interface.
+- Administrators can publish UNIDOCSs through the admin interface.
+- Students can view UNIDOCSs on the student interface.
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
