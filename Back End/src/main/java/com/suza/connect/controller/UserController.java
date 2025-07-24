@@ -28,12 +28,16 @@ public class UserController {
             User registeredUser = userService.registerUser(user);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(Map.of(
+                            "success", true,
                             "message", "User registered successfully",
                             "userId", registeredUser.getId()
                     ));
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", e.getMessage()));
+                    .body(Map.of(
+                            "success", false,
+                            "message", e.getMessage()
+                    ));
         }
     }
 
