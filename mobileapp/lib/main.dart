@@ -1585,6 +1585,19 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     {'label': 'All Time', 'value': 'all'},
   ];
 
+  Color _statusColor(String? status) {
+    switch ((status ?? '').toLowerCase()) {
+      case 'approved':
+        return Colors.green;
+      case 'declined':
+      case 'rejected':
+        return Colors.red;
+      case 'pending':
+      default:
+        return Colors.orange;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -1770,6 +1783,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       Color(0xFF6D4C41), // brown
       Color(0xFFEC407A), // pink
     ];
+    // Calculate dynamic height: 200 for chart + 28 per 4 legend items
+    final int legendRows = (labels.length / 4).ceil();
+    final double chartHeight = 200 + (legendRows > 1 ? (legendRows - 1) * 28.0 : 0);
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -1779,8 +1795,8 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           children: [
             Text('Letter Type Distribution', style: TextStyle(fontWeight: FontWeight.bold)),
             Text('Distribution of requests by letter type', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
-            SizedBox(
-              height: 180,
+            ConstrainedBox(
+              constraints: BoxConstraints(minHeight: chartHeight, maxHeight: chartHeight + 40),
               child: values.isEmpty
                   ? Center(child: Text('No data'))
                   : PieChart(
@@ -1790,9 +1806,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             PieChartSectionData(
                               color: colors[i % colors.length],
                               value: values[i],
-                              title: values[i] > 0 ? labels[i] : '',
+                              title: '',
                               radius: 50,
-                              titleStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+                              titleStyle: TextStyle(fontSize: 0),
                             ),
                         ],
                         sectionsSpace: 2,
@@ -1800,9 +1816,10 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ),
                     ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
+              runSpacing: 4,
               children: [
                 for (int i = 0; i < labels.length; i++)
                   Row(
@@ -1840,7 +1857,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             Text('Request Status', style: TextStyle(fontWeight: FontWeight.bold)),
             Text('Breakdown of request statuses', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
             SizedBox(
-              height: 180,
+              height: 200,
               child: values.every((v) => v == 0)
                   ? Center(child: Text('No data'))
                   : PieChart(
@@ -1850,9 +1867,9 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             PieChartSectionData(
                               color: colors[i],
                               value: values[i],
-                              title: values[i] > 0 ? labels[i] : '',
+                              title: '', // Remove inline text
                               radius: 50,
-                              titleStyle: TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: Colors.white),
+                              titleStyle: TextStyle(fontSize: 0), // No text
                             ),
                         ],
                         sectionsSpace: 2,
@@ -1860,7 +1877,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                       ),
                     ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Wrap(
               spacing: 8,
               children: [
@@ -1912,9 +1929,23 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
             return DataRow(
               color: MaterialStateProperty.all(isEven ? Colors.grey[50] : Colors.white),
               cells: [
-                DataCell(Text(req['letterType'] ?? '')),
-                DataCell(Text(_formatDate(req['requestDate']))),
-                DataCell(Text(req['status'] ?? '')),
+                DataCell(Text(req['letterType'] ?? '', style: TextStyle(fontSize: 14))),
+                DataCell(Text(_formatDateRobust(req['requestDate']), style: TextStyle(fontSize: 14))),
+                DataCell(Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _statusColor(req['status']).withOpacity(0.15),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    req['status'] ?? '',
+                    style: TextStyle(
+                      color: _statusColor(req['status']),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                )),
               ],
             );
           },
@@ -1923,13 +1954,21 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     );
   }
 
-  String _formatDate(dynamic date) {
+  String _formatDateRobust(dynamic date) {
     if (date == null) return '-';
     try {
-      final dt = DateTime.parse(date.toString());
-      return DateFormat('dd MMM yyyy').format(dt);
+      if (date is String) {
+        final dt = DateTime.parse(date);
+        return DateFormat('dd MMM yyyy').format(dt);
+      } else if (date is List && date.length >= 3) {
+        // [year, month, day, ...]
+        final dt = DateTime(date[0], date[1], date[2]);
+        return DateFormat('dd MMM yyyy').format(dt);
+      } else {
+        return date.toString();
+      }
     } catch (_) {
-      return date.toString();
+      return '-';
     }
   }
 }
