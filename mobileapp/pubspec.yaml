@@ -30,6 +30,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  fl_chart: ^0.66.2
   http: ^1.2.1
   shared_preferences: ^2.2.2
   intl: ^0.18.1

@@ -56,7 +56,11 @@ class _LoginScreenState extends State<LoginScreen> {
         });
         // Navigate to dashboard after short delay
         Future.delayed(const Duration(seconds: 1), () {
-          Navigator.of(context).pushReplacementNamed('/dashboard');
+          if (widget.onLoginSuccess != null) {
+            widget.onLoginSuccess!();
+          } else {
+            Navigator.of(context).pushReplacementNamed('/dashboard');
+          }
         });
       } else if (response.statusCode == 403 && data['error'] != null && data['error'].toString().contains('suspended')) {
         setState(() {
