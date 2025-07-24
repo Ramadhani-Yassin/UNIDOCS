@@ -4,7 +4,8 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final VoidCallback? onLoginSuccess;
+  const LoginScreen({Key? key, this.onLoginSuccess}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -40,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final response = await http.post(
-        Uri.parse('http://10.143.214.248:8088/api/users/student-login'),
+        Uri.parse('http://10.185.224.248:8088/api/users/student-login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
@@ -98,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final response = await http.post(
-        Uri.parse('http://10.143.214.248:8088/api/users/register'),
+        Uri.parse('http://10.185.224.248:8088/api/users/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'firstName': firstName,
