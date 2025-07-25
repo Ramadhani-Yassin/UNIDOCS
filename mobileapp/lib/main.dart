@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'dart:io' as http;
 import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
+import 'announcement_model.dart';
 
 void main() {
   runApp(const MyApp());
@@ -1581,8 +1582,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     {'label': 'Last 7 Days', 'value': '7'},
     {'label': 'Last 30 Days', 'value': '30'},
     {'label': 'Last 90 Days', 'value': '90'},
-    {'label': 'Last Year', 'value': '365'},
-    {'label': 'All Time', 'value': 'all'},
+    {'label': 'Last Year', 'value': '365'},   
   ];
 
   Color _statusColor(String? status) {
@@ -1706,19 +1706,13 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             SizedBox(
-                              width: 320,
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: _buildLetterTypeChart(),
-                              ),
+                              width: 340,
+                              child: _buildStatusChart(),
                             ),
                             const SizedBox(width: 24),
                             SizedBox(
-                              width: 320,
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: _buildStatusChart(),
-                              ),
+                              width: 340,
+                              child: _buildLetterTypeChart(),
                             ),
                           ],
                         ),
@@ -1783,56 +1777,66 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       Color(0xFF6D4C41), // brown
       Color(0xFFEC407A), // pink
     ];
-    // Calculate dynamic height: 200 for chart + 28 per 4 legend items
-    final int legendRows = (labels.length / 4).ceil();
-    final double chartHeight = 200 + (legendRows > 1 ? (legendRows - 1) * 28.0 : 0);
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text('Letter Type Distribution', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text('Distribution of requests by letter type', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
-            ConstrainedBox(
-              constraints: BoxConstraints(minHeight: chartHeight, maxHeight: chartHeight + 40),
-              child: values.isEmpty
-                  ? Center(child: Text('No data'))
-                  : PieChart(
-                      PieChartData(
-                        sections: [
+        child: SizedBox(
+          height: 340,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Letter Type Distribution', style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('Distribution of requests by letter type', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+              const SizedBox(height: 8),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 160,
+                        child: values.isEmpty
+                            ? Center(child: Text('No data'))
+                            : PieChart(
+                                PieChartData(
+                                  sections: [
+                                    for (int i = 0; i < labels.length; i++)
+                                      PieChartSectionData(
+                                        color: colors[i % colors.length],
+                                        value: values[i],
+                                        title: '',
+                                        radius: 50,
+                                        titleStyle: TextStyle(fontSize: 0),
+                                      ),
+                                  ],
+                                  sectionsSpace: 2,
+                                  centerSpaceRadius: 24,
+                                ),
+                              ),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
                           for (int i = 0; i < labels.length; i++)
-                            PieChartSectionData(
-                              color: colors[i % colors.length],
-                              value: values[i],
-                              title: '',
-                              radius: 50,
-                              titleStyle: TextStyle(fontSize: 0),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(width: 12, height: 12, color: colors[i % colors.length]),
+                                const SizedBox(width: 4),
+                                Text(labels[i], style: TextStyle(fontSize: 13)),
+                              ],
                             ),
                         ],
-                        sectionsSpace: 2,
-                        centerSpaceRadius: 24,
                       ),
-                    ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: [
-                for (int i = 0; i < labels.length; i++)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(width: 12, height: 12, color: colors[i % colors.length]),
-                      const SizedBox(width: 4),
-                      Text(labels[i], style: TextStyle(fontSize: 13)),
                     ],
                   ),
-              ],
-            ),
-          ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1852,47 +1856,61 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Text('Request Status', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text('Breakdown of request statuses', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
-            SizedBox(
-              height: 200,
-              child: values.every((v) => v == 0)
-                  ? Center(child: Text('No data'))
-                  : PieChart(
-                      PieChartData(
-                        sections: [
+        child: SizedBox(
+          height: 340,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Request Status', style: TextStyle(fontWeight: FontWeight.bold)),
+              Text('Breakdown of request statuses', style: TextStyle(fontSize: 13, color: Colors.grey[700])),
+              const SizedBox(height: 8),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 160,
+                        child: values.every((v) => v == 0)
+                            ? Center(child: Text('No data'))
+                            : PieChart(
+                                PieChartData(
+                                  sections: [
+                                    for (int i = 0; i < labels.length; i++)
+                                      PieChartSectionData(
+                                        color: colors[i],
+                                        value: values[i],
+                                        title: '',
+                                        radius: 50,
+                                        titleStyle: TextStyle(fontSize: 0),
+                                      ),
+                                  ],
+                                  sectionsSpace: 2,
+                                  centerSpaceRadius: 24,
+                                ),
+                              ),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
                           for (int i = 0; i < labels.length; i++)
-                            PieChartSectionData(
-                              color: colors[i],
-                              value: values[i],
-                              title: '', // Remove inline text
-                              radius: 50,
-                              titleStyle: TextStyle(fontSize: 0), // No text
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(width: 12, height: 12, color: colors[i]),
+                                const SizedBox(width: 4),
+                                Text(labels[i], style: TextStyle(fontSize: 13)),
+                              ],
                             ),
                         ],
-                        sectionsSpace: 2,
-                        centerSpaceRadius: 24,
                       ),
-                    ),
-            ),
-            const SizedBox(height: 12),
-            Wrap(
-              spacing: 8,
-              children: [
-                for (int i = 0; i < labels.length; i++)
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(width: 12, height: 12, color: colors[i]),
-                      const SizedBox(width: 4),
-                      Text(labels[i], style: TextStyle(fontSize: 13)),
                     ],
                   ),
-              ],
-            ),
-          ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -1982,7 +2000,7 @@ class AnnouncementsScreen extends StatefulWidget {
 class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
   bool isLoading = true;
   String? errorMessage;
-  List<dynamic> announcements = [];
+  List<Announcement> announcements = [];
   int expandedIndex = -1;
 
   @override
@@ -1998,7 +2016,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
-          announcements = data;
+          announcements = (data as List).map((a) => Announcement.fromJson(a)).toList();
           isLoading = false;
         });
       } else {
@@ -2009,7 +2027,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
       }
     } catch (e) {
       setState(() {
-        errorMessage = 'An error occurred. Please try again. ($e)';
+        errorMessage = 'An error occurred. Please try again. ( [31m$e [0m)';
         isLoading = false;
       });
     }
@@ -2018,98 +2036,121 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : errorMessage != null
-              ? Center(child: Text(errorMessage!, style: TextStyle(color: Colors.red)))
-              : ListView.builder(
-                  padding: const EdgeInsets.all(16.0),
-                  itemCount: announcements.length,
-                  itemBuilder: (context, idx) {
-                    final ann = announcements[idx];
-                    final isExpanded = expandedIndex == idx;
-                    return Card(
-                      elevation: 3,
-                      margin: const EdgeInsets.only(bottom: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(16),
-                        onTap: () {
-                          setState(() { expandedIndex = isExpanded ? -1 : idx; });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(20.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Icon(Icons.campaign, color: Colors.deepPurple),
-                                  const SizedBox(width: 8),
-                                  Expanded(
-                                    child: Text(ann['title'] ?? '', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                  ),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: _statusColor(ann['status']).withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(8),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 24),
+              Row(
+                children: [
+                  Icon(Icons.campaign, color: Colors.deepPurple, size: 32),
+                  const SizedBox(width: 8),
+                  Text('Announcements', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              const SizedBox(height: 16),
+              if (isLoading)
+                Expanded(child: Center(child: CircularProgressIndicator())),
+              if (!isLoading && errorMessage != null)
+                Expanded(child: Center(child: Text(errorMessage!, style: TextStyle(color: Colors.red)))),
+              if (!isLoading && errorMessage == null && announcements.isEmpty)
+                Expanded(child: Center(child: Text('No announcements available'))),
+              if (!isLoading && errorMessage == null && announcements.isNotEmpty)
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: announcements.length,
+                    itemBuilder: (context, idx) {
+                      final ann = announcements[idx];
+                      final isExpanded = expandedIndex == idx;
+                      return Card(
+                        elevation: 3,
+                        margin: const EdgeInsets.only(bottom: 16),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(16),
+                          onTap: () {
+                            setState(() { expandedIndex = isExpanded ? -1 : idx; });
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.campaign, color: Colors.deepPurple),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(ann.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                                     ),
-                                    child: Text(
-                                      (ann['status'] ?? '').toString().toUpperCase(),
-                                      style: TextStyle(
-                                        color: _statusColor(ann['status']),
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 13,
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: _statusColor(ann.status).withOpacity(0.15),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child: Text(
+                                        (ann.status).toUpperCase(),
+                                        style: TextStyle(
+                                          color: _statusColor(ann.status),
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
-                                  const SizedBox(width: 4),
-                                  Text(_formatDate(ann['createdDate'])),
-                                  const SizedBox(width: 16),
-                                  Icon(Icons.person, size: 16, color: Colors.grey[600]),
-                                  const SizedBox(width: 4),
-                                  Text(ann['author'] ?? 'Admin'),
-                                ],
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                ann['content'] ?? '',
-                                maxLines: isExpanded ? null : 3,
-                                overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              if (isExpanded && ann['attachments'] != null && ann['attachments'].isNotEmpty) ...[
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
+                                    const SizedBox(width: 4),
+                                    Text(_formatDate(ann.createdDate)),
+                                    const SizedBox(width: 16),
+                                    Icon(Icons.person, size: 16, color: Colors.grey[600]),
+                                    const SizedBox(width: 4),
+                                    Text(ann.author ?? 'Admin'),
+                                  ],
+                                ),
                                 const SizedBox(height: 12),
-                                Text('Attachments:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                for (var att in ann['attachments'])
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 4.0),
-                                    child: InkWell(
-                                      onTap: () => launchUrl(Uri.parse(att['fileUrl'])),
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.attach_file, size: 18, color: Colors.deepPurple),
-                                          const SizedBox(width: 4),
-                                          Text(att['fileName'] ?? '', style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue)),
-                                        ],
+                                Text(
+                                  ann.content,
+                                  maxLines: isExpanded ? null : 3,
+                                  overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                                  style: TextStyle(fontSize: 15),
+                                ),
+                                if (isExpanded && ann.attachments != null && ann.attachments!.isNotEmpty) ...[
+                                  const SizedBox(height: 12),
+                                  Text('Attachments:', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  for (var att in ann.attachments!)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 4.0),
+                                      child: InkWell(
+                                        onTap: () => launchUrl(Uri.parse(att.fileUrl)),
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.attach_file, size: 18, color: Colors.deepPurple),
+                                            const SizedBox(width: 4),
+                                            Flexible(child: Text(att.fileName, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue))),
+                                          ],
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                ],
                               ],
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
@@ -2125,13 +2166,12 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
     }
   }
 
-  String _formatDate(String? date) {
+  String _formatDate(DateTime? date) {
     if (date == null) return '-';
     try {
-      final dt = DateTime.parse(date);
-      return '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
+      return '${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
     } catch (_) {
-      return date;
+      return date.toString();
     }
   }
 }
