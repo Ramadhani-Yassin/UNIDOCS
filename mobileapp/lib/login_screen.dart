@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
           if (widget.onLoginSuccess != null) {
             widget.onLoginSuccess!();
           } else {
-            Navigator.of(context).pushReplacementNamed('/dashboard');
+          Navigator.of(context).pushReplacementNamed('/dashboard');
           }
         });
       } else if (response.statusCode == 403 && data['error'] != null && data['error'].toString().contains('suspended')) {

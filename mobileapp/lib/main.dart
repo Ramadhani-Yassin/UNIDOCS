@@ -300,138 +300,143 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 32), // Extra spacing above header
-          Row(
-            children: [
-              Icon(Icons.dashboard, color: Colors.deepPurple, size: 32),
-              const SizedBox(width: 8),
-              Text('Dashboard', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 16),
-          Card(
-            elevation: 4,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 48),
+        Row(
+          children: [
+            Icon(Icons.dashboard, color: Colors.deepPurple, size: 32),
+            const SizedBox(width: 8),
+            Text('Dashboard', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Card(
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: Padding(
+                    padding: const EdgeInsets.all(20.0),
+                    child: Row(
                       children: [
-                        Text('Hello 👋', style: TextStyle(fontSize: 18)),
-                        const SizedBox(height: 2),
-                        Text(
-                          fullName,
-                          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Hello 👋', style: TextStyle(fontSize: 18)),
+                              const SizedBox(height: 2),
+                              Text(
+                                fullName,
+                                style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Column(
+                          children: [
+                            Icon(Icons.mail, color: Colors.deepPurple),
+                            const SizedBox(height: 4),
+                            isLoading
+                                ? CircularProgressIndicator(strokeWidth: 2)
+                                : errorMessage != null
+                                    ? Text(errorMessage!, style: TextStyle(color: Colors.red))
+                                    : Text('$animatedRequestCount', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                            Text('Letters Requested', style: TextStyle(fontSize: 12)),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                  Column(
-                    children: [
-                      Icon(Icons.mail, color: Colors.deepPurple),
-                      const SizedBox(height: 4),
-                      isLoading
-                          ? CircularProgressIndicator(strokeWidth: 2)
-                          : errorMessage != null
-                              ? Text(errorMessage!, style: TextStyle(color: Colors.red))
-                              : Text('$animatedRequestCount', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                      Text('Letters Requested', style: TextStyle(fontSize: 12)),
-                    ],
+                ),
+                const SizedBox(height: 24),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
+                    child: Text('Recent Applications', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Add back the table title, aligned left
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
-              child: Text('Recent Applications', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-          ),
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                child: recentRequestsLoading
-                    ? Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                    : recentRequests.isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Center(child: Text('No letter requests found')),
-                          )
-                        : DataTable(
-                            showCheckboxColumn: false,
-                            columnSpacing: 16,
-                            columns: const [
-                              DataColumn(label: Text('Letter Type')),
-                              DataColumn(
-                                label: SizedBox(
-                                  width: 110,
-                                  child: Text('Request Date', style: TextStyle(fontSize: 13)),
-                                ),
-                              ),
-                              DataColumn(
-                                label: SizedBox(
-                                  width: 90,
-                                  child: Text('Status', style: TextStyle(fontSize: 13)),
-                                ),
-                              ),
-                            ],
-                            rows: recentRequests.map((req) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(Text(_displayLetterType(req.letterType))),
-                                  DataCell(
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                                      child: Text(_formatDate(req.requestDate), style: TextStyle(fontSize: 13)),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: _statusColor(req.status).withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(8),
+                ),
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 600),
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: recentRequestsLoading
+                          ? Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Center(child: CircularProgressIndicator()),
+                            )
+                          : recentRequests.isEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Center(child: Text('No letter requests found')),
+                                )
+                              : DataTable(
+                                  showCheckboxColumn: false,
+                                  columnSpacing: 16,
+                                  columns: const [
+                                    DataColumn(label: Text('Letter Type')),
+                                    DataColumn(
+                                      label: SizedBox(
+                                        width: 110,
+                                        child: Text('Request Date', style: TextStyle(fontSize: 13)),
                                       ),
-                                      child: Text(
-                                        req.status,
-                                        style: TextStyle(
-                                          color: _statusColor(req.status),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
+                                    ),
+                                    DataColumn(
+                                      label: SizedBox(
+                                        width: 90,
+                                        child: Text('Status', style: TextStyle(fontSize: 13)),
+                                      ),
+                                    ),
+                                  ],
+                                  rows: recentRequests.map((req) {
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(Text(_displayLetterType(req.letterType))),
+                                        DataCell(
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                                            child: Text(_formatDate(req.requestDate), style: TextStyle(fontSize: 13)),
+                                          ),
                                         ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-              ),
+                                        DataCell(
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: _statusColor(req.status).withOpacity(0.15),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              req.status,
+                                              style: TextStyle(
+                                                color: _statusColor(req.status),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-          // Removed Quick Letter Requests section
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -555,7 +560,7 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
     final userJson = prefs.getString('currentUser');
     if (userJson != null) {
       final user = jsonDecode(userJson);
-      setState(() {
+    setState(() {
         fullName = '${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'.trim();
         email = user['email'] ?? '';
       });
@@ -649,149 +654,156 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 32), // Extra spacing above header
-                    Row(
-                      children: [
-                        Icon(Icons.edit_document, color: Colors.deepPurple, size: 32),
-                        const SizedBox(width: 8),
-                        Text('Request Letter', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    if (_errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
-                      ),
-                    _buildReadonlyField('Full Name', fullName),
-                    _buildTextField('Registration Number', onSaved: (v) => regNumber = v!, validator: _requiredValidator, hint: 'e.g. BITA/6/22/079/TZ'),
-                    _buildReadonlyField('Email Address', email),
-                    _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Write Your Phone No:'),
-                    _buildTextField('Program of Study', onSaved: (v) => program = v!, validator: _requiredValidator, hint: 'e.g. Bachelor\'s Degree in ICT with Accounting (BITA)'),
-                    // Year of Study Dropdown (fixed)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 12.0),
-                      child: DropdownButtonFormField<String>(
-                        decoration: InputDecoration(
-                          labelText: 'Year of Study',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                        ),
-                        value: yearOfStudy.isNotEmpty ? yearOfStudy : null,
-                        items: yearOptions.map((opt) {
-                          return DropdownMenuItem<String>(
-                            value: opt,
-                            child: Text('$opt${_ordinal(opt)} Year'),
-                          );
-                        }).toList(),
-                        onChanged: (v) {
-                          setState(() { yearOfStudy = v ?? ''; });
-                        },
-                        onSaved: (v) => yearOfStudy = v ?? '',
-                        validator: _requiredValidator,
-                      ),
-                    ),
-                    _buildDropdownField('Letter Type', [
-                      'introduction',
-                      'postponement',
-                      'feasibility_study',
-                      //'discontinuation',
-                      'recommendation',
-                      //'transcript',
-                    ],
-                    onChanged: _onLetterTypeChange,
-                    onSaved: (v) => selectedLetterType = v ?? '',
-                    validator: _requiredValidator,
-                    displayNames: {
-                      'introduction': 'Introduction Letter for Field',
-                      'postponement': 'Postponement Request',
-                      'feasibility_study': 'Feasibility Study',
-                      //'discontinuation': 'Discontinuation Letter',
-                      'recommendation': 'Recommendation Letter',
-                      //'transcript': 'Transcript Request',
-                    }),
-                    if (showReasonField) ...[
-                      _buildTextField('Reason for Request', onSaved: (v) => reason = v!, validator: _requiredValidator, maxLines: 3),
-                      _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
-                    ],
-                    if (showIntroductionFields) ...[
-                      _buildTextField('Organization Name', onSaved: (v) => organizationName = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
-                      _buildDateFieldWithController('Start Date', _startDateController, (v) => startDate = v ?? '', startDate),
-                      _buildDateFieldWithController('End Date', _endDateController, (v) => endDate = v ?? '', endDate),
-                    ],
-                    if (showFeasibilityFields) ...[
-                      _buildTextField('Research Title', onSaved: (v) => researchTitle = v!, validator: _requiredValidator, hint: 'e.g. Impact of ICT on Accounting Practices'),
-                      _buildTextField('Organization Name', onSaved: (v) => feasibilityOrganization = v!, validator: _requiredValidator, hint: 'e.g. Department of Computer Science'),
-                      _buildDateFieldWithController('Study Start Date', _studyStartDateController, (v) => studyStartDate = v ?? '', studyStartDate),
-                      _buildDateFieldWithController('Study End Date', _studyEndDateController, (v) => studyEndDate = v ?? '', studyEndDate),
-                    ],
-                    if (showDiscontinuationFields) ...[
-                      _buildTextField('Reason for Discontinuation', onSaved: (v) => discontinuationReason = v!, validator: _requiredValidator, maxLines: 3, hint: 'e.g. Financial Difficulties'),
-                      _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
-                    ],
-                    if (showRecommendationFields) ...[
-                      _buildDropdownField('Purpose of Recommendation', [
-                        'scholarship', 'postgraduate', 'employment', 'internship'
-                      ], onSaved: (v) => recommendationPurpose = v ?? '', validator: _requiredValidator, displayNames: {
-                        'scholarship': 'Scholarship Application',
-                        'postgraduate': 'Postgraduate Studies',
-                        'employment': 'Employment Application',
-                        'internship': 'Internship Application',
-                      }),
-                      _buildTextField('Receiving Institution', onSaved: (v) => receivingInstitution = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
-                      _buildDateFieldWithController('Submission Deadline', _submissionDeadlineController, (v) => submissionDeadline = v ?? '', submissionDeadline),
-                    ],
-                    if (showTranscriptFields) ...[
-                      _buildDropdownField('Purpose of Transcript', [
-                        'employment', 'further studies', 'scholarship', 'personal use'
-                      ], onSaved: (v) => transcriptPurpose = v ?? '', validator: _requiredValidator),
-                      _buildDropdownField('Delivery Method', [
-                        'pickup', 'email', 'post'
-                      ], onSaved: (v) => deliveryMethod = v ?? '', validator: _requiredValidator),
-                    ],
-                    const SizedBox(height: 18),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _submit,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+        const SizedBox(height: 48),
+        Row(
+          children: [
+            Icon(Icons.edit_document, color: Colors.deepPurple, size: 32),
+            const SizedBox(width: 8),
+            Text('Request Letter', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 600),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (_errorMessage != null)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
                             ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                  )
-                                : const Text('Submit Request', style: TextStyle(fontSize: 16)),
+                          _buildReadonlyField('Full Name', fullName),
+                          _buildTextField('Registration Number', onSaved: (v) => regNumber = v!, validator: _requiredValidator, hint: 'e.g. BITA/6/22/079/TZ'),
+                          _buildReadonlyField('Email Address', email),
+                          _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Write Your Phone No:'),
+                          _buildTextField('Program of Study', onSaved: (v) => program = v!, validator: _requiredValidator, hint: 'e.g. Bachelor\'s Degree in ICT with Accounting (BITA)'),
+                          // Year of Study Dropdown (fixed)
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: DropdownButtonFormField<String>(
+                              decoration: InputDecoration(
+                                labelText: 'Year of Study',
+                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                              ),
+                              value: yearOfStudy.isNotEmpty ? yearOfStudy : null,
+                              items: yearOptions.map((opt) {
+                                return DropdownMenuItem<String>(
+                                  value: opt,
+                                  child: Text('$opt${_ordinal(opt)} Year'),
+                                );
+                              }).toList(),
+                              onChanged: (v) {
+                                setState(() { yearOfStudy = v ?? ''; });
+                              },
+                              onSaved: (v) => yearOfStudy = v ?? '',
+                              validator: _requiredValidator,
+                            ),
                           ),
-                        ),
-                      ],
+                          _buildDropdownField('Letter Type', [
+                            'introduction',
+                            'postponement',
+                            'feasibility_study',
+                            //'discontinuation',
+                            'recommendation',
+                            //'transcript',
+                          ],
+                          onChanged: _onLetterTypeChange,
+                          onSaved: (v) => selectedLetterType = v ?? '',
+                          validator: _requiredValidator,
+                          displayNames: {
+                            'introduction': 'Introduction Letter for Field',
+                            'postponement': 'Postponement Request',
+                            'feasibility_study': 'Feasibility Study',
+                            //'discontinuation': 'Discontinuation Letter',
+                            'recommendation': 'Recommendation Letter',
+                            //'transcript': 'Transcript Request',
+                          }),
+                          if (showReasonField) ...[
+                            _buildTextField('Reason for Request', onSaved: (v) => reason = v!, validator: _requiredValidator, maxLines: 3),
+                            _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
+                          ],
+                          if (showIntroductionFields) ...[
+                            _buildTextField('Organization Name', onSaved: (v) => organizationName = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
+                            _buildDateFieldWithController('Start Date', _startDateController, (v) => startDate = v ?? '', startDate),
+                            _buildDateFieldWithController('End Date', _endDateController, (v) => endDate = v ?? '', endDate),
+                          ],
+                          if (showFeasibilityFields) ...[
+                            _buildTextField('Research Title', onSaved: (v) => researchTitle = v!, validator: _requiredValidator, hint: 'e.g. Impact of ICT on Accounting Practices'),
+                            _buildTextField('Organization Name', onSaved: (v) => feasibilityOrganization = v!, validator: _requiredValidator, hint: 'e.g. Department of Computer Science'),
+                            _buildDateFieldWithController('Study Start Date', _studyStartDateController, (v) => studyStartDate = v ?? '', studyStartDate),
+                            _buildDateFieldWithController('Study End Date', _studyEndDateController, (v) => studyEndDate = v ?? '', studyEndDate),
+                          ],
+                          if (showDiscontinuationFields) ...[
+                            _buildTextField('Reason for Discontinuation', onSaved: (v) => discontinuationReason = v!, validator: _requiredValidator, maxLines: 3, hint: 'e.g. Financial Difficulties'),
+                            _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
+                          ],
+                          if (showRecommendationFields) ...[
+                            _buildDropdownField('Purpose of Recommendation', [
+                              'scholarship', 'postgraduate', 'employment', 'internship'
+                            ], onSaved: (v) => recommendationPurpose = v ?? '', validator: _requiredValidator, displayNames: {
+                              'scholarship': 'Scholarship Application',
+                              'postgraduate': 'Postgraduate Studies',
+                              'employment': 'Employment Application',
+                              'internship': 'Internship Application',
+                            }),
+                            _buildTextField('Receiving Institution', onSaved: (v) => receivingInstitution = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
+                            _buildDateFieldWithController('Submission Deadline', _submissionDeadlineController, (v) => submissionDeadline = v ?? '', submissionDeadline),
+                          ],
+                          if (showTranscriptFields) ...[
+                            _buildDropdownField('Purpose of Transcript', [
+                              'employment', 'further studies', 'scholarship', 'personal use'
+                            ], onSaved: (v) => transcriptPurpose = v ?? '', validator: _requiredValidator),
+                            _buildDropdownField('Delivery Method', [
+                              'pickup', 'email', 'post'
+                            ], onSaved: (v) => deliveryMethod = v ?? '', validator: _requiredValidator),
+                          ],
+                          const SizedBox(height: 18),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: _isLoading ? null : _submit,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.deepPurple,
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                        )
+                                      : const Text('Submit Request', style: TextStyle(fontSize: 16)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              if (_showSuccessModal)
+                _buildSuccessModal(),
+            ],
           ),
         ),
-        if (_showSuccessModal)
-          _buildSuccessModal(),
       ],
     );
   }
@@ -799,7 +811,7 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
   Widget _buildReadonlyField(String label, String value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: Column(
+        child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(label, style: TextStyle(fontWeight: FontWeight.w500)),
@@ -1134,128 +1146,134 @@ class _AllApplicationsScreenState extends State<AllApplicationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 32), // Extra spacing above header
-          Row(
-            children: [
-              Icon(Icons.folder_copy, color: Colors.deepPurple, size: 32),
-              const SizedBox(width: 8),
-              Text('All Applications', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
-            ],
-          ),
-          const SizedBox(height: 24),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
-              child: Text('All Requests', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-            ),
-          ),
-          // Filter/search bar
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16.0, left: 4.0, right: 4.0),
-            child: Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 48),
+        Row(
+          children: [
+            Icon(Icons.folder_copy, color: Colors.deepPurple, size: 32),
+            const SizedBox(width: 8),
+            Text('All Applications', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.search, color: Colors.deepPurple),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Search letter requests...',
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
-                    ),
-                    onChanged: (v) => setState(() => searchTerm = v),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 4.0, bottom: 4.0),
                   ),
                 ),
-                const SizedBox(width: 12),
-                DropdownButton<String>(
-                  value: letterTypeFilter,
-                  items: letterTypes.map((type) {
-                    return DropdownMenuItem<String>(
-                      value: type,
-                      child: Text(type == 'all' ? 'All Types' : type[0].toUpperCase() + type.substring(1)),
-                    );
-                  }).toList(),
-                  onChanged: (v) => setState(() => letterTypeFilter = v ?? 'all'),
+                // Filter/search bar
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0, left: 4.0, right: 4.0),
+                  child: Row(
+                    children: [
+                      Icon(Icons.search, color: Colors.deepPurple),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Search letter requests...',
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
+                          ),
+                          onChanged: (v) => setState(() => searchTerm = v),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      DropdownButton<String>(
+                        value: letterTypeFilter,
+                        items: letterTypes.map((type) {
+                          return DropdownMenuItem<String>(
+                            value: type,
+                            child: Text(type == 'all' ? 'All Types' : type[0].toUpperCase() + type.substring(1)),
+                          );
+                        }).toList(),
+                        onChanged: (v) => setState(() => letterTypeFilter = v ?? 'all'),
+                      ),
+                    ],
+                  ),
+                ),
+                Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 600),
+                    child: Card(
+                      elevation: 2,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      child: isLoading
+                          ? Padding(
+                              padding: const EdgeInsets.all(24.0),
+                              child: Center(child: CircularProgressIndicator()),
+                            )
+                          : filteredRequests.isEmpty
+                              ? Padding(
+                                  padding: const EdgeInsets.all(24.0),
+                                  child: Center(child: Text('No letter requests found')),
+                                )
+                              : DataTable(
+                                  showCheckboxColumn: false,
+                                  columnSpacing: 16,
+                                  columns: const [
+                                    DataColumn(label: Text('Letter Type')),
+                                    DataColumn(
+                                      label: SizedBox(
+                                        width: 110,
+                                        child: Text('Request Date', style: TextStyle(fontSize: 13)),
+                                      ),
+                                    ),
+                                    DataColumn(
+                                      label: SizedBox(
+                                        width: 90,
+                                        child: Text('Status', style: TextStyle(fontSize: 13)),
+                                      ),
+                                    ),
+                                  ],
+                                  rows: filteredRequests.map((req) {
+                                    return DataRow(
+                                      cells: [
+                                        DataCell(Text(_displayLetterType(req.letterType))),
+                                        DataCell(
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                                            child: Text(_formatDate(req.requestDate), style: TextStyle(fontSize: 13)),
+                                          ),
+                                        ),
+                                        DataCell(
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: _statusColor(req.status).withOpacity(0.15),
+                                              borderRadius: BorderRadius.circular(8),
+                                            ),
+                                            child: Text(
+                                              req.status,
+                                              style: TextStyle(
+                                                color: _statusColor(req.status),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 13,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  }).toList(),
+                                ),
+                    ),
+                  ),
                 ),
               ],
             ),
           ),
-          Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
-              child: Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                child: isLoading
-                    ? Padding(
-                        padding: const EdgeInsets.all(24.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                    : filteredRequests.isEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(24.0),
-                            child: Center(child: Text('No letter requests found')),
-                          )
-                        : DataTable(
-                            showCheckboxColumn: false,
-                            columnSpacing: 16,
-                            columns: const [
-                              DataColumn(label: Text('Letter Type')),
-                              DataColumn(
-                                label: SizedBox(
-                                  width: 110,
-                                  child: Text('Request Date', style: TextStyle(fontSize: 13)),
-                                ),
-                              ),
-                              DataColumn(
-                                label: SizedBox(
-                                  width: 90,
-                                  child: Text('Status', style: TextStyle(fontSize: 13)),
-                                ),
-                              ),
-                            ],
-                            rows: filteredRequests.map((req) {
-                              return DataRow(
-                                cells: [
-                                  DataCell(Text(_displayLetterType(req.letterType))),
-                                  DataCell(
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 2),
-                                      child: Text(_formatDate(req.requestDate), style: TextStyle(fontSize: 13)),
-                                    ),
-                                  ),
-                                  DataCell(
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: _statusColor(req.status).withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        req.status,
-                                        style: TextStyle(
-                                          color: _statusColor(req.status),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              );
-                            }).toList(),
-                          ),
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -1288,84 +1306,91 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: 600),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(height: 32),
-                    Row(
-                      children: [
-                        Icon(Icons.description, color: Colors.deepPurple, size: 32),
-                        const SizedBox(width: 8),
-                        Text('CV Generator', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    if (_errorMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
-                      ),
-                    if (_successMessage != null)
-                      Padding(
-                        padding: const EdgeInsets.only(bottom: 12.0),
-                        child: Text(_successMessage!, style: TextStyle(color: Colors.green)),
-                      ),
-                    _buildDropdownField('Choose CV Template', ['classic', 'modern', 'creative'], (v) => selectedTemplate = v ?? '', validator: _requiredValidator, displayNames: {
-                      'classic': 'Classic',
-                      'modern': 'Modern',
-                      'creative': 'Creative',
-                    }),
-                    _buildTextField('Full Name', onSaved: (v) => fullName = v!, validator: _requiredValidator, hint: 'Your full name'),
-                    _buildTextField('Email Address', onSaved: (v) => email = v!, validator: _requiredValidator, hint: 'you@example.com'),
-                    _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Your phone number'),
-                    _buildTextField('Address', onSaved: (v) => address = v!, validator: _requiredValidator, hint: 'Your address'),
-                    _buildTextField('Education', onSaved: (v) => education = v!, validator: _requiredValidator, hint: 'List your education, e.g. University, Degree, Year', maxLines: 3),
-                    _buildTextField('Work Experience', onSaved: (v) => experience = v!, validator: _requiredValidator, hint: 'List your work experience', maxLines: 3),
-                    _buildTextField('Skills', onSaved: (v) => skills = v!, validator: _requiredValidator, hint: 'e.g. Python, Communication, Leadership'),
-                    _buildTextField('About Me / Profile Summary', onSaved: (v) => about = v ?? '', hint: 'Short summary about yourself', maxLines: 2),
-                    const SizedBox(height: 18),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: _isLoading ? null : _submit,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
+        const SizedBox(height: 48),
+        Row(
+          children: [
+            Icon(Icons.description, color: Colors.deepPurple, size: 32),
+            const SizedBox(width: 8),
+            Text('CV Generator', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: Stack(
+            children: [
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16.0),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(maxWidth: 600),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (_errorMessage != null)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
                             ),
-                            child: _isLoading
-                                ? const SizedBox(
-                                    width: 24,
-                                    height: 24,
-                                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                  )
-                                : const Text('Generate CV', style: TextStyle(fontSize: 16)),
+                          if (_successMessage != null)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              child: Text(_successMessage!, style: TextStyle(color: Colors.green)),
+                            ),
+                          _buildDropdownField('Choose CV Template', ['classic', 'modern', 'creative'], (v) => selectedTemplate = v ?? '', validator: _requiredValidator, displayNames: {
+                            'classic': 'Classic',
+                            'modern': 'Modern',
+                            'creative': 'Creative',
+                          }),
+                          _buildTextField('Full Name', onSaved: (v) => fullName = v!, validator: _requiredValidator, hint: 'Your full name'),
+                          _buildTextField('Email Address', onSaved: (v) => email = v!, validator: _requiredValidator, hint: 'you@example.com'),
+                          _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Your phone number'),
+                          _buildTextField('Address', onSaved: (v) => address = v!, validator: _requiredValidator, hint: 'Your address'),
+                          _buildTextField('Education', onSaved: (v) => education = v!, validator: _requiredValidator, hint: 'List your education, e.g. University, Degree, Year', maxLines: 3),
+                          _buildTextField('Work Experience', onSaved: (v) => experience = v!, validator: _requiredValidator, hint: 'List your work experience', maxLines: 3),
+                          _buildTextField('Skills', onSaved: (v) => skills = v!, validator: _requiredValidator, hint: 'e.g. Python, Communication, Leadership'),
+                          _buildTextField('About Me / Profile Summary', onSaved: (v) => about = v ?? '', hint: 'Short summary about yourself', maxLines: 2),
+                          const SizedBox(height: 18),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: ElevatedButton(
+                                  onPressed: _isLoading ? null : _submit,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.deepPurple,
+                                    padding: const EdgeInsets.symmetric(vertical: 14),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: _isLoading
+                                      ? const SizedBox(
+                                          width: 24,
+                                          height: 24,
+                                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                        )
+                                      : const Text('Generate CV', style: TextStyle(fontSize: 16)),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
+              if (_isGenerating)
+                _buildLoadingModal('Please wait while the system generates your CV...'),
+              if (_downloadUrls != null && !_isGenerating)
+                _buildDownloadModal(),
+            ],
           ),
         ),
-        if (_isGenerating)
-          _buildLoadingModal('Please wait while the system generates your CV...'),
-        if (_downloadUrls != null && !_isGenerating)
-          _buildDownloadModal(),
       ],
     );
   }
@@ -1522,7 +1547,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                 Text('Download your CV in the preferred format below. A copy has also been sent to your email.', style: TextStyle(fontSize: 16)),
                 const SizedBox(height: 24),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton.icon(
                       onPressed: () {
@@ -1636,94 +1661,98 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // No AppBar
-      body: isLoading
-          ? Center(child: CircularProgressIndicator())
-          : errorMessage != null
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(errorMessage!, style: TextStyle(color: Colors.red)),
-                      const SizedBox(height: 16),
-                      InkWell(
-                        onTap: () => launchUrl(Uri.parse('mailto:unidocs.ramadhani@gmail.com?subject=Analytics%20Support')),
-                        child: Text('Contact Support', style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
-                      ),
-                    ],
-                  ),
-                )
-              : SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 32),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 48),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Icon(Icons.analytics, color: Colors.deepPurple, size: 32),
+            const SizedBox(width: 8),
+            Text('Analytics', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+            const Spacer(),
+            DropdownButton<String>(
+              value: selectedRange,
+              items: rangeOptions.map((opt) => DropdownMenuItem<String>(
+                value: opt['value'],
+                child: Text(opt['label']!),
+              )).toList(),
+              onChanged: (v) {
+                if (v != null) {
+                  setState(() { selectedRange = v; });
+                  _fetchAnalytics();
+                }
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.refresh),
+              onPressed: isLoading ? null : _fetchAnalytics,
+              tooltip: 'Refresh',
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: isLoading
+              ? Center(child: CircularProgressIndicator())
+              : errorMessage != null
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.analytics, color: Colors.deepPurple, size: 32),
-                          const SizedBox(width: 8),
-                          Text('Analytics', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                          const Spacer(),
-                          DropdownButton<String>(
-                            value: selectedRange,
-                            items: rangeOptions.map((opt) => DropdownMenuItem<String>(
-                              value: opt['value'],
-                              child: Text(opt['label']!),
-                            )).toList(),
-                            onChanged: (v) {
-                              if (v != null) {
-                                setState(() { selectedRange = v; });
-                                _fetchAnalytics();
-                              }
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.refresh),
-                            onPressed: isLoading ? null : _fetchAnalytics,
-                            tooltip: 'Refresh',
+                          Text(errorMessage!, style: TextStyle(color: Colors.red)),
+                          const SizedBox(height: 16),
+                          InkWell(
+                            onTap: () => launchUrl(Uri.parse('mailto:unidocs.ramadhani@gmail.com?subject=Analytics%20Support')),
+                            child: Text('Contact Support', style: TextStyle(color: Colors.blue, decoration: TextDecoration.underline)),
                           ),
                         ],
                       ),
-                      const SizedBox(height: 24),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            _summaryCard('Total', analyticsData?['totalRequests'] ?? 0, Icons.insert_drive_file, Colors.blue[100]!, Colors.blue[800]! ),
-                            _summaryCard('Approved', analyticsData?['approvedRequests'] ?? 0, Icons.check_circle, Colors.green[100]!, Colors.green[800]! ),
-                            _summaryCard('Pending', analyticsData?['pendingRequests'] ?? 0, Icons.hourglass_empty, Colors.orange[100]!, Colors.orange[800]! ),
-                            _summaryCard('Rejected', analyticsData?['rejectedRequests'] ?? 0, Icons.cancel, Colors.red[100]!, Colors.red[800]! ),
-                          ].map((w) => Padding(padding: const EdgeInsets.only(right: 12), child: w)).toList(),
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              width: 340,
-                              child: _buildStatusChart(),
+                    )
+                  : SingleChildScrollView(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              children: [
+                                _summaryCard('Total', analyticsData?['totalRequests'] ?? 0, Icons.insert_drive_file, Colors.blue[100]!, Colors.blue[800]! ),
+                                _summaryCard('Approved', analyticsData?['approvedRequests'] ?? 0, Icons.check_circle, Colors.green[100]!, Colors.green[800]! ),
+                                _summaryCard('Pending', analyticsData?['pendingRequests'] ?? 0, Icons.hourglass_empty, Colors.orange[100]!, Colors.orange[800]! ),
+                                _summaryCard('Rejected', analyticsData?['rejectedRequests'] ?? 0, Icons.cancel, Colors.red[100]!, Colors.red[800]! ),
+                              ].map((w) => Padding(padding: const EdgeInsets.only(right: 12), child: w)).toList(),
                             ),
-                            const SizedBox(width: 24),
-                            SizedBox(
-                              width: 340,
-                              child: _buildLetterTypeChart(),
+                          ),
+                          const SizedBox(height: 24),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  width: 340,
+                                  child: _buildStatusChart(),
+                                ),
+                                const SizedBox(width: 24),
+                                SizedBox(
+                                  width: 340,
+                                  child: _buildLetterTypeChart(),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 32),
+                          Text('Recent Requests', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 12),
+                          _buildRecentRequestsTable(),
+                        ],
                       ),
-                      const SizedBox(height: 32),
-                      Text('Recent Requests', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 12),
-                      _buildRecentRequestsTable(),
-                    ],
-                  ),
-                ),
+                    ),
+        ),
+      ],
     );
   }
 
@@ -2035,122 +2064,115 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const SizedBox(height: 24),
-              Row(
-                children: [
-                  Icon(Icons.campaign, color: Colors.deepPurple, size: 32),
-                  const SizedBox(width: 8),
-                  Text('Announcements', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-                ],
-              ),
-              const SizedBox(height: 16),
-              if (isLoading)
-                Expanded(child: Center(child: CircularProgressIndicator())),
-              if (!isLoading && errorMessage != null)
-                Expanded(child: Center(child: Text(errorMessage!, style: TextStyle(color: Colors.red)))),
-              if (!isLoading && errorMessage == null && announcements.isEmpty)
-                Expanded(child: Center(child: Text('No announcements available'))),
-              if (!isLoading && errorMessage == null && announcements.isNotEmpty)
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: announcements.length,
-                    itemBuilder: (context, idx) {
-                      final ann = announcements[idx];
-                      final isExpanded = expandedIndex == idx;
-                      return Card(
-                        elevation: 3,
-                        margin: const EdgeInsets.only(bottom: 16),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(16),
-                          onTap: () {
-                            setState(() { expandedIndex = isExpanded ? -1 : idx; });
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.campaign, color: Colors.deepPurple),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(ann.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                                    ),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: _statusColor(ann.status).withOpacity(0.15),
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Text(
-                                        (ann.status).toUpperCase(),
-                                        style: TextStyle(
-                                          color: _statusColor(ann.status),
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
-                                    const SizedBox(width: 4),
-                                    Text(_formatDate(ann.createdDate)),
-                                    const SizedBox(width: 16),
-                                    Icon(Icons.person, size: 16, color: Colors.grey[600]),
-                                    const SizedBox(width: 4),
-                                    Text(ann.author ?? 'Admin'),
-                                  ],
-                                ),
-                                const SizedBox(height: 12),
-                                Text(
-                                  ann.content,
-                                  maxLines: isExpanded ? null : 3,
-                                  overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
-                                  style: TextStyle(fontSize: 15),
-                                ),
-                                if (isExpanded && ann.attachments != null && ann.attachments!.isNotEmpty) ...[
-                                  const SizedBox(height: 12),
-                                  Text('Attachments:', style: TextStyle(fontWeight: FontWeight.bold)),
-                                  for (var att in ann.attachments!)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4.0),
-                                      child: InkWell(
-                                        onTap: () => launchUrl(Uri.parse(att.fileUrl)),
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.attach_file, size: 18, color: Colors.deepPurple),
-                                            const SizedBox(width: 4),
-                                            Flexible(child: Text(att.fileName, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue))),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                ],
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-            ],
-          ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 48),
+        Row(
+          children: [
+            Icon(Icons.campaign, color: Colors.deepPurple, size: 32),
+            const SizedBox(width: 8),
+            Text('Announcements', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+          ],
         ),
-      ),
+        const SizedBox(height: 16),
+        if (isLoading)
+          Expanded(child: Center(child: CircularProgressIndicator())),
+        if (!isLoading && errorMessage != null)
+          Expanded(child: Center(child: Text(errorMessage!, style: TextStyle(color: Colors.red)))),
+        if (!isLoading && errorMessage == null && announcements.isEmpty)
+          Expanded(child: Center(child: Text('No announcements available'))),
+        if (!isLoading && errorMessage == null && announcements.isNotEmpty)
+          Expanded(
+            child: ListView.builder(
+              itemCount: announcements.length,
+              itemBuilder: (context, idx) {
+                final ann = announcements[idx];
+                final isExpanded = expandedIndex == idx;
+                return Card(
+                  elevation: 3,
+                  margin: const EdgeInsets.only(bottom: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(16),
+                    onTap: () {
+                      setState(() { expandedIndex = isExpanded ? -1 : idx; });
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.campaign, color: Colors.deepPurple),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(ann.title, style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: _statusColor(ann.status).withOpacity(0.15),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  (ann.status).toUpperCase(),
+                                  style: TextStyle(
+                                    color: _statusColor(ann.status),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(_formatDate(ann.createdDate)),
+                              const SizedBox(width: 16),
+                              Icon(Icons.person, size: 16, color: Colors.grey[600]),
+                              const SizedBox(width: 4),
+                              Text(ann.author ?? 'Admin'),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            ann.content,
+                            maxLines: isExpanded ? null : 3,
+                            overflow: isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                          if (isExpanded && ann.attachments != null && ann.attachments!.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            Text('Attachments:', style: TextStyle(fontWeight: FontWeight.bold)),
+                            for (var att in ann.attachments!)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 4.0),
+                                child: InkWell(
+                                  onTap: () => launchUrl(Uri.parse(att.fileUrl)),
+                                  child: Row(
+                                    children: [
+                                      Icon(Icons.attach_file, size: 18, color: Colors.deepPurple),
+                                      const SizedBox(width: 4),
+                                      Flexible(child: Text(att.fileName, style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue))),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
     );
   }
 
@@ -2176,19 +2198,399 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
   }
 }
 
-class SettingsScreen extends StatelessWidget {
+class SettingsScreen extends StatefulWidget {
   const SettingsScreen({Key? key}) : super(key: key);
   @override
+  State<SettingsScreen> createState() => _SettingsScreenState();
+}
+
+class _SettingsScreenState extends State<SettingsScreen> {
+  final _formKey = GlobalKey<FormState>();
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String currentPassword = '';
+  int? userId;
+  bool isLoading = false;
+  bool showAlert = false;
+  String alertType = 'success';
+  String successMessage = 'Profile updated successfully!';
+  String errorMessage = 'Error updating profile. Please try again.';
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    final userJson = prefs.getString('currentUser');
+    if (userJson != null) {
+      final user = jsonDecode(userJson);
+      setState(() {
+        firstName = user['firstName'] ?? '';
+        lastName = user['lastName'] ?? '';
+        email = user['email'] ?? '';
+        userId = user['id'] is int ? user['id'] : int.tryParse(user['id'].toString());
+      });
+    }
+  }
+
+  Future<void> _onSubmit() async {
+    setState(() {
+      isLoading = true;
+      showAlert = false;
+    });
+    if (!email.contains('@')) {
+      setState(() {
+        isLoading = false;
+        showAlert = true;
+        alertType = 'danger';
+        errorMessage = 'Please enter a valid email address.';
+      });
+      return;
+    }
+    if (currentPassword.isEmpty) {
+      setState(() {
+        isLoading = false;
+        showAlert = true;
+        alertType = 'danger';
+        errorMessage = 'Password is required to save changes.';
+      });
+      return;
+    }
+    if (userId == null) {
+      setState(() {
+        isLoading = false;
+        showAlert = true;
+        alertType = 'danger';
+        errorMessage = 'User not found.';
+      });
+      return;
+    }
+    final updateData = {
+      'firstName': firstName,
+      'lastName': lastName,
+      'email': email,
+      'currentPassword': currentPassword,
+    };
+    try {
+      final response = await http.put(
+        Uri.parse('http://10.185.224.248:8088/api/users/$userId'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(updateData),
+      );
+      if (response.statusCode == 200) {
+        final updatedUser = jsonDecode(response.body);
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('currentUser', jsonEncode(updatedUser));
+        setState(() {
+          isLoading = false;
+          showAlert = true;
+          alertType = 'success';
+          successMessage = 'Profile updated successfully!';
+          // Optionally update fields with returned data
+          firstName = updatedUser['firstName'] ?? firstName;
+          lastName = updatedUser['lastName'] ?? lastName;
+          email = updatedUser['email'] ?? email;
+        });
+      } else {
+        final data = jsonDecode(response.body);
+        setState(() {
+          isLoading = false;
+          showAlert = true;
+          alertType = 'danger';
+          errorMessage = data['error'] ?? 'Error updating profile. Please try again.';
+        });
+      }
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+        showAlert = true;
+        alertType = 'danger';
+        errorMessage = 'An error occurred. Please try again.';
+      });
+    }
+  }
+
+  void _resetForm() {
+    _loadUserData();
+    setState(() {
+      currentPassword = '';
+      showAlert = false;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Settings', style: TextStyle(fontSize: 24)));
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SizedBox(height: 48),
+        Row(
+          children: [
+            Icon(Icons.settings, color: Colors.deepPurple, size: 32),
+            const SizedBox(width: 8),
+            Text('Settings', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16.0),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 700),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (showAlert)
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: alertType == 'success' ? Colors.green[100] : Colors.red[100],
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: alertType == 'success' ? Colors.green : Colors.red),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                          child: Row(
+                            children: [
+                              Icon(alertType == 'success' ? Icons.check_circle : Icons.error, color: alertType == 'success' ? Colors.green : Colors.red),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Text(
+                                  alertType == 'success' ? successMessage : errorMessage,
+                                  style: TextStyle(color: alertType == 'success' ? Colors.green[900] : Colors.red[900]),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.close),
+                                onPressed: () => setState(() => showAlert = false),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        final isWide = constraints.maxWidth > 600;
+                        return isWide
+                            ? Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Form column
+                                  Expanded(child: _buildForm()),
+                                  const SizedBox(width: 32),
+                                  // Info column
+                                  SizedBox(width: 260, child: _buildInfoBox()),
+                                ],
+                              )
+                            : Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  _buildForm(),
+                                  const SizedBox(height: 24),
+                                  _buildInfoBox(),
+                                ],
+                              );
+                      },
+                    ),
+                    const SizedBox(height: 32),
+                    _buildSupportBox(),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildForm() {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: Padding(
+        padding: const EdgeInsets.all(24.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Update Personal Information', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 18),
+              _buildTextField('First Name', initialValue: firstName, onChanged: (v) => setState(() => firstName = v), validator: (v) => v == null || v.isEmpty ? 'First name is required' : null),
+              const SizedBox(height: 12),
+              _buildTextField('Last Name', initialValue: lastName, onChanged: (v) => setState(() => lastName = v), validator: (v) => v == null || v.isEmpty ? 'Last name is required' : null),
+              const SizedBox(height: 12),
+              _buildTextField('Email Address', initialValue: email, onChanged: (v) => setState(() => email = v), validator: (v) => v == null || !v.contains('@') ? 'Valid email is required' : null),
+              const SizedBox(height: 12),
+              _buildTextField('Current Password', initialValue: currentPassword, onChanged: (v) => setState(() => currentPassword = v), validator: (v) => v == null || v.isEmpty ? 'Password is required to save changes' : null, obscureText: true, hint: 'Enter your password to confirm changes'),
+              const SizedBox(height: 20),
+              Row(
+                children: [
+                  Flexible(
+                    child: ElevatedButton.icon(
+                      onPressed: isLoading ? null : () {
+                        if (_formKey.currentState!.validate()) _onSubmit();
+                      },
+                      icon: isLoading ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : Icon(Icons.save),
+                      label: Text(isLoading ? 'Saving...' : 'Save Changes'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.deepPurple,
+                        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Flexible(
+                    child: OutlinedButton.icon(
+                      onPressed: isLoading ? null : _resetForm,
+                      icon: Icon(Icons.refresh),
+                      label: Text('Discard'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField(String label, {String? initialValue, required void Function(String) onChanged, String? Function(String?)? validator, bool obscureText = false, String? hint}) {
+    return TextFormField(
+      initialValue: initialValue,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      ),
+      obscureText: obscureText,
+      validator: validator,
+      onChanged: onChanged,
+    );
+  }
+
+  Widget _buildInfoBox() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Security Guidelines', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const SizedBox(height: 8),
+            _buildBullet('Keep your information current - Ensure your details are always up-to-date.'),
+            _buildBullet('Use a valid email - Important notifications will be sent to this address.'),
+            _buildBullet('Never share your password - University staff will never ask for your password.'),
+            _buildBullet('Verify email changes - Always verify new email addresses immediately.'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBullet(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('• ', style: TextStyle(fontSize: 16)),
+          Expanded(child: Text(text, style: TextStyle(fontSize: 15))),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSupportBox() {
+    return Card(
+      elevation: 1,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(18.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Need Help?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const SizedBox(height: 8),
+            Row(children: [Icon(Icons.phone, size: 18, color: Colors.deepPurple), const SizedBox(width: 6), Text('+255 777 987 654', style: TextStyle(fontSize: 15))]),
+            const SizedBox(height: 4),
+            Row(children: [Icon(Icons.email, size: 18, color: Colors.deepPurple), const SizedBox(width: 6), Text('itsupport@suza.ac.tz', style: TextStyle(fontSize: 15))]),
+            const SizedBox(height: 4),
+            Row(children: [Icon(Icons.location_on, size: 18, color: Colors.deepPurple), const SizedBox(width: 6), Text('Room 12, Administration Building', style: TextStyle(fontSize: 15))]),
+          ],
+        ),
+      ),
+    );
   }
 }
 
 class LogoutScreen extends StatelessWidget {
   const LogoutScreen({Key? key}) : super(key: key);
+
+  Future<void> _logout(BuildContext context) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('currentUser');
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => LoginScreen()),
+      (route) => false,
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Row(
+          children: [
+            Icon(Icons.logout, color: Colors.deepPurple),
+            SizedBox(width: 8),
+            Text('Confirm Logout'),
+          ],
+        ),
+        content: Text('Are you sure you want to log out?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(),
+            child: Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+            onPressed: () async {
+              Navigator.of(ctx).pop();
+              await _logout(context);
+            },
+            child: Text('Logout'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text('Logout', style: TextStyle(fontSize: 24)));
+    return Center(
+      child: ElevatedButton.icon(
+        icon: Icon(Icons.logout),
+        label: Text('Logout'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.deepPurple,
+          padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        onPressed: () => _showLogoutDialog(context),
+      ),
+    );
   }
 }
 
