@@ -590,6 +590,11 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
   final TextEditingController _studyEndDateController = TextEditingController();
   final TextEditingController _submissionDeadlineController = TextEditingController();
 
+  bool _showModal = false;
+  String _modalMessage = '';
+  Color _modalColor = kInfoColor;
+  bool _modalSuccess = false;
+
   @override
   void dispose() {
     _effectiveDateController.dispose();
@@ -655,6 +660,10 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _showModal = true;
+      _modalMessage = 'Please wait, we are generating your request...';
+      _modalColor = kInfoColor;
+      _modalSuccess = false;
     });
     _formKey.currentState!.save();
     // Prepare request data, only include non-empty fields, send null otherwise
@@ -679,29 +688,46 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
       'deliveryMethod': deliveryMethod.isNotEmpty ? deliveryMethod : null,
     };
     try {
-      print('Request body: ${jsonEncode(requestData)}');
       final response = await http.post(
         Uri.parse('http://10.185.224.248:8088/api/letter-requests'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(requestData),
       );
-      print('Status: ${response.statusCode}');
-      print('Body: ${response.body}');
       final data = jsonDecode(response.body);
       if (response.statusCode == 201 || response.statusCode == 200) {
         setState(() {
-          _showSuccessModal = true;
+          _showModal = true;
+          _modalMessage = 'Refer to your email for a copy of your letter.';
+          _modalColor = kSuccessColor;
+          _modalSuccess = true;
         });
         _formKey.currentState!.reset();
+        await Future.delayed(const Duration(seconds: 2));
+        setState(() {
+          _showModal = false;
+        });
       } else {
         setState(() {
-          _errorMessage = data['error'] ?? data['message'] ?? 'Failed to submit request.';
+          _showModal = true;
+          _modalMessage = data['error'] ?? data['message'] ?? 'Failed to submit request.';
+          _modalColor = kErrorColor;
+          _modalSuccess = false;
+        });
+        await Future.delayed(const Duration(seconds: 2));
+        setState(() {
+          _showModal = false;
         });
       }
     } catch (e) {
-      print('Submission error: $e');
       setState(() {
-        _errorMessage = 'An error occurred. Please try again. ($e)';
+        _showModal = true;
+        _modalMessage = 'An error occurred. Please try again. ($e)';
+        _modalColor = kErrorColor;
+        _modalSuccess = false;
+      });
+      await Future.delayed(const Duration(seconds: 2));
+      setState(() {
+        _showModal = false;
       });
     } finally {
       setState(() {
@@ -712,156 +738,161 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
-        const SizedBox(height: 48),
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.edit_document, color: Colors.deepPurple, size: 32),
-            const SizedBox(width: 8),
-            Text('Request Letter', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Expanded(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 600),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (_errorMessage != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
-                            ),
-                          _buildReadonlyField('Full Name', fullName),
-                          _buildTextField('Registration Number', onSaved: (v) => regNumber = v!, validator: _requiredValidator, hint: 'e.g. BITA/6/22/079/TZ'),
-                          _buildReadonlyField('Email Address', email),
-                          _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Write Your Phone No:'),
-                          _buildTextField('Program of Study', onSaved: (v) => program = v!, validator: _requiredValidator, hint: 'e.g. Bachelor\'s Degree in ICT with Accounting (BITA)'),
-                          // Year of Study Dropdown (fixed)
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 12.0),
-                            child: DropdownButtonFormField<String>(
-                              decoration: InputDecoration(
-                                labelText: 'Year of Study',
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
-                              ),
-                              value: yearOfStudy.isNotEmpty ? yearOfStudy : null,
-                              items: yearOptions.map((opt) {
-                                return DropdownMenuItem<String>(
-                                  value: opt,
-                                  child: Text('$opt${_ordinal(opt)} Year'),
-                                );
-                              }).toList(),
-                              onChanged: (v) {
-                                setState(() { yearOfStudy = v ?? ''; });
-                              },
-                              onSaved: (v) => yearOfStudy = v ?? '',
-                              validator: _requiredValidator,
-                            ),
-                          ),
-                          _buildDropdownField('Letter Type', [
-                            'introduction',
-                            'postponement',
-                            'feasibility_study',
-                            //'discontinuation',
-                            'recommendation',
-                            //'transcript',
-                          ],
-                          onChanged: _onLetterTypeChange,
-                          onSaved: (v) => selectedLetterType = v ?? '',
-                          validator: _requiredValidator,
-                          displayNames: {
-                            'introduction': 'Introduction Letter for Field',
-                            'postponement': 'Postponement Request',
-                            'feasibility_study': 'Feasibility Study',
-                            //'discontinuation': 'Discontinuation Letter',
-                            'recommendation': 'Recommendation Letter',
-                            //'transcript': 'Transcript Request',
-                          }),
-                          if (showReasonField) ...[
-                            _buildTextField('Reason for Request', onSaved: (v) => reason = v!, validator: _requiredValidator, maxLines: 3),
-                            _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
-                          ],
-                          if (showIntroductionFields) ...[
-                            _buildTextField('Organization Name', onSaved: (v) => organizationName = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
-                            _buildDateFieldWithController('Start Date', _startDateController, (v) => startDate = v ?? '', startDate),
-                            _buildDateFieldWithController('End Date', _endDateController, (v) => endDate = v ?? '', endDate),
-                          ],
-                          if (showFeasibilityFields) ...[
-                            _buildTextField('Research Title', onSaved: (v) => researchTitle = v!, validator: _requiredValidator, hint: 'e.g. Impact of ICT on Accounting Practices'),
-                            _buildTextField('Organization Name', onSaved: (v) => feasibilityOrganization = v!, validator: _requiredValidator, hint: 'e.g. Department of Computer Science'),
-                            _buildDateFieldWithController('Study Start Date', _studyStartDateController, (v) => studyStartDate = v ?? '', studyStartDate),
-                            _buildDateFieldWithController('Study End Date', _studyEndDateController, (v) => studyEndDate = v ?? '', studyEndDate),
-                          ],
-                          if (showDiscontinuationFields) ...[
-                            _buildTextField('Reason for Discontinuation', onSaved: (v) => discontinuationReason = v!, validator: _requiredValidator, maxLines: 3, hint: 'e.g. Financial Difficulties'),
-                            _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
-                          ],
-                          if (showRecommendationFields) ...[
-                            _buildDropdownField('Purpose of Recommendation', [
-                              'scholarship', 'postgraduate', 'employment', 'internship'
-                            ], onSaved: (v) => recommendationPurpose = v ?? '', validator: _requiredValidator, displayNames: {
-                              'scholarship': 'Scholarship Application',
-                              'postgraduate': 'Postgraduate Studies',
-                              'employment': 'Employment Application',
-                              'internship': 'Internship Application',
-                            }),
-                            _buildTextField('Receiving Institution', onSaved: (v) => receivingInstitution = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
-                            _buildDateFieldWithController('Submission Deadline', _submissionDeadlineController, (v) => submissionDeadline = v ?? '', submissionDeadline),
-                          ],
-                          if (showTranscriptFields) ...[
-                            _buildDropdownField('Purpose of Transcript', [
-                              'employment', 'further studies', 'scholarship', 'personal use'
-                            ], onSaved: (v) => transcriptPurpose = v ?? '', validator: _requiredValidator),
-                            _buildDropdownField('Delivery Method', [
-                              'pickup', 'email', 'post'
-                            ], onSaved: (v) => deliveryMethod = v ?? '', validator: _requiredValidator),
-                          ],
-                          const SizedBox(height: 18),
-                          Row(
+            const SizedBox(height: 48),
+            Row(
+              children: [
+                Icon(Icons.edit_document, color: Colors.deepPurple, size: 32),
+                const SizedBox(width: 8),
+                Text('Request Letter', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 600),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: _isLoading ? null : _submit,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.deepPurple,
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                              if (_errorMessage != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
+                                ),
+                              _buildReadonlyField('Full Name', fullName),
+                              _buildTextField('Registration Number', onSaved: (v) => regNumber = v!, validator: _requiredValidator, hint: 'e.g. BITA/6/22/079/TZ'),
+                              _buildReadonlyField('Email Address', email),
+                              _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Write Your Phone No:'),
+                              _buildTextField('Program of Study', onSaved: (v) => program = v!, validator: _requiredValidator, hint: 'e.g. Bachelor\'s Degree in ICT with Accounting (BITA)'),
+                              // Year of Study Dropdown (fixed)
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 12.0),
+                                child: DropdownButtonFormField<String>(
+                                  decoration: InputDecoration(
+                                    labelText: 'Year of Study',
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                                  ),
+                                  value: yearOfStudy.isNotEmpty ? yearOfStudy : null,
+                                  items: yearOptions.map((opt) {
+                                    return DropdownMenuItem<String>(
+                                      value: opt,
+                                      child: Text('$opt${_ordinal(opt)} Year'),
+                                    );
+                                  }).toList(),
+                                  onChanged: (v) {
+                                    setState(() { yearOfStudy = v ?? ''; });
+                                  },
+                                  onSaved: (v) => yearOfStudy = v ?? '',
+                                  validator: _requiredValidator,
+                                ),
+                              ),
+                              _buildDropdownField('Letter Type', [
+                                'introduction',
+                                'postponement',
+                                'feasibility_study',
+                                //'discontinuation',
+                                'recommendation',
+                                //'transcript',
+                              ],
+                              onChanged: _onLetterTypeChange,
+                              onSaved: (v) => selectedLetterType = v ?? '',
+                              validator: _requiredValidator,
+                              displayNames: {
+                                'introduction': 'Introduction Letter for Field',
+                                'postponement': 'Postponement Request',
+                                'feasibility_study': 'Feasibility Study',
+                                //'discontinuation': 'Discontinuation Letter',
+                                'recommendation': 'Recommendation Letter',
+                                //'transcript': 'Transcript Request',
+                              }),
+                              if (showReasonField) ...[
+                                _buildTextField('Reason for Request', onSaved: (v) => reason = v!, validator: _requiredValidator, maxLines: 3),
+                                _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
+                              ],
+                              if (showIntroductionFields) ...[
+                                _buildTextField('Organization Name', onSaved: (v) => organizationName = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
+                                _buildDateFieldWithController('Start Date', _startDateController, (v) => startDate = v ?? '', startDate),
+                                _buildDateFieldWithController('End Date', _endDateController, (v) => endDate = v ?? '', endDate),
+                              ],
+                              if (showFeasibilityFields) ...[
+                                _buildTextField('Research Title', onSaved: (v) => researchTitle = v!, validator: _requiredValidator, hint: 'e.g. Impact of ICT on Accounting Practices'),
+                                _buildTextField('Organization Name', onSaved: (v) => feasibilityOrganization = v!, validator: _requiredValidator, hint: 'e.g. Department of Computer Science'),
+                                _buildDateFieldWithController('Study Start Date', _studyStartDateController, (v) => studyStartDate = v ?? '', studyStartDate),
+                                _buildDateFieldWithController('Study End Date', _studyEndDateController, (v) => studyEndDate = v ?? '', studyEndDate),
+                              ],
+                              if (showDiscontinuationFields) ...[
+                                _buildTextField('Reason for Discontinuation', onSaved: (v) => discontinuationReason = v!, validator: _requiredValidator, maxLines: 3, hint: 'e.g. Financial Difficulties'),
+                                _buildDateFieldWithController('Effective Date', _effectiveDateController, (v) => effectiveDate = v ?? '', effectiveDate),
+                              ],
+                              if (showRecommendationFields) ...[
+                                _buildDropdownField('Purpose of Recommendation', [
+                                  'scholarship', 'postgraduate', 'employment', 'internship'
+                                ], onSaved: (v) => recommendationPurpose = v ?? '', validator: _requiredValidator, displayNames: {
+                                  'scholarship': 'Scholarship Application',
+                                  'postgraduate': 'Postgraduate Studies',
+                                  'employment': 'Employment Application',
+                                  'internship': 'Internship Application',
+                                }),
+                                _buildTextField('Receiving Institution', onSaved: (v) => receivingInstitution = v!, validator: _requiredValidator, hint: 'e.g. University of Dar es Salaam'),
+                                _buildDateFieldWithController('Submission Deadline', _submissionDeadlineController, (v) => submissionDeadline = v ?? '', submissionDeadline),
+                              ],
+                              if (showTranscriptFields) ...[
+                                _buildDropdownField('Purpose of Transcript', [
+                                  'employment', 'further studies', 'scholarship', 'personal use'
+                                ], onSaved: (v) => transcriptPurpose = v ?? '', validator: _requiredValidator),
+                                _buildDropdownField('Delivery Method', [
+                                  'pickup', 'email', 'post'
+                                ], onSaved: (v) => deliveryMethod = v ?? '', validator: _requiredValidator),
+                              ],
+                              const SizedBox(height: 18),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: _isLoading ? null : _submit,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.deepPurple,
+                                        padding: const EdgeInsets.symmetric(vertical: 14),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: _isLoading
+                                          ? const SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                            )
+                                          : const Text('Submit Request', style: TextStyle(fontSize: 16)),
                                     ),
                                   ),
-                                  child: _isLoading
-                                      ? const SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                        )
-                                      : const Text('Submit Request', style: TextStyle(fontSize: 16)),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  if (_showModal) _buildModal(),
+                ],
               ),
-              if (_showSuccessModal)
-                _buildSuccessModal(),
-            ],
-          ),
+            ),
+          ],
         ),
+        if (_showSuccessModal)
+          _buildSuccessModal(),
       ],
     );
   }
@@ -1070,6 +1101,37 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
       case '3': return 'rd';
       default: return 'th';
     }
+  }
+
+  Widget _buildModal() {
+    return Positioned.fill(
+      child: Container(
+        color: Colors.black.withOpacity(0.3),
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: kCardColor,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 16)],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(_modalSuccess ? Icons.check_circle : Icons.info, color: _modalColor, size: 48),
+                const SizedBox(height: 16),
+                Text(_modalMessage, style: TextStyle(fontSize: 18, color: _modalColor, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                if (!_modalSuccess && _isLoading)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: CircularProgressIndicator(),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -1362,93 +1424,103 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
   String skills = '';
   String about = '';
 
+  bool _showModal = false;
+  String _modalMessage = '';
+  Color _modalColor = kInfoColor;
+  bool _modalSuccess = false;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Stack(
       children: [
-        const SizedBox(height: 48),
-        Row(
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.description, color: Colors.deepPurple, size: 32),
-            const SizedBox(width: 8),
-            Text('CV Generator', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Expanded(
-          child: Stack(
-            children: [
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Center(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: 600),
-                    child: Form(
-                      key: _formKey,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          if (_errorMessage != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
-                            ),
-                          if (_successMessage != null)
-                            Padding(
-                              padding: const EdgeInsets.only(bottom: 12.0),
-                              child: Text(_successMessage!, style: TextStyle(color: Colors.green)),
-                            ),
-                          _buildDropdownField('Choose CV Template', ['classic', 'modern', 'creative'], (v) => selectedTemplate = v ?? '', validator: _requiredValidator, displayNames: {
-                            'classic': 'Classic',
-                            'modern': 'Modern',
-                            'creative': 'Creative',
-                          }),
-                          _buildTextField('Full Name', onSaved: (v) => fullName = v!, validator: _requiredValidator, hint: 'Your full name'),
-                          _buildTextField('Email Address', onSaved: (v) => email = v!, validator: _requiredValidator, hint: 'you@example.com'),
-                          _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Your phone number'),
-                          _buildTextField('Address', onSaved: (v) => address = v!, validator: _requiredValidator, hint: 'Your address'),
-                          _buildTextField('Education', onSaved: (v) => education = v!, validator: _requiredValidator, hint: 'List your education, e.g. University, Degree, Year', maxLines: 3),
-                          _buildTextField('Work Experience', onSaved: (v) => experience = v!, validator: _requiredValidator, hint: 'List your work experience', maxLines: 3),
-                          _buildTextField('Skills', onSaved: (v) => skills = v!, validator: _requiredValidator, hint: 'e.g. Python, Communication, Leadership'),
-                          _buildTextField('About Me / Profile Summary', onSaved: (v) => about = v ?? '', hint: 'Short summary about yourself', maxLines: 2),
-                          const SizedBox(height: 18),
-                          Row(
+            const SizedBox(height: 48),
+            Row(
+              children: [
+                Icon(Icons.description, color: Colors.deepPurple, size: 32),
+                const SizedBox(width: 8),
+                Text('CV Generator', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Expanded(
+              child: Stack(
+                children: [
+                  SingleChildScrollView(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: 600),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: _isLoading ? null : _submit,
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.deepPurple,
-                                    padding: const EdgeInsets.symmetric(vertical: 14),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12),
+                              if (_errorMessage != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Text(_errorMessage!, style: TextStyle(color: Colors.red)),
+                                ),
+                              if (_successMessage != null)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 12.0),
+                                  child: Text(_successMessage!, style: TextStyle(color: Colors.green)),
+                                ),
+                              _buildDropdownField('Choose CV Template', ['classic', 'modern', 'creative'], (v) => selectedTemplate = v ?? '', validator: _requiredValidator, displayNames: {
+                                'classic': 'Classic',
+                                'modern': 'Modern',
+                                'creative': 'Creative',
+                              }),
+                              _buildTextField('Full Name', onSaved: (v) => fullName = v!, validator: _requiredValidator, hint: 'Your full name'),
+                              _buildTextField('Email Address', onSaved: (v) => email = v!, validator: _requiredValidator, hint: 'you@example.com'),
+                              _buildTextField('Phone Number', onSaved: (v) => phone = v!, validator: _requiredValidator, hint: 'Your phone number'),
+                              _buildTextField('Address', onSaved: (v) => address = v!, validator: _requiredValidator, hint: 'Your address'),
+                              _buildTextField('Education', onSaved: (v) => education = v!, validator: _requiredValidator, hint: 'List your education, e.g. University, Degree, Year', maxLines: 3),
+                              _buildTextField('Work Experience', onSaved: (v) => experience = v!, validator: _requiredValidator, hint: 'List your work experience', maxLines: 3),
+                              _buildTextField('Skills', onSaved: (v) => skills = v!, validator: _requiredValidator, hint: 'e.g. Python, Communication, Leadership'),
+                              _buildTextField('About Me / Profile Summary', onSaved: (v) => about = v ?? '', hint: 'Short summary about yourself', maxLines: 2),
+                              const SizedBox(height: 18),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: ElevatedButton(
+                                      onPressed: _isLoading ? null : _submit,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.deepPurple,
+                                        padding: const EdgeInsets.symmetric(vertical: 14),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                      ),
+                                      child: _isLoading
+                                          ? const SizedBox(
+                                              width: 24,
+                                              height: 24,
+                                              child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                            )
+                                          : const Text('Generate CV', style: TextStyle(fontSize: 16)),
                                     ),
                                   ),
-                                  child: _isLoading
-                                      ? const SizedBox(
-                                          width: 24,
-                                          height: 24,
-                                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
-                                        )
-                                      : const Text('Generate CV', style: TextStyle(fontSize: 16)),
-                                ),
+                                ],
                               ),
                             ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),
-                ),
+                  if (_isGenerating)
+                    _buildLoadingModal('Please wait while the system generates your CV...'),
+                  if (_downloadUrls != null && !_isGenerating)
+                    _buildDownloadModal(),
+                ],
               ),
-              if (_isGenerating)
-                _buildLoadingModal('Please wait while the system generates your CV...'),
-              if (_downloadUrls != null && !_isGenerating)
-                _buildDownloadModal(),
-            ],
-          ),
+            ),
+          ],
         ),
+        if (_showModal) _buildModal(),
       ],
     );
   }
@@ -1504,6 +1576,10 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
       _errorMessage = null;
       _successMessage = null;
       _downloadUrls = null;
+      _showModal = true;
+      _modalMessage = 'Please wait, your CV is being generated...';
+      _modalColor = kInfoColor;
+      _modalSuccess = false;
     });
     _formKey.currentState!.save();
     final cvData = {
@@ -1527,32 +1603,36 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
       if (response.statusCode == 201 || response.statusCode == 200) {
         setState(() {
           _isLoading = false;
-          _isGenerating = true;
-          _requestId = data['requestId']?.toString();
+          _modalMessage = 'Refer to your email for CV copy.';
+          _modalColor = kSuccessColor;
+          _modalSuccess = true;
         });
         await Future.delayed(const Duration(seconds: 2));
         setState(() {
-          _isGenerating = false;
-          if (_requestId != null) {
-            _downloadUrls = {
-              'docx': 'http://10.185.224.248:8088/api/cv-requests/$_requestId/generate?format=docx',
-              'pdf': 'http://10.185.224.248:8088/api/cv-requests/$_requestId/generate?format=pdf',
-            };
-            _successMessage = 'CV generated successfully! A copy has also been sent to your email.';
-          } else {
-            _errorMessage = 'Failed to generate CV. Try again.';
-          }
+          _showModal = false;
         });
       } else {
         setState(() {
           _isLoading = false;
-          _errorMessage = data['error'] ?? data['message'] ?? 'Failed to generate CV.';
+          _modalMessage = data['error'] ?? data['message'] ?? 'Failed to generate CV.';
+          _modalColor = kErrorColor;
+          _modalSuccess = false;
+        });
+        await Future.delayed(const Duration(seconds: 2));
+        setState(() {
+          _showModal = false;
         });
       }
     } catch (e) {
       setState(() {
         _isLoading = false;
-        _errorMessage = 'An error occurred. Please try again. ($e)';
+        _modalMessage = 'An error occurred. Please try again. ($e)';
+        _modalColor = kErrorColor;
+        _modalSuccess = false;
+      });
+      await Future.delayed(const Duration(seconds: 2));
+      setState(() {
+        _showModal = false;
       });
     }
   }
@@ -1640,6 +1720,37 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
                   ),
                   child: const Text('Close'),
                 ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildModal() {
+    return Positioned.fill(
+      child: Container(
+        color: Colors.black.withOpacity(0.3),
+        child: Center(
+          child: Container(
+            padding: const EdgeInsets.all(32),
+            decoration: BoxDecoration(
+              color: kCardColor,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 16)],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(_modalSuccess ? Icons.check_circle : Icons.info, color: _modalColor, size: 48),
+                const SizedBox(height: 16),
+                Text(_modalMessage, style: TextStyle(fontSize: 18, color: _modalColor, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                if (!_modalSuccess && _isLoading)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 16.0),
+                    child: CircularProgressIndicator(),
+                  ),
               ],
             ),
           ),
@@ -2499,7 +2610,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       icon: isLoading ? SizedBox(width: 18, height: 18, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white)) : Icon(Icons.save),
                       label: Text(isLoading ? 'Saving...' : 'Save Changes'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.deepPurple,
+                        backgroundColor: kPrimaryColor,
                         padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 18),
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                       ),
@@ -2509,8 +2620,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   Flexible(
                     child: OutlinedButton.icon(
                       onPressed: isLoading ? null : _resetForm,
-                      icon: Icon(Icons.refresh),
-                      label: Text('Discard'),
+                      icon: Icon(Icons.refresh, color: kErrorColor),
+                      label: Text('Discard', style: TextStyle(color: kErrorColor)),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(color: kErrorColor),
+                        foregroundColor: kErrorColor,
+                        backgroundColor: Colors.transparent,
+                      ),
                     ),
                   ),
                 ],
@@ -2611,7 +2727,7 @@ class LogoutScreen extends StatelessWidget {
       builder: (ctx) => AlertDialog(
         title: Row(
           children: [
-            Icon(Icons.logout, color: Colors.deepPurple),
+            Icon(Icons.logout, color: kErrorColor),
             SizedBox(width: 8),
             Text('Confirm Logout'),
           ],
@@ -2623,7 +2739,7 @@ class LogoutScreen extends StatelessWidget {
             child: Text('Cancel'),
           ),
           ElevatedButton(
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.deepPurple),
+            style: ElevatedButton.styleFrom(backgroundColor: kErrorColor),
             onPressed: () async {
               Navigator.of(ctx).pop();
               await _logout(context);
@@ -2642,7 +2758,7 @@ class LogoutScreen extends StatelessWidget {
         icon: Icon(Icons.logout),
         label: Text('Logout'),
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.deepPurple,
+          backgroundColor: kErrorColor,
           padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 24),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         ),

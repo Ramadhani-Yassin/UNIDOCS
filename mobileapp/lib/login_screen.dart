@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'main.dart' show kPrimaryColor;
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -154,12 +155,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark ? Colors.grey[900] : const Color(0xFFE8EAF6),
-      appBar: AppBar(
-        title: Text(_showLogin ? 'Student Login' : 'Student Registration'),
-        centerTitle: true,
-        elevation: 0,
-        backgroundColor: Colors.deepPurple,
-      ),
       body: Center(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
@@ -176,7 +171,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.school, size: 48, color: Colors.deepPurple),
+                      Icon(Icons.school, size: 48, color: kPrimaryColor),
                       const SizedBox(height: 12),
                       Text(
                         _showLogin ? 'Welcome Back!' : 'Create Your Account',
@@ -222,7 +217,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
+                              backgroundColor: kPrimaryColor,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -238,15 +233,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : const Text('Login', style: TextStyle(fontSize: 16)),
                           ),
                         ),
-                        TextButton(
-                          onPressed: _isLoading ? null : () {
-                            setState(() {
-                              _showLogin = false;
-                              _message = null;
-                            });
-                          },
-                          child: const Text("Don't have an account? Register"),
-                        ),
+                       const SizedBox(height: 8),
+                       _AnimatedLink(
+                         text: "Don't have an account? Register",
+                         color: kPrimaryColor,
+                         onTap: _isLoading ? null : () {
+                           setState(() {
+                             _showLogin = false;
+                             _message = null;
+                           });
+                         },
+                       ),
                       ] else ...[
                         TextField(
                           controller: _regFirstNameController,
@@ -290,7 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: double.infinity,
                           child: ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
+                              backgroundColor: kPrimaryColor,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -306,15 +303,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                 : const Text('Register', style: TextStyle(fontSize: 16)),
                           ),
                         ),
-                        TextButton(
-                          onPressed: _isLoading ? null : () {
-                            setState(() {
-                              _showLogin = true;
-                              _message = null;
-                            });
-                          },
-                          child: const Text('Already have an account? Login'),
-                        ),
+                       const SizedBox(height: 8),
+                       _AnimatedLink(
+                         text: 'Already have an account? Login',
+                         color: kPrimaryColor,
+                         onTap: _isLoading ? null : () {
+                           setState(() {
+                             _showLogin = true;
+                             _message = null;
+                           });
+                         },
+                       ),
                       ],
                       if (_message != null)
                         Padding(
@@ -334,6 +333,41 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AnimatedLink extends StatefulWidget {
+  final String text;
+  final Color color;
+  final VoidCallback? onTap;
+  const _AnimatedLink({required this.text, required this.color, this.onTap});
+  @override
+  State<_AnimatedLink> createState() => _AnimatedLinkState();
+}
+
+class _AnimatedLinkState extends State<_AnimatedLink> {
+  bool _pressed = false;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTapDown: (_) => setState(() => _pressed = true),
+      onTapUp: (_) => setState(() => _pressed = false),
+      onTapCancel: () => setState(() => _pressed = false),
+      onTap: widget.onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 80),
+        margin: EdgeInsets.only(left: _pressed ? 8 : 0),
+        child: Text(
+          widget.text,
+          style: TextStyle(
+            color: widget.color,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            // No underline
           ),
         ),
       ),
