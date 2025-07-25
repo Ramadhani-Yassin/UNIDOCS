@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart' show kPrimaryColor;
+import 'main.dart' show StudentHome;
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -60,7 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
           if (widget.onLoginSuccess != null) {
             widget.onLoginSuccess!();
           } else {
-          Navigator.of(context).pushReplacementNamed('/dashboard');
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const StudentHome()),
+          );
           }
         });
       } else if (response.statusCode == 403 && data['error'] != null && data['error'].toString().contains('suspended')) {
