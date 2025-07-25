@@ -12,6 +12,19 @@ import 'package:http/http.dart' as http;
 import 'package:fl_chart/fl_chart.dart';
 import 'announcement_model.dart';
 
+// Define the new color palette
+const Color kPrimaryColor = Color(0xFF283593); // Primary
+const Color kAccentColor = Color(0xFF00ACC1); // Accent
+const Color kSuccessColor = Color(0xFF43A047); // Success
+const Color kErrorColor = Color(0xFFC62828); // Error
+const Color kWarningColor = Color(0xFFFF8F00); // Warning
+const Color kInfoColor = Color(0xFF039BE5); // Info
+const Color kBackgroundColor = Color(0xFFF0F4F8); // Background
+const Color kCardColor = Color(0xFFFFFFFF); // Card/Surface
+const Color kTextPrimary = Color(0xFF263238); // Text - Primary
+const Color kTextSecondary = Color(0xFF607D8B); // Text - Secondary
+const Color kBorderColor = Color(0xFFCFD8DC); // Border/Divider
+
 void main() {
   runApp(const MyApp());
 }
@@ -24,7 +37,52 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'UNIDOCS',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primaryColor: kPrimaryColor,
+        colorScheme: ColorScheme.fromSwatch().copyWith(
+          primary: kPrimaryColor,
+          secondary: kAccentColor,
+          background: kBackgroundColor,
+          error: kErrorColor,
+        ),
+        scaffoldBackgroundColor: kBackgroundColor,
+        cardColor: kCardColor,
+        dividerColor: kBorderColor,
+        textTheme: ThemeData.light().textTheme.copyWith(
+          titleLarge: TextStyle(color: kTextPrimary),
+          bodyLarge: TextStyle(color: kTextPrimary),
+          bodyMedium: TextStyle(color: kTextSecondary),
+        ),
+        iconTheme: IconThemeData(color: kPrimaryColor),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: kPrimaryColor,
+            foregroundColor: Colors.white,
+            textStyle: const TextStyle(color: Colors.white),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: kAccentColor,
+            side: BorderSide(color: kPrimaryColor),
+            textStyle: const TextStyle(color: Colors.white),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          ),
+        ),
+        textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+            foregroundColor: Colors.white,
+            backgroundColor: kPrimaryColor,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: kBorderColor)),
+          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: kBorderColor)),
+          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(8), borderSide: BorderSide(color: kPrimaryColor)),
+          labelStyle: TextStyle(color: kTextSecondary),
+        ),
       ),
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
