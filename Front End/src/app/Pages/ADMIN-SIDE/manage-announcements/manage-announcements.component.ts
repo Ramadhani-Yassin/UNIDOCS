@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { SidebarService } from '../../../services/sidebar.service';
 import { Announcement } from '../../../models/announcement.model';
+import { EditAnnouncementModalComponent } from '../../../components/edit-announcement-modal.component';
 
 @Component({
   selector: 'app-manage-announcements',
@@ -16,8 +17,8 @@ export class ManageAnnouncementsComponent implements OnInit {
   statusFilter: string = 'all';
   currentPage: number = 1;
   itemsPerPage: number = 10;
-  editingAnnouncement: Announcement | null = null;
-  editForm: { title: string; content: string; status: string } = { title: '', content: '', status: 'new' };
+  showEditModal: boolean = false;
+  selectedAnnouncementId: number | null = null;
 
   constructor(
     private announcementService: AnnouncementService,
@@ -59,33 +60,17 @@ export class ManageAnnouncementsComponent implements OnInit {
   }
 
   startEdit(announcement: Announcement): void {
-    this.editingAnnouncement = { ...announcement };
-    this.editForm = {
-      title: announcement.title,
-      content: announcement.content,
-      status: announcement.status
-    };
+    this.selectedAnnouncementId = announcement.id;
+    this.showEditModal = true;
   }
 
-  cancelEdit(): void {
-    this.editingAnnouncement = null;
-    this.editForm = { title: '', content: '', status: 'new' };
+  onEditModalClose(): void {
+    this.showEditModal = false;
+    this.selectedAnnouncementId = null;
   }
 
-  saveEdit(): void {
-    if (!this.editingAnnouncement) return;
-    const updated = {
-      title: this.editForm.title,
-      content: this.editForm.content,
-      status: this.editForm.status
-    };
-    this.announcementService.updateAnnouncement(this.editingAnnouncement.id, updated).subscribe({
-      next: () => {
-        this.editingAnnouncement = null;
-        this.editForm = { title: '', content: '', status: 'new' };
-        this.loadAnnouncements();
-      }
-    });
+  onEditModalSaved(): void {
+    this.loadAnnouncements();
   }
 
   deleteAnnouncement(id: number): void {

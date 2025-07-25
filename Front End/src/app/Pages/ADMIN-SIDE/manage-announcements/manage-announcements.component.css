@@ -1,3 +1,138 @@
+/* Import base styles from students management for consistency */
 @import '../students-management/students-management.component.css';
 
-/* Optionally, add or override styles here */
+/* Table improvements */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(60,145,230,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+}
+th, td {
+  padding: 14px 16px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+  vertical-align: middle;
+}
+th {
+  background: #f4f8fb;
+  color: #3C91E6;
+  font-weight: 600;
+  font-size: 15px;
+  border-bottom: 2px solid #e6e6e6;
+}
+tr {
+  transition: background 0.2s;
+}
+tbody tr:hover {
+  background: #f0f6ff;
+}
+td {
+  font-size: 14px;
+  color: #342E37;
+  border-bottom: 1px solid #f0f0f0;
+}
+tr:last-child td {
+  border-bottom: none;
+}
+
+.centered {
+  text-align: center;
+}
+
+/* Truncate long text and show tooltip */
+.ellipsis {
+  display: inline-block;
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+.btn-suspend, .btn-delete {
+  background: #3C91E6;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-suspend:hover {
+  background: #2563eb;
+}
+.btn-delete {
+  background: #ef4444;
+}
+.btn-delete:hover {
+  background: #b91c1c;
+}
+
+/* Responsive for small screens */
+@media screen and (max-width: 576px) {
+  th, td {
+    max-width: 100px;
+    font-size: 12px;
+    padding: 8px 6px;
+  }
+  .ellipsis {
+    max-width: 80px;
+  }
+  .action-buttons {
+    gap: 4px;
+  }
+}
+
+/* Pagination styling */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 18px;
+}
+.pagination button {
+  background: #3C91E6;
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 22px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pagination button:disabled {
+  background: #e0e7ff;
+  color: #3C91E6;
+  cursor: not-allowed;
+}
+
+/* Head title and breadcrumb improvements */
+.head-title h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #3C91E6;
+  margin-bottom: 0.5rem;
+}
+.breadcrumb {
+  font-size: 1rem;
+  color: #888;
+}

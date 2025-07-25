@@ -1,14 +1,14 @@
 @import '../../ADMIN-SIDE/admin-portal/admin-portal.component.css';
 
-/* Override or add styles for announcements page to match dashboard look */
-
-/* Main content alignment and padding */
+/* Subtle background gradient for the main area */
 #content {
   position: relative;
   width: calc(100% - 280px);
   margin-left: 280px;
   transition: all 0.3s ease;
   padding-top: 56px;
+  background: linear-gradient(135deg, #f8fafc 60%, #e0e7ff 100%);
+  min-height: 100vh;
 }
 
 #content.sidebar-collapsed {
@@ -27,10 +27,10 @@
 }
 
 .head-title .left h1 {
-  font-size: 36px;
-  font-weight: 600;
+  font-size: 2.2rem;
+  font-weight: 700;
   margin-bottom: 10px;
-  color: #342e37;
+  color: #3C91E6;
   letter-spacing: 0.5px;
 }
 
@@ -54,11 +54,11 @@
 }
 
 .head-title .left .breadcrumb li a.grey {
-  color: #AAAAAA !important; /* Grey for Dashboard */
+  color: #AAAAAA !important;
 }
 
 .head-title .left .breadcrumb li a.active {
-  color: #3C91E6 !important; /* Blue for Announcements */
+  color: #3C91E6 !important;
   pointer-events: unset;
   text-decoration: none !important;
 }
@@ -69,45 +69,50 @@
 }
 
 .btn-download {
-  height: 36px;
-  padding: 0 16px;
+  height: 40px;
+  padding: 0 22px;
   border-radius: 36px;
-  background: #3c91e6;
-  color: #f9f9f9;
+  background: linear-gradient(90deg, #3C91E6 60%, #6EE7B7 100%);
+  color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   grid-gap: 10px;
-  font-weight: 500;
+  font-weight: 600;
   text-decoration: none !important;
-  box-shadow: 0 2px 8px rgba(60, 145, 230, 0.1);
-  transition: background 0.2s;
+  box-shadow: 0 2px 8px rgba(60, 145, 230, 0.12);
+  transition: background 0.2s, transform 0.1s;
+  font-size: 1.08em;
 }
 
 .btn-download:hover {
-  background: #2563eb;
+  background: linear-gradient(90deg, #2563eb 60%, #10b981 100%);
   color: #fff;
+  transform: translateY(-2px) scale(1.03);
   text-decoration: none !important;
 }
 
-/* Announcements container */
 .announcements-container {
   margin-top: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-/* Announcement card styling */
 .announcement-card {
-  border: 1.5px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 24px 28px;
-  margin-bottom: 24px;
-  background-color: #f9f9f9;
-  transition: box-shadow 0.3s;
-  box-shadow: 0 2px 10px rgba(60, 145, 230, 0.05);
+  border: none;
+  border-radius: 18px;
+  padding: 32px 36px 24px 36px;
+  margin-bottom: 32px;
+  background: #fff;
+  transition: box-shadow 0.3s, transform 0.2s;
+  box-shadow: 0 6px 24px rgba(60, 145, 230, 0.08), 0 1.5px 6px rgba(60, 145, 230, 0.06);
+  position: relative;
 }
 
 .announcement-card:hover {
-  box-shadow: 0 4px 16px rgba(60, 145, 230, 0.12);
+  box-shadow: 0 10px 32px rgba(60, 145, 230, 0.16);
+  transform: translateY(-2px) scale(1.01);
 }
 
 .announcement-header {
@@ -119,7 +124,7 @@
 
 .announcement-title {
   font-size: 1.3em;
-  font-weight: 600;
+  font-weight: 700;
   color: #342e37;
   display: flex;
   align-items: center;
@@ -127,72 +132,77 @@
 }
 
 .status-badge {
-  padding: 6px 16px;
+  padding: 7px 18px;
   border-radius: 20px;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   text-align: center;
   margin-left: 10px;
   color: #fff;
   background: #bdbdbd;
   text-transform: capitalize;
   letter-spacing: 0.5px;
+  box-shadow: 0 1px 4px rgba(60,145,230,0.08);
+  border: 1.5px solid #e0e7ff;
 }
-
 .status-badge.new {
-  background: #3c91e6;
+  background: linear-gradient(90deg, #3c91e6 60%, #6ee7b7 100%);
+  color: #fff;
 }
-
 .status-badge.important {
-  background: #fd7238;
+  background: linear-gradient(90deg, #fd7238 60%, #fbbf24 100%);
+  color: #fff;
 }
-
 .status-badge.update {
-  background: #ffce26;
+  background: linear-gradient(90deg, #ffce26 60%, #3c91e6 100%);
   color: #342e37;
 }
 
 .announcement-meta {
-  font-size: 0.98em;
+  font-size: 1em;
   color: #6c757d;
   display: flex;
   gap: 18px;
   align-items: center;
+  font-weight: 500;
 }
-
 .announcement-meta i {
   color: #3c91e6;
   margin-right: 4px;
 }
 
 .announcement-content {
-  margin-top: 12px;
+  margin-top: 16px;
   color: #342e37;
-  font-size: 1.08em;
-  line-height: 1.6;
+  font-size: 1.13em;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+  word-break: break-word;
 }
 
 .announcement-attachments {
-  margin-top: 14px;
+  margin-top: 18px;
+  background: #f4f8fb;
+  border-radius: 8px;
+  padding: 12px 18px 10px 18px;
 }
-
 .announcement-attachments h4 {
   margin-bottom: 7px;
   color: #3c91e6;
   font-size: 1em;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
-
 .announcement-attachments ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .announcement-attachments li {
   margin-bottom: 6px;
 }
-
 .announcement-attachments a {
   color: #2563eb;
   text-decoration: none !important;
@@ -201,11 +211,11 @@
   display: flex;
   align-items: center;
   gap: 6px;
+  font-size: 1.01em;
 }
-
 .announcement-attachments a:hover {
   color: #10b981;
-  text-decoration: none !important;
+  text-decoration: underline !important;
 }
 
 .no-data {

@@ -46,38 +46,28 @@
           <tbody>
             <tr *ngFor="let announcement of paginatedAnnouncements">
               <td class="centered">
-                <span *ngIf="editingAnnouncement?.id !== announcement.id" [title]="announcement.title">
-                  {{ announcement.title }}
+                <span class="ellipsis" [title]="announcement.title">
+                  {{ truncate(announcement.title, 30) }}
                 </span>
-                <input *ngIf="editingAnnouncement?.id === announcement.id" [(ngModel)]="editForm.title" />
               </td>
               <!--<td class="centered">
                 <span class="status-badge" [ngClass]="announcement.status">{{ announcement.status | titlecase }}</span>
               </td>-->
               <td class="centered">{{ formatDate(announcement.createdDate) }}</td>
               <td>
-                <span
-                  *ngIf="editingAnnouncement?.id !== announcement.id"
-                  [title]="announcement.content"
-                  style="display: inline-block; max-width: 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
-                >
-                  {{ truncate(announcement.content, 60) }}
+                <span class="ellipsis" [title]="announcement.content">
+                  {{ truncate(announcement.content, 30) }}
                 </span>
-                <textarea *ngIf="editingAnnouncement?.id === announcement.id" [(ngModel)]="editForm.content"></textarea>
               </td>
               <td class="centered">
-                <button *ngIf="editingAnnouncement?.id !== announcement.id" class="btn-suspend" (click)="startEdit(announcement)">
-                  <i class="bx bx-edit"></i>
-                </button>
-                <button *ngIf="editingAnnouncement?.id === announcement.id" class="btn-activate" (click)="saveEdit()">
-                  <i class="bx bx-save"></i>
-                </button>
-                <button *ngIf="editingAnnouncement?.id === announcement.id" class="btn-delete" (click)="cancelEdit()">
-                  <i class="bx bx-x"></i>
-                </button>
-                <button class="btn-delete" (click)="deleteAnnouncement(announcement.id)">
-                  <i class="bx bx-trash"></i>
-                </button>
+                <div class="action-buttons">
+                  <button class="btn-suspend" (click)="startEdit(announcement)">
+                    <i class="bx bx-edit"></i>
+                  </button>
+                  <button class="btn-delete" (click)="deleteAnnouncement(announcement.id)">
+                    <i class="bx bx-trash"></i>
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -95,3 +85,9 @@
     </div>
   </main>
 </section>
+<app-edit-announcement-modal
+  [show]="showEditModal"
+  [announcementId]="selectedAnnouncementId"
+  (close)="onEditModalClose()"
+  (saved)="onEditModalSaved()"
+></app-edit-announcement-modal>

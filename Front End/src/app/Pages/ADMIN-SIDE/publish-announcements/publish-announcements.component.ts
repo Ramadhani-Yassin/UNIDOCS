@@ -120,12 +120,13 @@ export class PublishAnnouncementsComponent implements OnInit {
       content: this.form.content,
       status: this.form.status
     };
+    // Instantly clear the form
+    this.resetForm();
     // Backend will handle email sending asynchronously, so success appears instantly
     this.announcementService.createAnnouncementJson(announcement).subscribe({
       next: () => {
         this.isSubmitting = false;
         this.submitSuccess = true;
-        this.resetForm();
         this.loadAnnouncements();
         this.announcementPublished.emit();
       },

@@ -38,9 +38,9 @@
       </div>
 
       <div *ngFor="let announcement of announcements" class="announcement-card">
-        <div class="announcement-header">
-          <div class="announcement-title">
-            <h3>{{ announcement.title }}</h3>
+        <div class="announcement-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px;">
+          <div class="announcement-title" style="flex: 1 1 0; min-width: 0; display: flex; align-items: center; gap: 14px;">
+            <h3 style="margin: 0; font-size: 1.3em; font-weight: 700; color: #342e37; word-break: break-word; white-space: normal; line-height: 1.2;">{{ announcement.title }}</h3>
             <span class="status-badge" [ngClass]="{
               'new': announcement.status === 'new',
               'important': announcement.status === 'important',
@@ -49,7 +49,7 @@
               {{ announcement.status | titlecase }}
             </span>
           </div>
-          <div class="announcement-meta">
+          <div class="announcement-meta" style="flex-shrink: 0; white-space: nowrap; display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 120px;">
             <span>
               <i class='bx bx-calendar'></i>
               {{ formatDate(announcement.createdDate) }}

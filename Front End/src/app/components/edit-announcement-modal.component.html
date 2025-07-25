@@ -1,0 +1,31 @@
+<div *ngIf="show" class="modal-overlay">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div *ngIf="isLoading" class="spinner"></div>
+      <form *ngIf="!isLoading" (ngSubmit)="save()">
+        <h2>Edit Announcement</h2>
+        <div *ngIf="error" class="error-message">{{ error }}</div>
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input id="title" [(ngModel)]="form.title" name="title" required maxlength="100" />
+        </div>
+        <div class="form-group">
+          <label for="content">Content</label>
+          <textarea id="content" [(ngModel)]="form.content" name="content" required rows="4" maxlength="1000"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="status">Status</label>
+          <select id="status" [(ngModel)]="form.status" name="status" required>
+            <option value="new">New</option>
+            <option value="important">Important</option>
+            <option value="update">Update</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button type="button" (click)="onClose()" [disabled]="isSaving">Cancel</button>
+          <button type="submit" [disabled]="isSaving">{{ isSaving ? 'Saving...' : 'Save' }}</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div> 

@@ -33,6 +33,7 @@ import { CVGeneratorComponent } from './Pages/STUDENT-SIDE/cv-generator/cv-gener
 import { AllRequestComponent } from './Pages/ADMIN-SIDE/all-request/all-request.component';
 import { MyApplicationsComponent } from './Pages/STUDENT-SIDE/my-applications/my-applications.component';
 import { ManageAnnouncementsComponent } from './Pages/ADMIN-SIDE/manage-announcements/manage-announcements.component';
+import { EditAnnouncementModalComponent } from './components/edit-announcement-modal.component';
 
 @NgModule({
   declarations: [
@@ -63,6 +64,7 @@ import { ManageAnnouncementsComponent } from './Pages/ADMIN-SIDE/manage-announce
     AllRequestComponent,
     MyApplicationsComponent,
     ManageAnnouncementsComponent,
+    EditAnnouncementModalComponent,
   ],
   imports: [
     BrowserModule,
