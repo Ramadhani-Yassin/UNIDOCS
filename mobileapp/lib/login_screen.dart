@@ -43,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final response = await http.post(
-        Uri.parse('http://10.185.224.248:8088/api/users/student-login'),
+        Uri.parse('http://10.177.46.248:8088/api/users/student-login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
@@ -107,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final response = await http.post(
-        Uri.parse('http://10.185.224.248:8088/api/users/register'),
+        Uri.parse('http://10.177.46.248:8088/api/users/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'firstName': firstName,

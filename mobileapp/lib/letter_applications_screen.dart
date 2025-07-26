@@ -162,7 +162,7 @@ class _LetterApplicationsScreenState extends State<LetterApplicationsScreen> {
     };
     try {
       final response = await http.post(
-        Uri.parse('http://10.185.224.248:8088/api/letter-requests'),
+        Uri.parse('http://10.177.46.248:8088/api/letter-requests'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(requestData),
       );

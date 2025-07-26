@@ -7,7 +7,7 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://10.185.224.248:8088/api/users'; // Use your actual API URL
+  private apiUrl = 'http://10.177.46.248:8088/api/users'; // Use your actual API URL
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 

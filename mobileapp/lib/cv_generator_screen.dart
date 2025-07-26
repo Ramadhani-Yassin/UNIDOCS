@@ -83,7 +83,7 @@ class _CVGeneratorScreenState extends State<CVGeneratorScreen> {
     };
     try {
       final response = await http.post(
-        Uri.parse('http://10.185.224.248:8088/api/cv-requests'),
+        Uri.parse('http://10.177.46.248:8088/api/cv-requests'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(cvData),
       );

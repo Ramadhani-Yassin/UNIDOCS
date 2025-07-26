@@ -27,7 +27,7 @@ class _AnnouncementsScreenState extends State<AnnouncementsScreen> {
   Future<void> _fetchAnnouncements() async {
     setState(() { isLoading = true; errorMessage = null; });
     try {
-      final response = await http.get(Uri.parse('http://10.185.224.248:8088/api/announcements/recent?limit=10'));
+      final response = await http.get(Uri.parse('http://10.177.46.248:8088/api/announcements/recent?limit=10'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
