@@ -270,22 +270,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         const SizedBox(height: 16),
                         
                         // Back to Login Link
-                        TextButton(
-                          onPressed: _isLoading
-                              ? null
-                              : () {
-                                  if (widget.onBackToLogin != null) {
-                                    widget.onBackToLogin!();
-                                  } else {
-                                    Navigator.of(context).pop();
-                                  }
-                                },
-                          child: const Text(
-                            'Back to Login',
-                            style: TextStyle(
-                              color: kPrimaryColor,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
+                        Center(
+                          child: GestureDetector(
+                            onTap: _isLoading
+                                ? null
+                                : () {
+                                    if (widget.onBackToLogin != null) {
+                                      widget.onBackToLogin!();
+                                    } else {
+                                      Navigator.of(context).pop();
+                                    }
+                                  },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 8),
+                              child: const Text(
+                                'Back to Login',
+                                style: TextStyle(
+                                  color: Color(0xFF512DA8),
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w600,
+                                  decoration: TextDecoration.none,
+                                ),
+                              ),
                             ),
                           ),
                         ),
