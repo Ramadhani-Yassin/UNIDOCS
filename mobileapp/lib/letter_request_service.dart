@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'letter_request_model.dart';
 
 class LetterRequestService {
-  final String baseUrl = 'http://10.103.236.248:8088/api/letter-requests';
+  final String baseUrl = 'http://10.166.183.248:8088/api/letter-requests';
 
   Future<int> getRequestCount(String email) async {
     final response = await http.get(Uri.parse('$baseUrl/count/$email'));

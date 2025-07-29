@@ -4,6 +4,8 @@ import { AdminLetterService } from '../../../services/admin-letter.service';
 import { UserService } from '../../../services/user.service';
 import { AdminSearchService } from '../../../services/admin-search.service';
 import { interval, Subscription } from 'rxjs';
+import * as XLSX from 'xlsx';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-admin-portal',
@@ -34,6 +36,14 @@ export class AdminPortalComponent implements OnInit {
   adminRole: string = '';
   letterTypeFilter: string = 'all';
   letterTypes: string[] = ['introduction', 'feasibility_study', 'recommendation']; // Add more as needed
+
+  // Export modal properties
+  showExportModal: boolean = false;
+  exportFormat: 'excel' | 'pdf' = 'excel';
+  exportAllData: boolean = true;
+  exportFilteredData: boolean = false;
+  exportByStatus: boolean = false;
+  selectedStatus: string = 'PENDING';
 
   constructor(
     public sidebarService: SidebarService,
@@ -307,5 +317,230 @@ export class AdminPortalComponent implements OnInit {
       case 'postponement': return 'Postponement';
       default: return type.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
     }
+  }
+
+  onExportAllChange(): void {
+    if (this.exportAllData) {
+      this.exportFilteredData = false;
+      this.exportByStatus = false;
+    }
+  }
+
+  exportReport(): void {
+    if (this.exportFormat === 'excel') {
+      this.exportToExcel();
+    } else if (this.exportFormat === 'pdf') {
+      this.exportToPDF();
+    }
+    this.showExportModal = false;
+  }
+
+  private getDataToExport(): any[] {
+    let dataToExport: any[] = [];
+
+    if (this.exportAllData) {
+      dataToExport = this.letterRequests;
+    } else if (this.exportFilteredData) {
+      dataToExport = this.filteredLetterRequests;
+    } else if (this.exportByStatus) {
+      dataToExport = this.letterRequests.filter(request => request.status === this.selectedStatus);
+    }
+
+    return dataToExport.map(request => ({
+      'Student Name': request.fullName,
+      'Letter Type': this.displayLetterType(request.letterType),
+      'Status': request.status,
+      'Admin Comment': request.adminComment || '',
+      'Request Date': this.formatDate(request.requestDate)
+    }));
+  }
+
+  private exportToExcel(): void {
+    const dataToExport = this.getDataToExport();
+    
+    if (dataToExport.length === 0) {
+      alert('No data to export!');
+      return;
+    }
+
+    // Create worksheet
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(dataToExport);
+    
+    // Create workbook
+    const workbook: XLSX.WorkBook = { 
+      Sheets: { 'Letter Requests': worksheet }, 
+      SheetNames: ['Letter Requests'] 
+    };
+
+    // Generate buffer
+    const excelBuffer: any = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    // Save file
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    const fileName = `letter_requests_${new Date().toISOString().split('T')[0]}.xlsx`;
+    saveAs(blob, fileName);
+  }
+
+  private exportToPDF(): void {
+    const dataToExport = this.getDataToExport();
+    
+    if (dataToExport.length === 0) {
+      alert('No data to export!');
+      return;
+    }
+
+    // Create PDF content with better styling
+    let pdfContent = `
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            @page {
+              size: A4;
+              margin: 2cm;
+            }
+            body { 
+              font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+              margin: 0; 
+              padding: 20px;
+              color: #333;
+            }
+            .header { 
+              text-align: center; 
+              margin-bottom: 30px;
+              border-bottom: 3px solid #3C91E6;
+              padding-bottom: 20px;
+            }
+            h1 { 
+              color: #3C91E6; 
+              margin: 0;
+              font-size: 28px;
+              font-weight: bold;
+            }
+            .date { 
+              color: #666; 
+              font-size: 14px; 
+              margin-top: 10px;
+            }
+            .summary {
+              background: #f8f9fa;
+              padding: 15px;
+              border-radius: 8px;
+              margin-bottom: 20px;
+              border-left: 4px solid #3C91E6;
+            }
+            .summary p {
+              margin: 5px 0;
+              font-weight: 500;
+            }
+            table { 
+              width: 100%; 
+              border-collapse: collapse; 
+              margin-top: 20px;
+              font-size: 12px;
+            }
+            th, td { 
+              border: 1px solid #ddd; 
+              padding: 10px 8px; 
+              text-align: left; 
+              vertical-align: top;
+            }
+            th { 
+              background-color: #3C91E6; 
+              color: white;
+              font-weight: bold;
+              font-size: 13px;
+            }
+            tr:nth-child(even) {
+              background-color: #f9f9f9;
+            }
+            tr:hover {
+              background-color: #f0f0f0;
+            }
+            .status-approved {
+              color: #28a745;
+              font-weight: bold;
+            }
+            .status-pending {
+              color: #ffc107;
+              font-weight: bold;
+            }
+            .status-declined {
+              color: #dc3545;
+              font-weight: bold;
+            }
+            .footer {
+              margin-top: 30px;
+              text-align: center;
+              font-size: 12px;
+              color: #666;
+              border-top: 1px solid #ddd;
+              padding-top: 15px;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="header">
+            <h1>Letter Requests Report</h1>
+            <p class="date">Generated on: ${new Date().toLocaleDateString('en-US', { 
+              year: 'numeric', 
+              month: 'long', 
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}</p>
+          </div>
+          
+          <div class="summary">
+            <p><strong>Total Records:</strong> ${dataToExport.length}</p>
+            <p><strong>Export Type:</strong> ${this.exportAllData ? 'All Data' : this.exportFilteredData ? 'Filtered Data' : `Status: ${this.selectedStatus}`}</p>
+          </div>
+          
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 25%;">Student Name</th>
+                <th style="width: 20%;">Letter Type</th>
+                <th style="width: 15%;">Status</th>
+                <th style="width: 25%;">Admin Comment</th>
+                <th style="width: 15%;">Request Date</th>
+              </tr>
+            </thead>
+            <tbody>
+    `;
+
+    dataToExport.forEach(row => {
+      const statusClass = row['Status'].toLowerCase().replace(' ', '-');
+      pdfContent += `
+        <tr>
+          <td><strong>${row['Student Name']}</strong></td>
+          <td>${row['Letter Type']}</td>
+          <td class="status-${statusClass}">${row['Status']}</td>
+          <td>${row['Admin Comment'] || '-'}</td>
+          <td>${row['Request Date']}</td>
+        </tr>
+      `;
+    });
+
+    pdfContent += `
+            </tbody>
+          </table>
+          
+          <div class="footer">
+            <p>This report was generated from the UNIDOCS Letter Management System</p>
+            <p>© ${new Date().getFullYear()} State University of Zanzibar</p>
+          </div>
+        </body>
+      </html>
+    `;
+
+    // Create blob and download
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `letter_requests_report_${new Date().toISOString().split('T')[0]}.html`;
+    link.click();
+    window.URL.revokeObjectURL(url);
   }
 }

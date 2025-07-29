@@ -16,6 +16,11 @@
           </li>
         </ul>
       </div>
+      <div class="right">
+        <button class="btn-export" (click)="showExportModal = true">
+          <i class="bx bx-export"></i> Export Report
+        </button>
+      </div>
     </div>
 
     <ul class="box-info">
@@ -152,6 +157,80 @@
         </ul>
       </div>
 -->
+    </div>
+
+    <!-- Export Report Modal Overlay -->
+    <div *ngIf="showExportModal" class="modal-overlay">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <h3 style="color:#3C91E6;display:flex;align-items:center;gap:10px;margin-bottom:20px;">
+            <i class='bx bx-export'></i> Export Letter Requests Report
+          </h3>
+          <p style="margin-bottom:20px;color:#666;">Choose the format and data to export:</p>
+          
+          <!-- Export Options -->
+          <div class="export-options" style="margin-bottom:20px;">
+            <div class="export-option">
+              <label>
+                <input type="radio" [(ngModel)]="exportFormat" value="excel" name="exportFormat">
+                <span class="option-text">
+                  <i class="bx bxs-file-spreadsheet"></i> Excel (.xlsx)
+                </span>
+              </label>
+            </div>
+            <div class="export-option">
+              <label>
+                <input type="radio" [(ngModel)]="exportFormat" value="pdf" name="exportFormat">
+                <span class="option-text">
+                  <i class="bx bxs-file-pdf"></i> PDF (.pdf)
+                </span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Data Selection -->
+          <div class="data-selection" style="margin-bottom:20px;">
+            <h4 style="color:#3C91E6;margin-bottom:10px;">Select Data to Export:</h4>
+            <div class="data-option">
+              <label>
+                <input type="checkbox" [(ngModel)]="exportAllData" (change)="onExportAllChange()">
+                <span>Export All Letter Requests</span>
+              </label>
+            </div>
+            <div class="data-option" *ngIf="!exportAllData">
+              <label>
+                <input type="checkbox" [(ngModel)]="exportFilteredData">
+                <span>Export Filtered Data (Current View)</span>
+              </label>
+            </div>
+            <div class="data-option" *ngIf="!exportAllData">
+              <label>
+                <input type="checkbox" [(ngModel)]="exportByStatus">
+                <span>Export by Status</span>
+              </label>
+              <select *ngIf="exportByStatus" [(ngModel)]="selectedStatus" style="margin-left:20px;padding:5px;border-radius:5px;border:1px solid #ddd;">
+                <option value="PENDING">Pending</option>
+                <option value="APPROVED">Approved</option>
+                <option value="DECLINED">Declined</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Export Buttons -->
+          <div class="export-buttons" style="display:flex;gap:10px;margin-bottom:15px;">
+            <button class="btn-export-excel" (click)="exportReport()" [disabled]="!exportFormat || (!exportAllData && !exportFilteredData && !exportByStatus)">
+              <i class="bx bx-download"></i> Export {{ exportFormat | uppercase }}
+            </button>
+            <button class="btn-cancel" (click)="showExportModal = false">
+              <i class='bx bx-x'></i> Cancel
+            </button>
+          </div>
+          
+          <p class="export-note" style="font-size:0.9em;color:#666;text-align:center;">
+            <i class='bx bx-info-circle'></i> The report will include: Student Name, Letter Type, Status, and Admin Comments
+          </p>
+        </div>
+      </div>
     </div>
   </main>
   <!-- MAIN -->

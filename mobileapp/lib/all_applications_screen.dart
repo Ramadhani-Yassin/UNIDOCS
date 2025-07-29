@@ -46,7 +46,7 @@ class _AllApplicationsScreenState extends State<AllApplicationsScreen> {
       errorMessage = null;
     });
     try {
-              final response = await http.get(Uri.parse('http://10.103.236.248:8088/api/letter-requests/all/$userEmail'));
+              final response = await http.get(Uri.parse('http://10.166.183.248:8088/api/letter-requests/all/$userEmail'));
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         final requests = data.map((json) => LetterRequest.fromJson(json)).toList();
