@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts'; // <-- Corrected import
 
 import { AppRoutingModule } from './app-routing.module';
@@ -34,6 +34,9 @@ import { AllRequestComponent } from './Pages/ADMIN-SIDE/all-request/all-request.
 import { MyApplicationsComponent } from './Pages/STUDENT-SIDE/my-applications/my-applications.component';
 import { ManageAnnouncementsComponent } from './Pages/ADMIN-SIDE/manage-announcements/manage-announcements.component';
 import { EditAnnouncementModalComponent } from './components/edit-announcement-modal.component';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
+import { ForgotPasswordComponent } from './Pages/STUDENT-SIDE/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './Pages/STUDENT-SIDE/reset-password/reset-password.component';
 
 @NgModule({
   declarations: [
@@ -65,6 +68,8 @@ import { EditAnnouncementModalComponent } from './components/edit-announcement-m
     MyApplicationsComponent,
     ManageAnnouncementsComponent,
     EditAnnouncementModalComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
   ],
   imports: [
     BrowserModule,
@@ -73,7 +78,14 @@ import { EditAnnouncementModalComponent } from './components/edit-announcement-m
     HttpClientModule,
     NgChartsModule // <-- Corrected import in imports array
   ],
-  providers: [UserService],
+  providers: [
+    UserService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

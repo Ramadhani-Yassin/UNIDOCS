@@ -7,7 +7,7 @@ import { tap, catchError } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://10.177.46.248:8088/api/users'; // Use your actual API URL
+  private apiUrl = 'http://localhost:8088/api/users'; // Use your actual API URL
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser$ = this.currentUserSubject.asObservable();
 
@@ -34,13 +34,19 @@ export class UserService {
   }
 
   // Store user data in localStorage and BehaviorSubject
-  public storeUserData(user: any): void {
+  public storeUserData(user: any, token?: string, refreshToken?: string): void {
     if (!user) {
       console.warn('Attempted to store null/undefined user in localStorage!');
       return;
     }
     console.log('Storing user in localStorage:', user);
     localStorage.setItem('currentUser', JSON.stringify(user));
+    if (token) {
+      localStorage.setItem('auth_token', token);
+    }
+    if (refreshToken) {
+      localStorage.setItem('refresh_token', refreshToken);
+    }
     this.currentUserSubject.next(user);
   }
 
@@ -70,14 +76,44 @@ export class UserService {
 
   // Logout user
   logout(): void {
-    console.log('Removing currentUser from localStorage');
+    console.log('Removing user data from localStorage');
     localStorage.removeItem('currentUser');
+    localStorage.removeItem('auth_token');
+    localStorage.removeItem('refresh_token');
     this.currentUserSubject.next(null);
   }
 
   // Check if user is authenticated
   isAuthenticated(): boolean {
-    return !!localStorage.getItem('currentUser');
+    return !!localStorage.getItem('currentUser') && !!localStorage.getItem('auth_token');
+  }
+
+  // Get auth token
+  getAuthToken(): string {
+    return localStorage.getItem('auth_token') || '';
+  }
+
+  // Get refresh token
+  getRefreshToken(): string {
+    return localStorage.getItem('refresh_token') || '';
+  }
+
+  // Refresh token
+  refreshToken(): Observable<any> {
+    const refreshToken = this.getRefreshToken();
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available'));
+    }
+    
+    return this.http.post(`${this.apiUrl}/refresh-token`, { refreshToken }).pipe(
+      tap((response: any) => {
+        if (response.token && response.refreshToken) {
+          localStorage.setItem('auth_token', response.token);
+          localStorage.setItem('refresh_token', response.refreshToken);
+        }
+      }),
+      catchError(this.handleError)
+    );
   }
 
   // Get student count

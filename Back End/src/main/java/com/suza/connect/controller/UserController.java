@@ -2,6 +2,9 @@ package com.suza.connect.controller;
 
 import com.suza.connect.model.User;
 import com.suza.connect.service.UserService;
+import com.suza.connect.service.JwtService;
+import com.suza.connect.service.PasswordResetService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,12 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    
+    @Autowired
+    private JwtService jwtService;
+    
+    @Autowired
+    private PasswordResetService passwordResetService;
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -63,9 +72,14 @@ public class UserController {
                         loginRequest.getPassword()
                 );
                 if (valid) {
+                    String token = jwtService.generateToken(user.getEmail(), user.getRole(), user.getId());
+                    String refreshToken = jwtService.generateRefreshToken(user.getEmail(), user.getRole(), user.getId());
+                    
                     return ResponseEntity.ok(Map.of(
                             "message", "Login successful",
-                            "user", user
+                            "user", user,
+                            "token", token,
+                            "refreshToken", refreshToken
                     ));
                 }
             }
@@ -74,6 +88,39 @@ public class UserController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(Map.of("error", "Login failed: " + e.getMessage()));
+        }
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<?> refreshToken(@RequestBody Map<String, String> request) {
+        try {
+            String refreshToken = request.get("refreshToken");
+            if (refreshToken == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Refresh token is required"));
+            }
+
+            // Validate refresh token
+            if (jwtService.isTokenExpired(refreshToken)) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body(Map.of("error", "Refresh token has expired"));
+            }
+
+            String email = jwtService.extractEmail(refreshToken);
+            String role = jwtService.extractRole(refreshToken);
+            Long userId = jwtService.extractUserId(refreshToken);
+
+            // Generate new access token
+            String newToken = jwtService.generateToken(email, role, userId);
+            String newRefreshToken = jwtService.generateRefreshToken(email, role, userId);
+
+            return ResponseEntity.ok(Map.of(
+                    "token", newToken,
+                    "refreshToken", newRefreshToken
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid refresh token"));
         }
     }
 
@@ -100,9 +147,14 @@ public class UserController {
                 );
                 System.out.println("PASSWORD VALID: " + valid);
                 if (valid) {
+                    String token = jwtService.generateToken(user.getEmail(), user.getRole(), user.getId());
+                    String refreshToken = jwtService.generateRefreshToken(user.getEmail(), user.getRole(), user.getId());
+                    
                     return ResponseEntity.ok(Map.of(
                             "message", "Login successful",
-                            "user", user
+                            "user", user,
+                            "token", token,
+                            "refreshToken", refreshToken
                     ));
                 }
             }
@@ -194,5 +246,93 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(Map.of("error", "User is not a student or does not exist"));
+    }
+
+    // Password Reset Endpoints
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@RequestBody Map<String, String> request) {
+        try {
+            String email = request.get("email");
+            if (email == null || email.trim().isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Email is required"));
+            }
+
+            passwordResetService.initiatePasswordReset(email.trim());
+            
+            // Always return success to prevent email enumeration
+            return ResponseEntity.ok(Map.of(
+                    "message", "If an account with this email exists, a password reset link has been sent.",
+                    "success", true
+            ));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to process password reset request"));
+        }
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestBody Map<String, String> request) {
+        try {
+            String resetToken = request.get("resetToken");
+            String newPassword = request.get("newPassword");
+            String confirmPassword = request.get("confirmPassword");
+
+            if (resetToken == null || newPassword == null || confirmPassword == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Reset token, new password, and confirm password are required"));
+            }
+
+            if (!newPassword.equals(confirmPassword)) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Passwords do not match"));
+            }
+
+            boolean success = passwordResetService.resetPassword(resetToken, newPassword);
+            
+            if (success) {
+                return ResponseEntity.ok(Map.of(
+                        "message", "Password reset successfully. You can now login with your new password.",
+                        "success", true
+                ));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Invalid or expired reset token, or password does not meet requirements"));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to reset password"));
+        }
+    }
+
+    @GetMapping("/validate-reset-token")
+    public ResponseEntity<?> validateResetToken(@RequestParam String token) {
+        try {
+            boolean isValid = passwordResetService.isValidResetToken(token);
+            
+            if (isValid) {
+                return ResponseEntity.ok(Map.of(
+                        "valid", true,
+                        "message", "Reset token is valid"
+                ));
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of(
+                                "valid", false,
+                                "error", "Invalid or expired reset token"
+                        ));
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Failed to validate reset token"));
+        }
+    }
+
+    @GetMapping("/password-requirements")
+    public ResponseEntity<?> getPasswordRequirements() {
+        return ResponseEntity.ok(Map.of(
+                "requirements", passwordResetService.getPasswordRequirements()
+        ));
     }
 }

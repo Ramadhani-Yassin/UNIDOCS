@@ -43,15 +43,21 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final response = await http.post(
-        Uri.parse('http://10.177.46.248:8088/api/users/student-login'),
+        Uri.parse('http://10.103.236.248:8088/api/users/student-login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'email': email, 'password': password}),
       );
       final data = jsonDecode(response.body);
       if (response.statusCode == 200 && data['user'] != null) {
-        // Store user info
+        // Store user info and tokens
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('currentUser', jsonEncode(data['user']));
+        if (data['token'] != null) {
+          await prefs.setString('auth_token', data['token']);
+        }
+        if (data['refreshToken'] != null) {
+          await prefs.setString('refresh_token', data['refreshToken']);
+        }
         setState(() {
           _message = 'Login successful! Redirecting... ✅';
           _isError = false;
@@ -107,7 +113,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     try {
       final response = await http.post(
-        Uri.parse('http://10.177.46.248:8088/api/users/register'),
+        Uri.parse('http://10.103.236.248:8088/api/users/register'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'firstName': firstName,

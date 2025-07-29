@@ -33,4 +33,13 @@ public class User {
 
     @Column(name = "status", nullable = false)
     private String status = "active"; // default to active
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "reset_token_expiry")
+    private java.time.LocalDateTime resetTokenExpiry;
+
+    @Column(name = "reset_token_created")
+    private java.time.LocalDateTime resetTokenCreated;
 }

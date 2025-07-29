@@ -36,9 +36,9 @@ export class LoginComponent {
 
     this.userService.studentLogin(this.credentials).subscribe({
       next: (response) => {
-        // Store the user from backend response
+        // Store the user and tokens from backend response
         if (response && response.user) {
-          this.userService.storeUserData(response.user);
+          this.userService.storeUserData(response.user, response.token, response.refreshToken);
         }
         this.showMessage('Login successful! Redirecting..✅', false);
         setTimeout(() => {

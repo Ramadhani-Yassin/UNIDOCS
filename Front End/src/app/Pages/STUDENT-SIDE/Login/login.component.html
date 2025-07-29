@@ -47,6 +47,13 @@
           <span *ngIf="loading">Authenticating...</span>
         </button>
         
+        <!-- Forgot Password Link -->
+        <div class="forgot-password-link">
+          <a routerLink="/forgot-password">
+            <i class="fas fa-key"></i> Forgot Password?
+          </a>
+        </div>
+        
         <!-- Login Message -->
         <div *ngIf="message && isLoginForm" class="message" [ngClass]="{'error': isError, 'success': !isError}">
           {{ message }}

@@ -6,7 +6,7 @@ import { UserService } from './user.service'; // Import UserService
   providedIn: 'root'
 })
 export class AdminLetterService {
-  private apiUrl = 'http://10.177.46.248:8088/api/letter-requests';
+  private apiUrl = 'http://localhost:8088/api/letter-requests';
 
   constructor(private http: HttpClient, private userService: UserService) {}
 
@@ -30,6 +30,6 @@ export class AdminLetterService {
   }
 
   getAll() {
-    return this.http.get<any[]>('http://10.177.46.248:8088/api/letter-requests');
+    return this.http.get<any[]>('http://localhost:8088/api/letter-requests');
   }
 }

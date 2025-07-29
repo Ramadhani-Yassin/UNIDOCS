@@ -42,14 +42,9 @@ export class CVRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
         
         return this.http.get<CVRequest[]>(
-            `${this.apiUrl}/recent/${encodeURIComponent(user.email)}?limit=${limit}`, 
-            { headers }
+            `${this.apiUrl}/recent/${encodeURIComponent(user.email)}?limit=${limit}`
         ).pipe(
             catchError(this.handleError)
         );
@@ -60,23 +55,15 @@ export class CVRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
         
-        return this.http.get<number>(`${this.apiUrl}/count/${encodeURIComponent(user.email)}`, { headers })
+        return this.http.get<number>(`${this.apiUrl}/count/${encodeURIComponent(user.email)}`)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     getCVRequestById(id: string): Observable<any> {
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
-
-        return this.http.get(`${this.apiUrl}/${id}`, { headers })
+        return this.http.get(`${this.apiUrl}/${id}`)
             .pipe(
                 catchError(this.handleError)
             );
@@ -95,8 +82,10 @@ export class CVRequestService {
         };
     }
 
+    // Token handling is now done by AuthInterceptor
+    // This method is kept for backward compatibility
     private getAuthToken(): string {
-        return localStorage.getItem('auth_token') || '';
+        return '';
     }
 
     private handleError(error: any): Observable<never> {

@@ -27,8 +27,7 @@ export class LetterRequestService {
 
     submitLetterRequest(requestData: any): Observable<any> {
         const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${this.getAuthToken()}`
+            'Content-Type': 'application/json'
         });
 
         return this.http.post(this.apiUrl, this.formatRequestData(requestData), { headers })
@@ -42,14 +41,9 @@ export class LetterRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
         
         return this.http.get<LetterRequest[]>(
-            `${this.apiUrl}/recent/${encodeURIComponent(user.email)}?limit=${limit}`, 
-            { headers }
+            `${this.apiUrl}/recent/${encodeURIComponent(user.email)}?limit=${limit}`
         ).pipe(
             catchError(this.handleError)
         );
@@ -60,23 +54,15 @@ export class LetterRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
         
-        return this.http.get<number>(`${this.apiUrl}/count/${encodeURIComponent(user.email)}`, { headers })
+        return this.http.get<number>(`${this.apiUrl}/count/${encodeURIComponent(user.email)}`)
             .pipe(
                 catchError(this.handleError)
             );
     }
 
     getLetterRequestById(id: string): Observable<any> {
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
-
-        return this.http.get(`${this.apiUrl}/${id}`, { headers })
+        return this.http.get(`${this.apiUrl}/${id}`)
             .pipe(
                 catchError(this.handleError)
             );
@@ -99,24 +85,17 @@ export class LetterRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
         return this.http.get<LetterRequest[]>(
-            `${this.apiUrl}/all/${encodeURIComponent(user.email)}`,
-            { headers }
+            `${this.apiUrl}/all/${encodeURIComponent(user.email)}`
         ).pipe(
             catchError(this.handleError)
         );
     }
 
     getGeneratedLetter(id: string, format: 'pdf' | 'docx' = 'pdf'): Observable<Blob> {
-        const headers = new HttpHeaders({
-            'Authorization': `Bearer ${this.getAuthToken()}`
-        });
         return this.http.get(
             `${this.apiUrl}/${id}/generate?format=${format}`,
-            { headers, responseType: 'blob' }
+            { responseType: 'blob' }
         ).pipe(
             catchError(this.handleError)
         );
@@ -145,8 +124,10 @@ export class LetterRequestService {
         };
     }
 
+    // Token handling is now done by AuthInterceptor
+    // This method is kept for backward compatibility
     private getAuthToken(): string {
-        return localStorage.getItem('auth_token') || '';
+        return '';
     }
 
     private handleError(error: any): Observable<never> {

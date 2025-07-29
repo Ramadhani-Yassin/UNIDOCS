@@ -1,5 +1,7 @@
 package com.suza.connect;
 
+import com.suza.connect.config.JwtAuthenticationFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -9,6 +11,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -18,6 +21,9 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -29,16 +35,24 @@ public class SecurityConfig {
         http
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .csrf(csrf -> csrf.disable())
+            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
                 // PUBLIC ENDPOINTS
                 .requestMatchers(HttpMethod.POST,
                     "/api/users/register",
                     "/api/users/login",
                     "/api/users/student-login",
+                    "/api/users/refresh-token",
+                    "/api/users/forgot-password",
+                    "/api/users/reset-password",
                     "/api/admin/register",
                     "/api/admin/login",
                     "/api/letter-requests",
                     "/api/cv-requests"
+                ).permitAll()
+                .requestMatchers(HttpMethod.GET,
+                    "/api/users/validate-reset-token",
+                    "/api/users/password-requirements"
                 ).permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/letter-requests/{id}/status").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
@@ -76,7 +90,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(List.of(
             "http://localhost:4200",
-            "http://10.177.46.248:4200"
+            "http://10.103.236.248:4200"
         ));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of(

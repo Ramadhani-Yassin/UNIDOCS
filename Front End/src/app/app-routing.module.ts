@@ -25,6 +25,8 @@ import { AdminSettingsShellComponent } from './Pages/ADMIN-SIDE/admin-settings-s
 import { AllRequestComponent } from './Pages/ADMIN-SIDE/all-request/all-request.component';
 import { MyApplicationsComponent } from './Pages/STUDENT-SIDE/my-applications/my-applications.component';
 import { AuthGuard } from './auth.guard';
+import { ForgotPasswordComponent } from './Pages/STUDENT-SIDE/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './Pages/STUDENT-SIDE/reset-password/reset-password.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -33,6 +35,8 @@ const routes: Routes = [
   { path: 'contacts', component: ContactsComponent },
   { path: 'login', component: LoginComponent },
   { path: 'admin-login', component: AdminLoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
 
   // All routes below are protected
   { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },

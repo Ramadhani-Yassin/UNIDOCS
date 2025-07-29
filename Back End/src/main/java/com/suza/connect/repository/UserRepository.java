@@ -10,4 +10,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmailAndRole(String email, String role);
     boolean existsByEmail(String email);
     List<User> findByRole(String role); // For filtering by 'admin' or 'student'
+    
+    // Password reset methods
+    Optional<User> findByResetToken(String resetToken);
+    Optional<User> findByResetTokenAndResetTokenExpiryAfter(String resetToken, java.time.LocalDateTime now);
 }
