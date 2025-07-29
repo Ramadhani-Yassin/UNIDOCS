@@ -42,7 +42,7 @@ export class CVRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-        
+
         return this.http.get<CVRequest[]>(
             `${this.apiUrl}/recent/${encodeURIComponent(user.email)}?limit=${limit}`
         ).pipe(
@@ -55,7 +55,7 @@ export class CVRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-        
+
         return this.http.get<number>(`${this.apiUrl}/count/${encodeURIComponent(user.email)}`)
             .pipe(
                 catchError(this.handleError)

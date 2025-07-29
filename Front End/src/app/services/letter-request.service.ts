@@ -54,7 +54,7 @@ export class LetterRequestService {
         if (!user || !user.email) {
             return throwError(() => new Error('User email not available'));
         }
-        
+
         return this.http.get<number>(`${this.apiUrl}/count/${encodeURIComponent(user.email)}`)
             .pipe(
                 catchError(this.handleError)

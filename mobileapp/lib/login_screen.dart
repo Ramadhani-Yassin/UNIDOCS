@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'main.dart' show kPrimaryColor;
 import 'main.dart' show StudentHome;
+import 'forgot_password_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   final VoidCallback? onLoginSuccess;
@@ -240,6 +241,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                     child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
                                   )
                                 : const Text('Login', style: TextStyle(fontSize: 16)),
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        // Forgot Password Link
+                        Align(
+                          alignment: Alignment.center,
+                          child: GestureDetector(
+                            onTap: _isLoading ? null : () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const ForgotPasswordScreen(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Forgot Password?',
+                              style: TextStyle(
+                                color: kPrimaryColor,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                decoration: TextDecoration.underline,
+                              ),
+                            ),
                           ),
                         ),
                        const SizedBox(height: 8),
