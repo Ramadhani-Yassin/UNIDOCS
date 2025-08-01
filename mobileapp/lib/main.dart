@@ -9,6 +9,7 @@ import 'announcements_screen.dart';
 import 'settings_screen.dart';
 import 'logout_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'widgets/ai_chat_widget.dart';
 
 // Define the new color palette
 const Color kPrimaryColor = Color(0xFF283593); // Primary
@@ -185,7 +186,13 @@ class _StudentHomeState extends State<StudentHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_selectedIndex],
+      body: Stack(
+        children: [
+          _screens[_selectedIndex],
+          // AI Chat Widget - available on all screens
+          const AIChatWidget(),
+        ],
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         currentIndex: _selectedIndex,
