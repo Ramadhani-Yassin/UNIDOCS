@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-import { AnnouncementService } from '../services/announcement.service';
-import { Announcement } from '../models/announcement.model';
+import { AnnouncementService } from '../../services/announcement.service';
+import { Announcement } from '../../models/announcement.model';
 
 @Component({
   selector: 'app-edit-announcement-modal',

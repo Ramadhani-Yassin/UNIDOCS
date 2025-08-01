@@ -40,7 +40,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
       if (userJson == null) throw Exception('No user session');
       final user = jsonDecode(userJson);
       final email = user['email'];
-              final response = await http.get(Uri.parse('http://10.166.183.248:8088/api/letter-requests/analytics/$email?range=$selectedRange'));
+              final response = await http.get(Uri.parse('http://10.75.52.248:8088/api/letter-requests/analytics/$email?range=$selectedRange'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {

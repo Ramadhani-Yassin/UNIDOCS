@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CVRequestService } from '../../../services/cv-request.service';
 import { StudentSidebarService } from '../../../services/student-sidebar.service'; // Import sidebar service
+import { PawaAIService, CVEnhancementRequest } from '../../../services/pawa-ai.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -26,9 +27,17 @@ export class CVGeneratorComponent {
   errorMessage: string = '';
   // Change downloadUrl to an object for docx/pdf
   downloadUrl: { docx: string, pdf: string } | null = null;
+  
+  // AI Enhancement features
+  showAIEnhancement: boolean = false;
+  aiEnhancementSuggestion: string = '';
+  isEnhancing: boolean = false;
+  targetIndustry: string = '';
+  experienceLevel: string = '';
 
   constructor(
     private cvRequestService: CVRequestService,
+    private pawaAIService: PawaAIService,
     public sidebarService: StudentSidebarService // Inject sidebar service as public
   ) {}
 
@@ -95,5 +104,74 @@ export class CVGeneratorComponent {
     this.about = '';
     this.selectedTemplate = '';
     this.downloadUrl = null;
+    this.showAIEnhancement = false;
+    this.aiEnhancementSuggestion = '';
+    this.targetIndustry = '';
+    this.experienceLevel = '';
+  }
+
+  // AI Enhancement Methods
+  toggleAIEnhancement(): void {
+    this.showAIEnhancement = !this.showAIEnhancement;
+    if (!this.showAIEnhancement) {
+      this.aiEnhancementSuggestion = '';
+    }
+  }
+
+  enhanceCVWithAI(): void {
+    if (!this.fullName || !this.education || !this.experience || !this.skills) {
+      this.showAlertMessage('Please fill in the basic CV information first (Name, Education, Experience, Skills)', 'danger');
+      return;
+    }
+
+    this.isEnhancing = true;
+    this.aiEnhancementSuggestion = '';
+
+    // Build current CV content
+    const currentCV = `
+Name: ${this.fullName}
+Email: ${this.email}
+Phone: ${this.phone}
+Address: ${this.address}
+
+Education:
+${this.education}
+
+Experience:
+${this.experience}
+
+Skills:
+${this.skills}
+
+About:
+${this.about}
+    `.trim();
+
+    const enhancementRequest: CVEnhancementRequest = {
+      currentCV: currentCV,
+      targetIndustry: this.targetIndustry || 'General',
+      experienceLevel: this.experienceLevel || 'Student',
+      skills: this.skills.split(',').map(skill => skill.trim()).filter(skill => skill.length > 0)
+    };
+
+    this.pawaAIService.enhanceCV(enhancementRequest).subscribe({
+      next: (suggestion) => {
+        this.isEnhancing = false;
+        this.aiEnhancementSuggestion = suggestion;
+        this.showAlertMessage('AI enhancement completed! Check the suggestions below.', 'success');
+      },
+      error: (error) => {
+        this.isEnhancing = false;
+        this.showAlertMessage('AI enhancement failed: ' + (error.message || 'Unknown error'), 'danger');
+      }
+    });
+  }
+
+  applyAISuggestion(): void {
+    if (this.aiEnhancementSuggestion) {
+      // Parse AI suggestions and apply them to the form
+      // This is a simplified implementation - you can enhance it based on AI response format
+      this.showAlertMessage('AI suggestions applied! Review and adjust as needed.', 'success');
+    }
   }
 }

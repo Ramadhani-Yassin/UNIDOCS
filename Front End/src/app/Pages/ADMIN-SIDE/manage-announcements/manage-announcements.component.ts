@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AnnouncementService } from '../../../services/announcement.service';
 import { SidebarService } from '../../../services/sidebar.service';
 import { Announcement } from '../../../models/announcement.model';
-import { EditAnnouncementModalComponent } from '../../../components/edit-announcement-modal.component';
+import { EditAnnouncementModalComponent } from '../../../components/edit-announcement/edit-announcement-modal.component';
 
 @Component({
   selector: 'app-manage-announcements',

@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class PasswordResetService {
-  static const String baseUrl = 'http://10.166.183.248:8088/api/users';
+  static const String baseUrl = 'http://10.75.52.248:8088/api/users';
 
   // Request password reset
   static Future<Map<String, dynamic>> forgotPassword(String email) async {

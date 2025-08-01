@@ -1,0 +1,165 @@
+<!-- AI Chat Widget -->
+<div class="ai-chat-widget" [class.open]="isChatOpen">
+  
+  <!-- Chat Toggle Button -->
+  <div class="chat-toggle" (click)="toggleChat()" *ngIf="!isChatOpen">
+    <div class="chat-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+      </svg>
+    </div>
+    <div class="chat-label">
+      <span>AI Assistant</span>
+      <small>Ask me anything!</small>
+    </div>
+  </div>
+
+  <!-- Chat Interface -->
+  <div class="chat-interface" *ngIf="isChatOpen">
+    
+    <!-- Chat Header -->
+    <div class="chat-header">
+      <div class="chat-header-info">
+        <div class="ai-avatar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <div class="ai-info">
+          <h4>UNIDOCS AI Assistant</h4>
+          <span class="status" [class.online]="true">Online</span>
+        </div>
+      </div>
+      <div class="chat-actions">
+        <button class="action-btn clear-btn" (click)="clearChat()" title="Clear Chat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+          </svg>
+        </button>
+        <button class="action-btn close-btn" (click)="toggleChat()" title="Close Chat">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Chat Messages -->
+    <div class="chat-messages" #chatContainer>
+      <div class="message-container" *ngFor="let message of messages">
+        
+        <!-- User Message -->
+        <div class="message user-message" *ngIf="isUserMessage(message)">
+          <div class="message-content">
+            <p>{{ message.content }}</p>
+            <div class="message-footer">
+              <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+            </div>
+          </div>
+          <div class="message-avatar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Assistant Message -->
+        <div class="message assistant-message" *ngIf="!isUserMessage(message)">
+          <div class="message-avatar">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+            </svg>
+          </div>
+          <div class="message-content">
+            <p [innerHTML]="message.content | nl2br"></p>
+            <div class="message-footer">
+              <span class="message-time">{{ formatTime(message.timestamp) }}</span>
+              <button 
+                class="translate-btn" 
+                (click)="translateToEnglish(message)"
+                [disabled]="message.isTranslating"
+                title="Translate to English">
+                <span class="translate-icon">🌐</span>
+                <span *ngIf="!message.isTranslating">EN</span>
+                <span *ngIf="message.isTranslating">...</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Loading Indicator -->
+      <div class="message assistant-message" *ngIf="isLoading">
+        <div class="message-avatar">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+          </svg>
+        </div>
+        <div class="message-content">
+          <div class="typing-indicator">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="quick-actions" *ngIf="messages.length <= 1">
+        <h5>Quick Questions:</h5>
+        <div class="quick-buttons">
+          <button 
+            class="quick-btn" 
+            *ngFor="let action of quickActions"
+            (click)="sendQuickAction(action.text)"
+            [disabled]="isLoading">
+            <span class="quick-icon">{{ action.icon }}</span>
+            <span class="quick-text">{{ action.text }}</span>
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Chat Input -->
+    <div class="chat-input-container">
+      <form [formGroup]="chatForm" (ngSubmit)="sendMessage()" class="chat-form">
+        <div class="input-wrapper">
+          <textarea
+            formControlName="message"
+            placeholder="Type your message here..."
+            class="chat-input"
+            (keypress)="onKeyPress($event)"
+            [disabled]="isLoading"
+            rows="1"
+            #messageInput></textarea>
+          
+          <button 
+            type="submit" 
+            class="send-btn"
+            [disabled]="!chatForm.valid || isLoading">
+            <svg *ngIf="!isLoading" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+            </svg>
+            <svg *ngIf="isLoading" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" class="spinner">
+              <path d="M12 4V2A10 10 0 0 0 2 12h2a8 8 0 0 1 8-8Z"/>
+            </svg>
+          </button>
+        </div>
+        
+        <!-- Input Validation -->
+        <div class="input-validation" *ngIf="chatForm.get('message')?.invalid && chatForm.get('message')?.touched">
+          <small class="error-text" *ngIf="chatForm.get('message')?.errors?.['required']">
+            Please enter a message
+          </small>
+          <small class="error-text" *ngIf="chatForm.get('message')?.errors?.['minlength']">
+            Message must be at least 2 characters
+          </small>
+        </div>
+      </form>
+    </div>
+
+  </div>
+
+</div> 

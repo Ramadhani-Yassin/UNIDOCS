@@ -7,14 +7,16 @@ import { Component, AfterViewInit } from '@angular/core';
 })
 export class AppComponent implements AfterViewInit {
   ngAfterViewInit() {
-    // Prevent loading the script multiple times
-    if (!document.getElementById('g_2z9kh90ehDyF2Olf694')) {
+
+    // CHATBASE AI CHAT WIDGET
+   /* if (!document.getElementById('g_2z9kh90ehDyF2Olf694')) {
       const script = document.createElement('script');
       script.src = 'https://www.chatbase.co/embed.min.js';
       script.id = 'g_2z9kh90ehDyF2Olf694';
       script.setAttribute('domain', 'www.chatbase.co');
       document.body.appendChild(script);
-    }
+    }*/
+
   }
 }
 

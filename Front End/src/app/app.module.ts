@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgChartsModule } from 'ng2-charts'; // <-- Corrected import
 
@@ -33,10 +33,13 @@ import { CVGeneratorComponent } from './Pages/STUDENT-SIDE/cv-generator/cv-gener
 import { AllRequestComponent } from './Pages/ADMIN-SIDE/all-request/all-request.component';
 import { MyApplicationsComponent } from './Pages/STUDENT-SIDE/my-applications/my-applications.component';
 import { ManageAnnouncementsComponent } from './Pages/ADMIN-SIDE/manage-announcements/manage-announcements.component';
-import { EditAnnouncementModalComponent } from './components/edit-announcement-modal.component';
+import { EditAnnouncementModalComponent } from './components/edit-announcement/edit-announcement-modal.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { ForgotPasswordComponent } from './Pages/STUDENT-SIDE/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './Pages/STUDENT-SIDE/reset-password/reset-password.component';
+import { AiChatComponent } from './components/ai-chat/ai-chat.component';
+import { Nl2brPipe } from './pipes/nl2br.pipe';
+import { MockPawaAIService } from './services/mock-pawa-ai.service';
 
 @NgModule({
   declarations: [
@@ -70,16 +73,20 @@ import { ResetPasswordComponent } from './Pages/STUDENT-SIDE/reset-password/rese
     EditAnnouncementModalComponent,
     ForgotPasswordComponent,
     ResetPasswordComponent,
+    AiChatComponent,
+    Nl2brPipe,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    ReactiveFormsModule,
     HttpClientModule,
     NgChartsModule // <-- Corrected import in imports array
   ],
   providers: [
     UserService,
+    MockPawaAIService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
