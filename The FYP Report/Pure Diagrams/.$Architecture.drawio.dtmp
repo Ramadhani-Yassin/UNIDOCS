@@ -1,0 +1,92 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.0.6 Chrome/138.0.7204.100 Electron/37.2.3 Safari/537.36" version="28.0.6" pages="2">
+  <diagram name="Page-1" id="S2q8RoJOQ9dGwTA4oaph">
+    <mxGraphModel dx="818" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-1" value="DATA LAYER" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="48" y="804" width="509" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-2" value="DATA ACCESS LAYER" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="20" y="602" width="330" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-3" value="BUSINESS LOGIC LAYER" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="83" y="400" width="440" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-4" value="API LAYER" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="87" y="198" width="432" height="152" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-5" value="PRESENTATION LAYER" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="62" y="20" width="493" height="128" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-6" value="Angular Web App&#xa;Admin/Student" style="whiteSpace=wrap;strokeWidth=2;gradientColor=none;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="97" y="45" width="133" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-7" value="Flutter Mobile App" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="380" y="57" width="140" height="54" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-8" value="REST Controllers&#xa;User, Letter, CV, Announcement, AI" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="177" y="223" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-9" value="Services&#xa;User, Letter, CV, AI, Email, JWT, Password Reset" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="177" y="425" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-10" value="Repositories&#xa;User, Letter, CV, Announcement" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="55" y="627" width="260" height="102" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-11" value="Database&#xa;MySQL/PostgreSQL" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="83" y="829" width="177" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-12" value="External Services&#xa;AI, Email" style="whiteSpace=wrap;strokeWidth=2;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="350" y="829" width="172" height="78" as="geometry" />
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-13" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.2;entryY=0;rounded=0;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" edge="1" parent="1" source="Fki5WM0qg_2C2hv84OK1-6" target="Fki5WM0qg_2C2hv84OK1-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="189" y="198" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-14" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.81;entryY=0;rounded=0;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" edge="1" parent="1" source="Fki5WM0qg_2C2hv84OK1-7" target="Fki5WM0qg_2C2hv84OK1-8">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="426" y="198" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-15" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" edge="1" parent="1" source="Fki5WM0qg_2C2hv84OK1-8" target="Fki5WM0qg_2C2hv84OK1-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-16" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.19;exitY=1;entryX=0.5;entryY=0;rounded=0;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" edge="1" parent="1" source="Fki5WM0qg_2C2hv84OK1-9" target="Fki5WM0qg_2C2hv84OK1-10">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="185" y="552" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-17" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.5;exitY=1;entryX=0.5;entryY=0;rounded=0;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" edge="1" parent="1" source="Fki5WM0qg_2C2hv84OK1-10" target="Fki5WM0qg_2C2hv84OK1-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fki5WM0qg_2C2hv84OK1-18" value="" style="curved=1;startArrow=none;endArrow=block;exitX=0.82;exitY=1;entryX=0.5;entryY=0;rounded=0;fontColor=#000000;labelBackgroundColor=none;strokeColor=#000000;" edge="1" parent="1" source="Fki5WM0qg_2C2hv84OK1-9" target="Fki5WM0qg_2C2hv84OK1-12">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="430" y="552" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="aQHmPWGD_W_3vy6Ksfxo" name="Page-2">
+    <mxGraphModel dx="818" dy="517" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
