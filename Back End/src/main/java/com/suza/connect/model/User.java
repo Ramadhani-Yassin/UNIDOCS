@@ -42,4 +42,7 @@ public class User {
 
     @Column(name = "reset_token_created")
     private java.time.LocalDateTime resetTokenCreated;
+
+    @OneToMany(mappedBy = "recipient")
+    private java.util.List<Notification> notifications;
 }
