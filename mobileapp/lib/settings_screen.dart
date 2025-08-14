@@ -83,7 +83,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     };
     try {
       final response = await http.put(
-        Uri.parse('http://10.75.52.248:8088/api/users/$userId'),
+        Uri.parse('http://10.14.79.248:8088/api/users/$userId'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode(updateData),
       );
