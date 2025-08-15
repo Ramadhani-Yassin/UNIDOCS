@@ -33,7 +33,9 @@ class _AIChatWidgetState extends State<AIChatWidget>
   late Animation<double> _fadeAnimation;
   late Animation<double> _pulseAnimation;
 
-
+  // Show closed-state label briefly on first load (per app run)
+  bool _showLabel = true;
+  Timer? _labelTimer;
 
   @override
   void initState() {
@@ -90,6 +92,14 @@ class _AIChatWidgetState extends State<AIChatWidget>
 
     // Add welcome message
     _addWelcomeMessage();
+
+    // Hide label after a short time on first app load
+    _labelTimer = Timer(const Duration(seconds: 4), () {
+      if (!mounted) return;
+      setState(() {
+        _showLabel = false;
+      });
+    });
   }
 
   @override
@@ -101,6 +111,7 @@ class _AIChatWidgetState extends State<AIChatWidget>
     _scrollController.dispose();
     _focusNode.dispose();
     _chatSubscription?.cancel();
+    _labelTimer?.cancel();
     super.dispose();
   }
 
@@ -128,6 +139,8 @@ Una swali lolote? Unaweza kuuliza kwa Kiswahili au Kiingereza!''',
   void _toggleChat() {
     setState(() {
       _isChatOpen = !_isChatOpen;
+      // Ensure label is hidden after first interaction
+      _showLabel = false;
     });
 
     if (_isChatOpen) {
@@ -303,8 +316,11 @@ Una swali lolote? Unaweza kuuliza kwa Kiswahili au Kiingereza!''',
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final safeArea = MediaQuery.of(context).padding;
-    final maxX = screenSize.width - 200; // Account for button width
-    final maxY = screenSize.height - 100 - safeArea.bottom; // Account for button height and safe area
+    // Adjust draggable bounds based on closed button size
+    final double closedButtonWidth = _showLabel ? 220 : 60;
+    final double closedButtonHeight = _showLabel ? 76 : 60;
+    final maxX = screenSize.width - closedButtonWidth - 20; // margin
+    final maxY = screenSize.height - closedButtonHeight - safeArea.bottom - 20;
     
     return Stack(
       children: [
@@ -337,67 +353,92 @@ Una swali lolote? Unaweza kuuliza kwa Kiswahili au Kiingereza!''',
                     scale: _isDragging ? 1.1 : _pulseAnimation.value,
                     child: GestureDetector(
                       onTap: _toggleChat,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        decoration: BoxDecoration(
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFfc763f), Color(0xFFffb88c)],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                          ),
-                          borderRadius: BorderRadius.circular(50),
-                          boxShadow: [
-                            BoxShadow(
-                              color: const Color(0xFFfc763f).withValues(alpha: 0.3),
-                              blurRadius: 20,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: 44,
-                              height: 44,
+                      child: _showLabel
+                          ? Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 16,
+                              ),
                               decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.2),
-                                borderRadius: BorderRadius.circular(22),
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFfc763f), Color(0xFFffb88c)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(50),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFfc763f).withValues(alpha: 0.3),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Container(
+                                    width: 44,
+                                    height: 44,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white.withValues(alpha: 0.2),
+                                      borderRadius: BorderRadius.circular(22),
+                                    ),
+                                    child: const Icon(
+                                      Icons.smart_toy,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      const Text(
+                                        'AI Assistant',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14,
+                                        ),
+                                      ),
+                                      const Text(
+                                        'Ask me anything!',
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [Color(0xFFfc763f), Color(0xFFffb88c)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: const Color(0xFFfc763f).withValues(alpha: 0.35),
+                                    blurRadius: 16,
+                                    offset: const Offset(0, 6),
+                                  ),
+                                ],
                               ),
                               child: const Icon(
                                 Icons.smart_toy,
                                 color: Colors.white,
-                                size: 24,
+                                size: 26,
                               ),
                             ),
-                            const SizedBox(width: 12),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const Text(
-                                  'AI Assistant',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                const Text(
-                                  'Ask me anything!',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
                     ),
                   );
                 },
