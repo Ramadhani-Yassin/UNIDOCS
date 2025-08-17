@@ -37,6 +37,13 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(auth -> auth
+                // SWAGGER ENDPOINTS - allow without authentication
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**",
+                    "/swagger-ui.html"
+                ).permitAll()
+
                 // PUBLIC ENDPOINTS
                 .requestMatchers(HttpMethod.POST,
                     "/api/users/register",
@@ -76,8 +83,10 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/api/announcements").permitAll()
                 .requestMatchers(HttpMethod.PUT, "/api/announcements/{id}").permitAll()
                 .requestMatchers(HttpMethod.DELETE, "/api/announcements/{id}").permitAll()
+                
                 // Everything else under /api/users/** requires role
                 .requestMatchers("/api/users/**").hasAnyRole("STUDENT", "ADMIN")
+                
                 .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
