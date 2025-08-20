@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'announcement_model.dart';
 
 class AnnouncementService {
-  final String baseUrl = 'http://10.14.79.248:8088/api/announcements';
+  final String baseUrl = 'http://10.43.231.248:8088/api/announcements';
 
   Future<List<Announcement>> getRecentAnnouncements({int limit = 5}) async {
     final response = await http.get(Uri.parse('$baseUrl/recent?limit=$limit'));
