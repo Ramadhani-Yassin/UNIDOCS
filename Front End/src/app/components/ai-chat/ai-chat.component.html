@@ -1,8 +1,8 @@
 <!-- AI Chat Widget -->
-<div class="ai-chat-widget" [class.open]="isChatOpen">
+<div class="ai-chat-widget" [class.open]="isChatOpen" #chatWidget [ngStyle]="widgetStyle">
   
   <!-- Chat Toggle Button -->
-  <div class="chat-toggle" (click)="toggleChat()" *ngIf="!isChatOpen">
+  <div class="chat-toggle" (click)="onToggleClick($event)" (mousedown)="startDrag($event)" (touchstart)="startDrag($event)" *ngIf="!isChatOpen">
     <div class="chat-icon">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
@@ -18,7 +18,7 @@
   <div class="chat-interface" *ngIf="isChatOpen">
     
     <!-- Chat Header -->
-    <div class="chat-header">
+    <div class="chat-header" (mousedown)="startDrag($event)" (touchstart)="startDrag($event)">
       <div class="chat-header-info">
         <div class="ai-avatar">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">

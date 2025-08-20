@@ -15,11 +15,17 @@ export class AdminLoginComponent {
   message = '';
   isError = false;
 
+  showPassword = false;
+
   constructor(private userService: UserService, private router: Router) {}
 
   toggleActive(state: boolean): void {
     this.isActive = state;
     this.message = '';
+  }
+
+  togglePassword(): void {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit(loginForm: NgForm): void {

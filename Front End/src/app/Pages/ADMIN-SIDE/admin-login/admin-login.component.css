@@ -87,6 +87,32 @@ body{
     outline: none;
 }
 
+/* Eye button styles */
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.password-field .eye-btn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #555;
+  padding: 4px;
+}
+
+.password-field .eye-btn:focus {
+  outline: none;
+}
+
+.password-field i.fa {
+  font-size: 16px;
+}
+
 .form-container{
     position: absolute;
     top: 0;
@@ -114,8 +140,6 @@ body{
 .container.active .sign-up{
     transform: translateX(100%);
     opacity: 1;
-    z-index: 5;
-    animation: move 0.6s;
 }
 
 @keyframes move{

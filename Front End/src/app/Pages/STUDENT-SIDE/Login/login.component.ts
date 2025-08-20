@@ -17,12 +17,24 @@ export class LoginComponent {
   message = '';
   isError = false;
 
+  // Password visibility
+  showLoginPassword = false;
+  showSignupPassword = false;
+
   constructor(private userService: UserService, private router: Router) {}
 
   toggleForm(isLogin: boolean): void {
     this.isLoginForm = isLogin;
     this.isActive = !isLogin;
     this.message = '';
+  }
+
+  toggleLoginPassword(): void {
+    this.showLoginPassword = !this.showLoginPassword;
+  }
+
+  toggleSignupPassword(): void {
+    this.showSignupPassword = !this.showSignupPassword;
   }
 
   onLoginSubmit(loginForm: NgForm): void {

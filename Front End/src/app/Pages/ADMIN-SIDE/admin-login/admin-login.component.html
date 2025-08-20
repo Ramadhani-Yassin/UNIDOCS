@@ -43,13 +43,18 @@
           required
           placeholder="Email"
         />
-        <input 
-          [(ngModel)]="credentials.password" 
-          name="password" 
-          type="password" 
-          required
-          placeholder="Password"
-        />
+        <div class="password-field">
+          <input 
+            [(ngModel)]="credentials.password" 
+            name="password" 
+            [type]="showPassword ? 'text' : 'password'" 
+            required
+            placeholder="Password"
+          />
+          <button type="button" class="eye-btn" (click)="togglePassword()" aria-label="Toggle password visibility">
+            <i class="fa" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+          </button>
+        </div>
         
         <!-- 
         Add a select for role in the login form

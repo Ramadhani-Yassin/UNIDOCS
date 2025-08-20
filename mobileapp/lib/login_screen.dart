@@ -28,6 +28,10 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isError = false;
   bool _showLogin = true;
 
+  // Password visibility
+  bool _loginObscure = true;
+  bool _registerObscure = true;
+
   Future<void> _login() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text.trim();
@@ -215,11 +219,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16),
                         TextField(
                           controller: _passwordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
+                          obscureText: _loginObscure,
+                          decoration: InputDecoration(
                             labelText: 'Password',
-                            prefixIcon: Icon(Icons.lock_outline),
-                            border: OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(_loginObscure ? Icons.visibility : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() { _loginObscure = !_loginObscure; });
+                              },
+                              tooltip: _loginObscure ? 'Show password' : 'Hide password',
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -308,11 +319,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16),
                         TextField(
                           controller: _regPasswordController,
-                          obscureText: true,
-                          decoration: const InputDecoration(
+                          obscureText: _registerObscure,
+                          decoration: InputDecoration(
                             labelText: 'Password',
-                            prefixIcon: Icon(Icons.lock_outline),
-                            border: OutlineInputBorder(),
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            border: const OutlineInputBorder(),
+                            suffixIcon: IconButton(
+                              icon: Icon(_registerObscure ? Icons.visibility : Icons.visibility_off),
+                              onPressed: () {
+                                setState(() { _registerObscure = !_registerObscure; });
+                              },
+                              tooltip: _registerObscure ? 'Show password' : 'Hide password',
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),
